@@ -1,0 +1,1473 @@
+{
+  "id": "ch8_ep2",
+  "episodeOrder": 23,
+  "chapterNumber": 8,
+  "title": "Chương VIII · Hồi 23: Trở Về Thiên Minh & Trang Cuối Sổ Xanh",
+  "ql2ChapterId": "supreme_command",
+  "rankRange": "Tổng Tư Lệnh · Hồi Ký",
+  "nextChapterId": "ch8_ep3",
+  "entryNodeId": "ch8_ep2_01_duong_ve_thien_minh",
+  "summary": "Trước giờ khắc định đoạt di sản hòa bình ở Hồi cuối, vị Tổng Tư Lệnh rời Thủ đô trên chiếc xe jeep màu xanh ô-liu đi ngược toàn bộ Quân Lộ: từ cầu Xích Thủy, thung lũng Vân Long, ngã ba Thiên Lang tới Bản Sương Mù, vọng gác Thiên Minh và Học viện Quân sự Quang Trung để đối diện những đồng đội còn sống hay đã khuất, soi lại sáu kỷ vật chiến trường và quyết định số phận trang cuối Cuốn Sổ Bìa Xanh.",
+  "nodes": [
+    {
+      "id": "ch8_ep2_01_duong_ve_thien_minh",
+      "type": "narration",
+      "location": "Quốc Lộ Quân Sự Phía Tây — Buổi Sớm Rời Ngoại Ô Thủ Đô",
+      "mood": "calm",
+      "text": "Chiếc xe jeep màu xanh ô-liu bỏ lại sau lưng dãy mái vòm đá xám của Bộ Chỉ Huy Tối Cao, lăn bánh đều đặn qua cửa ngõ ngoại ô còn bảng lảng sương sớm. Chiếc áo mưa dã chiến khoác hờ bên ngoài che kín bốn ngôi sao vàng trên cầu vai Tổng Tư Lệnh, chỉ để lộ chiếc ba lô vải bạt sờn mép quen thuộc đặt ngang ghế phụ.\n\nNgoài cửa kính bám hơi lạnh mùa xuân đầu tiên sau chiến tranh, những cánh đồng ven đô bắt đầu thấy bóng người dân ra thăm ruộng sớm mà không còn phải ngước nhìn bầu trời dò tiếng phản lực. Sau ngày đầu tiên nhận ấn và ký những sắc lệnh giải ngũ, Hội Đồng Quốc Phòng cho phép tôi có một ngày đêm tự do trước phiên họp định đoạt di sản quốc gia sáng mai.\n\nThay vì ở lại tòa nhà kính đọc trước bản thảo diễn văn lịch sử, tôi bảo người lái xe quay mũi về hướng tuyến chiến dịch cũ — đi ngược toàn bộ Quân Lộ từ sông Xích Thủy qua Vân Long, Thiên Lang, lên Bản Sương Mù và chốt lại ở mái trường Quang Trung.\n\nBên ghế phụ, Cuốn Sổ Bìa Xanh nằm yên trên tấm bản đồ gấp cũ, nhắc tôi rằng mọi quyền lực tối cao đều phải quay về trả lời trước những nơi đã sinh ra nó.",
+      "next": "ch8_ep2_02_doc_ben_song_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_02_doc_ben_song_xich_thuy",
+      "type": "narration",
+      "location": "Bờ Sông Xích Thủy — Cửa Ngõ Chiến Tuyến Cũ",
+      "mood": "calm",
+      "text": "Chín giờ sáng, chiếc xe jeep dừng bánh trên triền đê lộng gió nhìn xuống dòng sông Xích Thủy đục màu phù sa nhạt. Cây cầu phao ghép gỗ năm nào đại đội tôi từng căng mình giữ nhịp rút quân dưới làn pháo bây giờ đã được thay bằng dầm thép sơn xám vững chãi nối liền hai bờ đất đỏ.\n\nTiếng còi xe công trình thỉnh thoảng vang lên từ phía hạ lưu nơi tốp thợ dân sự đang kè lại bờ ta-luy chống sạt lở mùa mưa tới. Gió sông thổi ngược lên mặt đê mang theo mùi bùn non và mùi cỏ may khô, khiến lòng người bỗng chùng xuống một nhịp rất khẽ giữa buổi sáng thanh bình.\n\nTôi bước xuống xe, đi bộ dọc theo dải phân cách bằng bê tông sơn vàng mới tinh để nhìn lại mép bờ nơi Tiểu Đoàn Xích Phong từng chôn chân suốt bốn mươi tám giờ trong cơn mưa đạn Chương IV. Dưới chân trụ cầu mới, dòng nước vẫn cuộn xoáy qua những hòn đá tảng y hệt đêm công binh căng dây cáp.\n\nĐiều đầu tiên đập vào mắt tôi ở đầu cầu phía Nam là lối rẽ dẫn sang khu dân cư và mái ngói trường tiểu học cũ ẩn sau rặng tre xanh.",
+      "branches": [
+        {
+          "condition": {
+            "flag": "giu_loi_di_truong_hoc_xich_phong"
+          },
+          "next": "ch8_ep2_03a_loi_di_truong_hoc_con_nguyen"
+        }
+      ],
+      "next": "ch8_ep2_03b_vet_seo_ben_cau_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_03a_loi_di_truong_hoc_con_nguyen",
+      "type": "narration",
+      "location": "Lối Đi Trường Học Đầu Cầu Xích Thủy",
+      "mood": "warm",
+      "text": "Lối mòn lát gạch dành riêng cho học sinh ngày trước tôi nhất quyết không cho xe tăng cán nát trên bản vẽ tác chiến giờ vẫn nằm nguyên vẹn bên sườn cầu. Một tốp trẻ nhỏ đeo cặp vải chạy ríu rít qua hàng rào gỗ sơn trắng, không đứa nào phải men theo vạt đường nhựa dành cho xe tải hạng nặng.\n\nThấy một người lính đứng tuổi mặc áo mưa đứng lặng bên cột mốc, cô giáo trẻ đi sau đoàn học sinh khẽ gật đầu chào theo thói quen kính trọng bộ đội. Cô không hề biết người đang đứng trước mặt mình chính là kẻ năm xưa từng cãi nhau nảy lửa với sĩ quan tham mưu để giữ lại tám mét chiều rộng con đường đất này.\n\nTôi đứng nhìn cho đến khi tiếng cười của bọn trẻ khuất hẳn sau rặng dâm bụt trước cổng trường và tiếng trống vào tiết vang lên giòn giã. Trên sa bàn Bộ Tổng Tham Mưu, tám mét đất ấy từng bị xem là một nét vẽ phiền phức làm chậm tốc độ cơ động.\n\nNhưng giữa ánh nắng buổi sáng thanh bình này, tôi hiểu rằng có những nét bút trên giấy chiến trận không dùng để thắng nhanh, mà để bảo toàn một buổi sáng đi học nguyên vẹn sau khi tiếng súng tắt.",
+      "next": "ch8_ep2_04_ky_uc_xich_thuy_va_dong_ho"
+    },
+    {
+      "id": "ch8_ep2_03b_vet_seo_ben_cau_xich_thuy",
+      "type": "narration",
+      "location": "Mố Cầu Phía Nam Sông Xích Thủy",
+      "mood": "somber",
+      "text": "Phần đất ven mố cầu nơi lối mòn cũ từng dẫn về ngôi trường tiểu học giờ chỉ còn là khoảng sân bê tông phẳng lì phục vụ bến bãi tập kết vật liệu. Bọn trẻ đi học từ phía xóm ngoài phải vòng qua con đường đất vòng vèo xa hơn gần hai cây số, men theo triền đê dốc đứng đầy đá dăm.\n\nMột tấm bảng gỗ nhỏ đóng bên rìa mương thoát nước ghi dòng chữ nhắc người qua lại cẩn thận xe ben chở đá. Tôi đứng lặng rất lâu trước khoảng bê tông xám ấy, nhớ lại buổi chiều năm xưa mình đã chấp nhận xóa nét bút chì lối dân sinh để mở đường tăng cơ động nhanh hơn nửa giờ.\n\nChiến dịch Xích Phong năm đó đã giữ được cầu, và báo cáo tổng kết quân sự khen đó là một quyết định táo bạo dứt khoát. Nhưng không một trang biên bản nào ghi lại quãng đường vòng lấm bụi mà lũ trẻ vùng ven phải đi suốt mấy năm trời, hay tiếng thở dài của những bà mẹ đứng chờ con mỗi chiều mưa.\n\nTôi ghi vội một dòng nhắc nhở vào tờ giấy nhỏ để đề xuất mở lại đường bộ hành riêng cho trường học, rồi cúi đầu bước chậm ra giữa nhịp cầu chính.",
+      "next": "ch8_ep2_04_ky_uc_xich_thuy_va_dong_ho"
+    },
+    {
+      "id": "ch8_ep2_04_ky_uc_xich_thuy_va_dong_ho",
+      "type": "narration",
+      "location": "Tượng Đài Nhỏ Đầu Cầu Xích Thủy",
+      "mood": "somber",
+      "text": "Giữa khoảng sân nhỏ lát đá phiến ngay đầu cầu, một tấm bia tưởng niệm bằng đá xanh khắc danh sách những chiến sĩ đã giữ chốt Xích Thủy đứng lặng lẽ dưới tán phượng già. Mùi nhang mới thắp sáng nay vẫn còn thoang thoảng trong gió sông, chứng tỏ bà con quanh vùng vẫn giữ lệ quét dọn mỗi sớm.\n\nTôi tháo mũ kê-pi cầm gọn bên hông, bước tới từng bước chậm rãi trên nền đá lạnh. Đứng ở đúng vị trí năm xưa pháo Khối Thiết Phong từng trút xuống như mưa rào, ký ức về tiếng gầm của sắt thép, mùi khét của gỗ cháy và ánh lửa lóe lên từ chiếc đồng hồ mặt kính vỡ bỗng ùa về rõ mồn một.\n\nĐây chính là khúc quanh định mệnh của đời binh nghiệp — nơi người bạn giường tầng từ thuở Quang Trung của tôi đã bước vào trận lửa giữ đường rút cho cả tiểu đoàn. Có những tình bạn sinh ra từ chiếc khăn mặt khô và vuông chăn phòng B2, nhưng lại được thử thách bằng đạn pháo.\n\nÁnh mắt tôi dừng lại ở phía lan can cầu hướng Tây, nơi một bóng người quen thuộc hay khoảng trống lặng lẽ của kỷ niệm đang chờ sẵn.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch8_ep2_05a_khang_dung_doi_ben_cau"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "injured" } }
+            ]
+          },
+          "next": "ch8_ep2_05b_khang_ghe_xich_thuy_chong_nang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "estranged" } }
+            ]
+          },
+          "next": "ch8_ep2_05c_khang_bo_di_khong_ngoanh_lai"
+        },
+        {
+          "condition": {
+            "flag": "khang_hi_sinh_xich_thuy"
+          },
+          "next": "ch8_ep2_05d_bia_da_xich_thuy_ten_khang"
+        }
+      ],
+      "next": "ch8_ep2_05d_bia_da_xich_thuy_ten_khang"
+    },
+    {
+      "id": "ch8_ep2_05a_khang_dung_doi_ben_cau",
+      "type": "dialogue",
+      "location": "Lan Can Cầu Xích Thủy",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Tui biết thế nào ông cũng lén trốn mấy tay cận vệ chạy về đây một mình trước ngày đọc diễn văn mà! Hồi nãy nhìn thấy cái xe jeep màu cỏ úa bò qua dốc đê là tui nghi ngay cái nết của ông bạn giường tầng rồi.\n\n*Tách.*\n\nNè, uống ly trà đá vỉa hè cho đỡ khô cổ đi ngài Tổng Tư Lệnh, tui mua hai ly ngoài quán cô Ba đầu cầu đó. Cầm lấy đi, đứng trước cái lan can này đừng có nói chuyện kiểu trên giấy với tui nha, bữa nay tui với ông chỉ là hai thằng binh nhì từng chia nhau nửa gói mì tôm thôi.\n\nNgó lại cái trụ cầu dưới kia đi, hồi đó hai đứa mình cứ tưởng không qua nổi buổi chiều mưa pháo, vậy mà nay đứng đây nghe tiếng còi xe dân sự chạy êm ru rồi. Còn nghe nhau là còn đội hình, tụi mình đi được tới cây cầu xây mới này coi như lời hứa năm xưa trả đủ rồi.\n\nNhớ giữ lấy hai cái vỗ vai của tui trước khi ông quay về cái phòng kính lớn ngoài Thủ đô nghe chưa — coi chừng cái bản đồ nó lừa mắt mình đó nha!",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_06_choice_nghi_le_cau_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_05b_khang_ghe_xich_thuy_chong_nang",
+      "type": "dialogue",
+      "location": "Lan Can Cầu Xích Thủy",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang (Cựu chiến binh)",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "injured" } }
+        ]
+      },
+      "text": "Chào Tổng Tư Lệnh... à quên, ngồi xuống bậc đá này với tui đi ông bạn, đứng chi cho mỏi giò. Chân trái tui bữa nay trời trở gió vẫn còn nhức khúc đinh vít hồi Xích Thủy, nhưng đi bộ lên giữa cầu ngắm nước chảy thì dư sức rồi.\n\n*Tách.*\n\nHồi tui nhận giấy giải ngũ về lại vườn dưới sông Tiền, tui tưởng đời lính của mình khép lại ngang khúc cầu gỗ gãy đôi đó luôn rồi chứ. Nhưng nhìn ông vẫn bò lên tới đỉnh cao nhất mà không bỏ lại mấy đứa đồng đội cũ tụi tui, tui thấy cái giá mình trả năm xưa không uổng chút nào.\n\nSáng mai lúc ông bước lên bục ở Thủ đô, mấy thằng cựu binh tụi tui ở quê nhà cũng mở ra-đi-ô nghe hết đó nha, đừng có nói giọng quan chức lạnh tanh làm tụi tui buồn lòng. Cứ nhớ hồi ở ghe nhà với ở Thiên Minh tụi mình sống thật sao thì nói vậy là đủ.\n\nThôi ông uống miếng nước trà nóng trong bình tui mang theo rồi đi tiếp lên Vân Long đi, đường núi chiều nay sương xuống sớm lắm. Còn nghe nhau là còn đội hình!",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_06_choice_nghi_le_cau_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_05c_khang_bo_di_khong_ngoanh_lai",
+      "type": "narration",
+      "location": "Bờ Tây Cầu Xích Thủy",
+      "mood": "somber",
+      "text": "Cách tấm bia tưởng niệm chừng hai mươi bước chân, một dáng người cao gầy mặc áo khoác dân sự màu sẫm đang cúi xuống đặt bó cúc trắng lên thành bê tông. Ngay khoảnh khắc người ấy đứng thẳng dậy và khẽ xoay cổ tay nhìn mặt đồng hồ quen thuộc, tôi nhận ra ngay Lê Minh Khang.\n\nTôi bước lên định gọi một tiếng nhưng âm thanh mắc nghẹn lại nơi cổ họng khi ánh mắt Khang lướt ngang qua cầu vai áo tôi. Không còn cái nháy mắt quen thuộc thời Quang Trung, cũng không có tiếng bật lửa tách nhẹ hay hai cái vỗ vai giữ đội hình thuở nào.\n\nKhang chỉ khẽ gật đầu đúng một lần lạnh lẽo như chào một người quen cũ đã đi sang bờ khác, rồi quay lưng bước thẳng xuống bậc tam cấp hướng ra bến xe khách. Những chọn lựa thiết huyết trên con đường quyền lực đã đặt giữa chúng tôi một con sông rộng hơn cả dòng Xích Thủy.\n\nTôi đứng lại một mình bên bó cúc trắng ướt sương, nghe tiếng bước chân bạn cũ xa dần rồi hòa hẳn vào tiếng gió thổi qua gầm cầu, hiểu rằng có những vết rạn không thể vá lại bằng lời xin lỗi muộn màng.",
+      "next": "ch8_ep2_06_choice_nghi_le_cau_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_05d_bia_da_xich_thuy_ten_khang",
+      "type": "narration",
+      "location": "Tượng Đài Nhỏ Đầu Cầu Xích Thủy",
+      "mood": "somber",
+      "text": "Trên hàng thứ ba của tấm bia đá xanh, dòng chữ khắc sâu tên Lê Minh Khang nằm lặng lẽ giữa những đồng đội thuộc Tiểu Đoàn Xích Phong đã ngã xuống trong buổi chiều rút quân năm ấy. Gió từ mặt sông thổi qua làm tàn nhang bay nhẹ, chạm vào ngón tay tôi đang lần theo từng nét khắc lạnh buốt.\n\nTôi khẽ đặt tay lên túi áo ngực nơi những kỷ vật cũ vẫn nằm yên, tưởng tượng lại tiếng cười hào sảng của thằng bạn miền Nam từng chỉ tôi cách vuốt vuông chăn trong phòng B2 Quang Trung. Có những người đi cùng ta qua những dốc bùn đầu tiên, nhưng mãi mãi không kịp nhìn thấy cây cầu mới hôm nay.\n\nTôi vẫn nhớ buổi sáng chia tay ở sân trường khi Khang huých nhẹ chân nhắc nhịp bước, vậy mà giờ chỉ còn lại hàng chữ lạnh trên phiến đá xanh. Chiến thắng trọn vẹn đến mấy cũng không bao giờ gọi được một cái tên từ mặt bia trở về ngồi uống trà đá đầu ngõ.\n\nTôi đứng nghiêm trước tấm bia đá, gõ nhẹ hai ngón tay lên mặt đá đúng chỗ khắc tên Khang — như hai lần chạm vai thay lời đổi gác năm nào dưới chân đồi Thiên Minh.",
+      "next": "ch8_ep2_06_choice_nghi_le_cau_xich_thuy"
+    },
+    {
+      "id": "ch8_ep2_06_choice_nghi_le_cau_xich_thuy",
+      "type": "choice",
+      "location": "Đầu Cầu Xích Thủy — Trước Khi Lên Vân Long",
+      "mood": "calm",
+      "text": "Nắng trưa bắt đầu hửng nhẹ trên mặt sông Xích Thủy, soi rõ dòng xe dân sự bình yên qua lại trên cây cầu mới. Tiếng máy xúc kè bờ đê phía hạ lưu vang đều như nhịp thở của một vùng đất đang hồi sinh sau nhiều năm gánh chịu bom đạn.\n\nTrước khi quay lại chiếc xe dã chiến để ngược dốc lên thung lũng Vân Long, bạn dừng lại thực hiện một hành động cuối cùng tại khúc sông lịch sử này.",
+      "choices": [
+        {
+          "id": "c23_di_bo_het_nhip_cau_dem_tru_cu",
+          "label": "Đi bộ từ đầu cầu Bắc sang đầu cầu Nam dọc theo làn người đi bộ, đếm từng trụ cầu cũ và cúi chào dòng sông",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_07_thung_lung_van_long"
+        },
+        {
+          "id": "c23_kiem_tra_tuyen_ke_chong_lu",
+          "label": "Ghé tổ công binh cầu đường ven đê hỏi thăm tiến độ gia cố bờ kè chống lũ cho đường đi học của trẻ em quanh cầu",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_07_thung_lung_van_long"
+        },
+        {
+          "id": "c23_chep_lai_ten_liet_si_xich_thuy",
+          "label": "Mở Cuốn Sổ Bìa Xanh ngay trên thành đá để đối chiếu lại tên từng trinh sát Xích Phong còn khắc trên bia, không để sót một dòng",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_cau_xich_thuy",
+                "title": "Dừng Chân Cầu Xích Thủy",
+                "entry": "Trở lại bến sông Xích Thủy kiểm chứng dấu tích trận rút quân Chương IV và đối chiếu danh sách đồng đội trước khi ngược lên Vân Long."
+              }
+            }
+          ],
+          "next": "ch8_ep2_07_thung_lung_van_long"
+        },
+        {
+          "id": "c23_dat_nhanh_hoa_trang_chao_nghiem",
+          "label": "Mua một bó hoa cúc trắng ở quán nước đầu đê, đặt ngay ngắn dưới chân bia rồi đứng nghiêm chào điều lệnh trong ba mươi giây lặng im",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch8_ep2_07_thung_lung_van_long"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_07_thung_lung_van_long",
+      "type": "narration",
+      "location": "Thung Lũng Vân Long — Khu Huấn Luyện Ven Suối",
+      "mood": "calm",
+      "text": "Hai giờ chiều, chiếc xe jeep rẽ vào con đường đất đỏ lượn quanh sườn đồi dẫn vào thung lũng Vân Long. Mùa này con suối cạn giữa thung lũng chỉ còn dòng nước mảnh róc rách qua bãi đá cuội, khác hẳn cơn lũ quét cuồn cuộn từng chia cắt đội hình Trung Đội 1 năm xưa.\n\nPhía triền đồi thấp bên phải, một khu doanh trại mái tôn xanh mới dựng vẫn giữ nguyên nếp kỷ luật của tuyến trung chuyển. Tiếng hô khẩu lệnh tập điều lệnh đội ngũ của tốp tân binh vang vọng qua làn sương mỏng, gợi lại những ngày đầu tiên tôi nhận băng chỉ huy ở nơi này.\n\nKhông khí vùng thung lũng ẩm ướt mùi lá mục và mùi vôi mới quét lên tường dãy nhà tập kết. Một tổ lính trẻ vừa chạy vượt chướng ngại vật xong đang đứng xếp hàng bên giếng nước giữa sân nghe cán bộ huấn luyện nhận xét từng lỗi nhỏ trên trang bị cá nhân.\n\nTừ dưới dãy nhà kho quân khí, một dáng người mặc quân phục dã chiến bạc màu đang cúi xuống kiểm tra khóa nòng súng tập và dây ba lô cho hai người lính trẻ trước giờ ra bãi bắn.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "nam" },
+              { "charState": { "char": "nam", "state": "alive" } },
+              { "notFlag": "nam_bi_thuong_van_long" }
+            ]
+          },
+          "next": "ch8_ep2_08a_nam_o_trai_huan_luyen_van_long"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "nam" },
+              {
+                "any": [
+                  { "charState": { "char": "nam", "state": "injured" } },
+                  { "flag": "nam_bi_thuong_van_long" }
+                ]
+              }
+            ]
+          },
+          "next": "ch8_ep2_08b_nam_chong_gay_day_linh_moi"
+        }
+      ],
+      "next": "ch8_ep2_08c_doanh_trai_cu_van_long"
+    },
+    {
+      "id": "ch8_ep2_08a_nam_o_trai_huan_luyen_van_long",
+      "type": "dialogue",
+      "location": "Sân Huấn Luyện — Trung Đội 1 Vân Long",
+      "speaker": "nam",
+      "speakerTitle": "Đại úy Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "nam" },
+          { "charState": { "char": "nam", "state": "alive" } }
+        ]
+      },
+      "text": "Khoan đã mấy chú tân binh, giải lao năm phút uống nước chè xanh đi rồi tập tiếp. Bây giờ chú mới chịu ghé về thăm cái xó Vân Long ni à? Anh tưởng lên tới chức Tổng Tư Lệnh ngồi giữa hội đồng rồi thì quên luôn cái sân đất sỏi dưới chân đồi ni rồi chứ.\n\nLại đây anh coi cái cổ áo mưa coi, đứng gió mà quên gài khuy cổ là cảm lạnh ngay đấy. Hồi xưa anh hay nói với chú răng? Lính tráng mệt được, chứ không được để lưng đồng đội lạnh.\n\nMấy đứa lính mới đợt ni ngoan lắm, nhưng tụi nó chưa nếm mùi lũ quét mùa mưa nên cái tay cột dây ba lô còn lóng ngóng y hệt chú hồi mới từ Quang Trung xuống. Anh vẫn bắt tụi nó tập buộc lại từng nút một mỗi sáng, vì cái nghề ni sai một li là mất một nhà.\n\nChiều ni nhớ ghé xuống mé suối phía dưới coi mố cầu cũ đi chú, dưới nớ nước trong veo rồi mà anh em tụi tui vẫn ra quét lá mỗi tuần đó.",
+      "effects": [
+        { "addRel": { "char": "nam", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_09_thuong_nho_loc_va_dung"
+    },
+    {
+      "id": "ch8_ep2_08b_nam_chong_gay_day_linh_moi",
+      "type": "dialogue",
+      "location": "Sân Huấn Luyện — Khu Tuyến Sau Vân Long",
+      "speaker": "nam",
+      "speakerTitle": "Huấn luyện viên Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "nam" },
+          {
+            "any": [
+              { "charState": { "char": "nam", "state": "injured" } },
+              { "flag": "nam_bi_thuong_van_long" }
+            ]
+          }
+        ]
+      },
+      "text": "Ôi chao, Tổng Tư Lệnh mà đi xe cũ rích rứa ni à? Cho anh ngồi nhờ trên bậc thềm ni chút nghen, cái đầu gối dính mảnh pháo hồi trận rút quân Vân Long bữa mô trở trời nó vẫn nhức như có kim châm.\n\nChú đừng có nhìn cái chân khập khiễng của anh mà áy náy nữa, anh xin ở lại tuyến sau dạy tụi nhỏ buộc dây giày với lau dầu súng là hợp nhất rồi. Miệng anh còn nói rõ, mắt còn tinh để soi đường chỉ quai ba lô của lính mới thì anh chưa chịu nghỉ mô.\n\nCái nghề ni sai một li là mất một nhà — anh nhắc tụi nó câu nớ suốt như hồi trước nhắc chú với thằng Lộc vậy. Lính tráng mệt được, chứ không được để lưng đồng đội lạnh.\n\nChú xuống dưới bờ suối chỗ mố cầu cũ đi, anh dặn tụi trực ban quét dọn sạch sẽ dưới nớ từ hồi sáng rồi.",
+      "effects": [
+        { "addRel": { "char": "nam", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_09_thuong_nho_loc_va_dung"
+    },
+    {
+      "id": "ch8_ep2_08c_doanh_trai_cu_van_long",
+      "type": "narration",
+      "location": "Sân Huấn Luyện — Trung Đội 1 Vân Long",
+      "mood": "somber",
+      "text": "Trên khoảng sân đất nện trước dãy nhà mái tôn xanh, một viên trung đội trưởng trẻ tuổi đang cho lớp tân binh chỉnh lại quai mũ và dây đeo súng trước giờ hành quân dã ngoại. Tôi đứng nép bên hàng xà cừ, nghe anh ta nhắc đi nhắc lại câu dặn quen thuộc của Trung sĩ Nguyễn Hoàng Nam năm nào.\n\nDù người tiểu đội trưởng Nghệ-Tĩnh chất phác ngày trước không còn đứng ở góc sân này nữa, nếp kèm cặp tỉ mỉ từ từng nút dây trang bị vẫn được truyền nguyên vẹn cho thế hệ lính mới. Những kinh nghiệm viết bằng mồ hôi ở Thiên Minh và Vân Long đã biến thành bài học nhập môn của cả doanh trại.\n\nNgười lính trẻ được chỉnh lại quai ba lô vội vã đứng nghiêm cảm ơn rồi chạy về cuối hàng với nụ cười rạng rỡ. Nhìn cảnh ấy, tôi hiểu rằng sự cẩn trọng của những người đi trước chưa bao giờ mất đi theo năm tháng.\n\nTôi khẽ gật đầu chào từ xa rồi men theo lối mòn nhỏ đầy cỏ may dẫn xuống phía khe suối nơi chiếc cầu treo cũ từng đứng giữa cơn lũ.",
+      "next": "ch8_ep2_09_thuong_nho_loc_va_dung"
+    },
+    {
+      "id": "ch8_ep2_09_thuong_nho_loc_va_dung",
+      "type": "narration",
+      "location": "Khe Suối Đá & Mố Cầu Cũ Vân Long",
+      "mood": "tense",
+      "text": "Hai bên bờ suối Vân Long vẫn còn lưu lại hai trụ mố bê tông xám rêu phong từ trận đánh cắt đường truy kích của Thiết Phong hồi Chương III. Nước suối bây giờ trong vắt đến tận đáy sỏi, lặng lẽ len qua những tảng đá tảng mà năm xưa tiếng súng nổ gần như làm rung chuyển cả vách núi.\n\nTôi đứng bên mép trụ bê tông vỡ, nhớ như in tiếng hét nóng nảy của trinh sát Hoàng Tiến Dũng và đôi tay run rẩy nhưng cố bám chặt dây kích nổ của Bùi Văn Lộc trong màn mưa mù. Mỗi quyết định bẻ lệnh cứu quân hay giữ giờ cắt cầu ngày ấy đều đè nặng lên số phận của từng con người bằng xương bằng thịt.\n\nCơn gió chiều từ thượng nguồn thổi qua khe núi làm những bụi lau trắng nghiêng rạp xuống mặt nước lấp lánh. Sau ngần ấy năm nhìn lại trận đánh sinh tử nơi thung lũng hẹp này, tôi vẫn cảm thấy rõ nhịp tim đập gấp gáp của buổi tối chờ tiếng mìn phá cầu.\n\nBất chợt, một tiếng bước chân mạnh dạn từ phía đường mòn trinh sát vang lên ngay sau lưng tôi.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "dung" },
+              { "charState": { "char": "dung", "state": "alive" } },
+              { "notFlag": "dung_hi_sinh_van_long" }
+            ]
+          },
+          "next": "ch8_ep2_10a_dung_con_song_van_long"
+        },
+        {
+          "condition": {
+            "flag": "dung_hi_sinh_van_long"
+          },
+          "next": "ch8_ep2_10b_tuong_niem_dung"
+        }
+      ],
+      "next": "ch8_ep2_10b_tuong_niem_dung"
+    },
+    {
+      "id": "ch8_ep2_10a_dung_con_song_van_long",
+      "type": "dialogue",
+      "location": "Khe Suối Đá Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Thiếu tá Trinh sát Hoàng Tiến Dũng",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "dung" },
+          { "charState": { "char": "dung", "state": "alive" } }
+        ]
+      },
+      "text": "Báo cáo Thủ trưởng... à không, cho phép tôi gọi một tiếng 'ông' như hồi còn chui bụi rậm Thiên Minh với nhau nhé! Nghe anh em trạm gác báo có xe biển lạ vào thung lũng là tôi chạy ngay từ chốt trinh sát xuống đây xem có đúng ông về thăm suối cũ không.\n\nÔng coi, tính tôi hồi đó nóng như lửa, lúc nào cũng gào lên đòi đánh úp ngay chứ chờ tới sáng là tụi nó rút sạch rồi. Hồi Vân Long mà ông không kìm cương lại hoặc không quay đầu đón tổ tôi qua dòng lũ, chắc cái tên tôi đã nằm luôn trên vách đá này rồi.\n\n*Cạch.* Thấy không, tôi vẫn giữ thói quen vuốt quai mũ sắt trước khi nhận lệnh mới đấy, nhưng giờ biết ngó chừng cánh sườn trước khi cắm đầu chạy rồi! Mấy đứa trinh sát mới dưới trướng tôi bây giờ đứa nào cũng sợ cái tật bắt đi bộ mười cây số kiểm tra điểm cao trước khi nổ súng.\n\nSau đợt lễ mai ở Thủ đô, tôi vẫn xin ở lại phụ trách đội trinh sát biên giới thôi, ngồi bàn giấy chắc tôi ngộp thở chết mất.",
+      "effects": [
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "loc" },
+              { "charState": { "char": "loc", "state": "alive" } },
+              { "notFlag": "loc_hi_sinh_van_long" }
+            ]
+          },
+          "next": "ch8_ep2_11a_loc_truong_thanh_van_long"
+        },
+        {
+          "condition": {
+            "flag": "loc_hi_sinh_van_long"
+          },
+          "next": "ch8_ep2_11b_tuong_niem_loc"
+        }
+      ],
+      "next": "ch8_ep2_11b_tuong_niem_loc"
+    },
+    {
+      "id": "ch8_ep2_10b_tuong_niem_dung",
+      "type": "narration",
+      "location": "Mố Cầu Cũ Vân Long",
+      "mood": "somber",
+      "text": "Bên gốc cây muồng dại mọc sát mố cầu phía Đông, một phiến đá phẳng đặt ngay ngắn ba nén hương đã tàn và chiếc ca sắt móp ghi mờ tên Hoàng Tiến Dũng. Gã trinh sát người Hải Phòng bộc trực và nóng nảy như ngọn lửa ấy đã vĩnh viễn nằm lại ngay cửa rừng này để mở đường rút cho đồng đội.\n\nTôi vẫn nhớ như in dáng Dũng vuốt quai mũ sắt mỗi lần sắp xung phong, giọng nói oang oang gạt phắt mọi nỗi sợ hãi của tân binh. Có những người lính sinh ra để lao vào chỗ hiểm nghèo nhất trước khi kịp học cách giữ mình cho ngày bình yên.\n\nTừng có lúc tôi trách tính nóng vội của cậu ta khiến đội hình suýt lộ cánh sườn, nhưng đến giờ nhìn lại chiếc ca sắt móp này, tôi hiểu chính sự liều lĩnh không toan tính ấy đã cứu sống biết bao người phía sau.\n\nTôi đặt nhẹ bàn tay lên mặt đá lạnh, thầm nhủ với người đồng đội cũ rằng mặt trận phía sau cuối cùng đã thắng, rồi ngước nhìn sang bờ suối phía Tây nơi có tiếng bước chân thứ hai vừa tới.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "loc" },
+              { "charState": { "char": "loc", "state": "alive" } },
+              { "notFlag": "loc_hi_sinh_van_long" }
+            ]
+          },
+          "next": "ch8_ep2_11a_loc_truong_thanh_van_long"
+        },
+        {
+          "condition": {
+            "flag": "loc_hi_sinh_van_long"
+          },
+          "next": "ch8_ep2_11b_tuong_niem_loc"
+        }
+      ],
+      "next": "ch8_ep2_11b_tuong_niem_loc"
+    },
+    {
+      "id": "ch8_ep2_11a_loc_truong_thanh_van_long",
+      "type": "dialogue",
+      "location": "Bờ Suối Vân Long",
+      "speaker": "loc",
+      "speakerTitle": "Trung úy Bùi Văn Lộc",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "loc" },
+          { "charState": { "char": "loc", "state": "alive" } }
+        ]
+      },
+      "text": "Em chào anh. Hồi nãy nghe mấy anh trên trạm nói có khách quen về thăm khe suối cũ, em mang theo bình trà gừng xuống đây mời anh cho ấm bụng.\n\nAnh nhìn thử sợi dây ba lô của em coi còn lỏng như hồi mới lên Thiên Minh không? Hồi đó mỗi lần bị gọi tên là hai tay em lại bấu chặt quai ba lô run bần bật, nói câu 'Dạ để em làm lại liền' mà nước mắt muốn rớt ra ngoài.\n\nNếu ngày xưa anh không kiên nhẫn kèm từng nút buộc hay không rèn cho em giữ vững tâm trí ở trận đầu, chắc em chẳng bao giờ đứng nổi tới ngày hòa bình này đâu anh. Bây giờ dẫn tốp lính trẻ đi tuần vùng ven, lúc nào em cũng nhắc tụi nó câu cũ của mình: anh đi trước, chỗ dây này em cột chặt rồi.\n\nChúc anh thượng lộ bình an trên đường lên Bản Sương Mù nha anh — tụi em dưới này luôn giữ chắc tuyến sau.",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_12_sat_lo_duong_deo_van_long"
+    },
+    {
+      "id": "ch8_ep2_11b_tuong_niem_loc",
+      "type": "narration",
+      "location": "Dòng Suối Mố Cầu Vân Long",
+      "mood": "somber",
+      "text": "Sát mép nước chảy xiết dưới chân trụ cầu bên Tây, một vòng hoa cúc nhỏ buộc bằng sợi dây dù quân dụng nằm lặng lẽ bên dòng chữ khắc tên Bùi Văn Lộc. Tôi đứng lặng rất lâu nhìn chỗ xoáy nước cạn ấy, nơi cậu tân binh miền Tây hiền lành từng nắm chặt cuộn dây kích nổ không chịu buông tay giữa cơn lũ dữ.\n\nTrong ký ức của tôi vẫn còn nguyên hình ảnh hai bàn tay Lộc bấu lấy quai ba lô ở sân tập Quang Trung, giọng nói rụt rè xin làm lại mỗi khi buộc sai dây trang bị. Người lính từng sợ tiếng còi tập hợp nhất tiểu đội cuối cùng lại là người giữ lại sự sống cho cả trung đội bằng mạng sống của chính mình.\n\nTôi cúi xuống nhặt một viên cuội trắng dưới lòng suối đặt ngay ngắn lên bệ đá cạnh vòng hoa dại. Dẫu chiến tranh đã khép lại, món nợ kiên nhẫn với những người lính trẻ như Lộc vẫn là vết nhắc sâu nhất trong lòng người làm chỉ huy.\n\nRời khe suối Vân Long lúc trời ngả bóng chiều, chiếc jeep lại gầm máy leo lên đoạn dốc quanh co dẫn ra ngã ba đèo.",
+      "next": "ch8_ep2_12_sat_lo_duong_deo_van_long"
+    },
+    {
+      "id": "ch8_ep2_12_sat_lo_duong_deo_van_long",
+      "type": "narration",
+      "location": "Dốc Đá Khúc Cua Đèo Vân Long",
+      "mood": "urgent",
+      "text": "Chiếc xe vừa bò qua khúc cua tay áo đầu tiên thì bầu trời phía đỉnh núi đột ngột sầm lại, trút xuống một cơn mưa rào trái mùa nặng hạt. Nước từ các khe đá trên cao đổ ào xuống mặt đường đất đỏ biến đoạn ta-luy dương thành dòng bùn sền sệt.\n\nBất ngờ, phía trước mũi xe chừng bốn mươi mét, một mảng đất đá trên vách núi bắt đầu rạn nứt phát ra tiếng rào rào rợn người. Ngay đúng chỗ rìa đường ấy, một chiếc xe ba gác chở nông sản của người dân vừa bị sa lầy chết máy, tài xế đang cuống cuồng tìm cách đẩy bánh sau ra khỏi rãnh bùn.\n\nNguy hiểm hơn, lẫn trong lớp đất vừa trượt xuống nửa thân ta-luy là đuôi kim loại han gỉ của một quả đạn cối lép sót lại từ những năm chiến tranh — chỉ cần tảng đá lớn phía trên lăn xuống đè trúng là cả khúc cua có thể nổ tung.",
+      "next": "ch8_ep2_13_choice_suoi_da_van_long"
+    },
+    {
+      "id": "ch8_ep2_13_choice_suoi_da_van_long",
+      "type": "choice",
+      "location": "Khúc Cua Sạt Lở — Đèo Vân Long",
+      "timedSeconds": 18,
+      "timeoutChoiceId": "c23_ban_hieu_ra_lenh_phong_toa",
+      "text": "Đất đá trên vách đèo đang tiếp tục rít xuống rào rào từng mảng, bùn nhão cuốn theo sỏi đá lăn lộc cộc xuống rãnh thoát nước ngay bên bánh xe. Chỉ còn chưa đầy hai mươi giây trước khi tảng đá hộc phía trên sập xuống sát vị trí chiếc xe ba gác bị kẹt cùng quả đạn cối han gỉ.",
+      "choices": [
+        {
+          "id": "c23_lao_ra_chan_xe_dan_pha_da",
+          "label": "Bật cửa lao ra khỏi xe bất chấp mưa lớn, hô tài xế bỏ lại hàng hóa chạy ngược về phía an toàn và dùng gậy gỗ chặn bớt dòng đá nhỏ",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch8_ep2_14_tram_giao_lien_thien_lang"
+        },
+        {
+          "id": "c23_ban_hieu_ra_lenh_phong_toa",
+          "label": "Bắn pháo hiệu đỏ cảnh giới khóa hai đầu dốc đèo, hét lớn buộc dân lùi khỏi bán kính nổ rồi điện khẩn gọi đội công binh gần nhất lên xử lý",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_14_tram_giao_lien_thien_lang"
+        },
+        {
+          "id": "c23_keo_xe_dan_qua_doan_sat",
+          "label": "Cùng đồng chí lái xe quăng nhanh sợi cáp kéo vào càng trước chiếc xe ba gác, rồ ga lôi cả người lẫn xe thoát khỏi vùng sạt trong một nhịp",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_14_tram_giao_lien_thien_lang"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_14_tram_giao_lien_thien_lang",
+      "type": "narration",
+      "location": "Ngã Ba Thiên Lang – Bạch Vũ",
+      "mood": "calm",
+      "text": "Vượt qua đoạn đèo sạt sau khi đội công binh địa phương kịp thời tiếp quản hiện trường và khoanh vùng quả đạn lép an toàn, chiếc xe jeep chạy thêm một giờ nữa thì tới ngã ba giao liên Thiên Lang – Bạch Vũ. Cơn mưa rào vừa tạnh hẳn, để lại ánh nắng chiều nhạt trải dài trên mặt đường nhựa mới cán.\n\nKhu bến bãi ngập úng triền miên ngày trước giờ là trạm trung chuyển hậu cần kiêm điểm trường liên xã khang trang. Phía xa, sườn đồi Bạch Vũ sừng sững trong nắng chiều, không còn bóng hỏa lực pháo binh mà phủ kín màu xanh của những vạt thông non mới trồng.\n\nTừ sân tập trung phía trước trạm chỉ huy rà phá vật nổ, tiếng đọc tên kiểm quân số vang lên đều đặn và dứt khoát như hồi lễ bàn giao phòng tuyến năm xưa. Dù hòa bình đã lập lại, kỷ luật ghi nhớ từng con người trên cao điểm Bạch Vũ vẫn chưa hề mai một.\n\nNgay cạnh bảng quân số công binh, một vị sĩ quan vai áo bạc màu đang đứng lật từng trang sổ điểm danh bằng ngón tay cái rất khẽ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              { "flag": "tat_dong_ho_doc_ten_liet_si" }
+            ]
+          },
+          "next": "ch8_ep2_15a_son_tai_tram_bach_vu"
+        },
+        {
+          "condition": {
+            "charAlive": "son"
+          },
+          "next": "ch8_ep2_15a_son_tai_tram_bach_vu"
+        }
+      ],
+      "next": "ch8_ep2_15b_bia_doi_bach_vu"
+    },
+    {
+      "id": "ch8_ep2_15a_son_tai_tram_bach_vu",
+      "type": "dialogue",
+      "location": "Trạm Chỉ Huy Rà Phá — Ngã Ba Bạch Vũ",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": {
+        "charAlive": "son"
+      },
+      "text": "Chào Tổng Tư Lệnh. Về kiểm tra tuyến cũ à?\n\nTôi vẫn đọc sổ mỗi sáng. Không sót tên nào. Đọc chậm thôi.\n\nLính của tôi, tôi chịu. Giờ họ đi rà mìn mở đất. Đường sống còn dài.\n\nSườn đồi Bạch Vũ xanh lại rồi. Ngắn thôi. Cậu nhớ tên lính mới chưa?\n\nĐừng để họ chờ lâu. Ngày mai ở Thủ đô còn nhiều việc.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_16_bep_anh_nuoi_va_chuyen_xe_cu"
+    },
+    {
+      "id": "ch8_ep2_15b_bia_doi_bach_vu",
+      "type": "narration",
+      "location": "Chân Đồi Bạch Vũ",
+      "mood": "somber",
+      "text": "Bên cột mốc giao lộ dẫn lên cao điểm Bạch Vũ, tấm bảng danh sách quân số bằng đồng ghi tên những người chỉ huy tiền phương đã dìu dắt Đại Đội 3 Huyền Ưng qua các mùa bão lửa sáng ánh lên dưới nắng chiều. Tôi đứng lại rất lâu trước cái tên Đỗ Thành Sơn.\n\nNgười đại đội trưởng nói năng cụt lủn nhưng sẵn sàng gánh trọn mọi trách nhiệm thay cho lính dưới quyền ấy từng dạy tôi bài học xương máu đầu tiên khi lên cấp úy: phải thuộc từng cái tên trước khi ký bất cứ tờ lệnh điều quân nào.\n\nNhững nét mực trên cuốn sổ quân số năm nào giờ đã hằn sâu vào kỷ luật của cả một thế hệ sĩ quan trẻ đang làm nhiệm vụ dọn sạch bom mìn trên cao điểm này. Không có đồng hồ bấm giờ nào được phép cắt ngang danh sách người đã ngã xuống.\n\nMen theo mùi khói bếp thoang thoảng bay ra từ khu hậu cần bên cạnh, tôi bước vòng ra sân sau trạm giao liên.",
+      "next": "ch8_ep2_16_bep_anh_nuoi_va_chuyen_xe_cu"
+    },
+    {
+      "id": "ch8_ep2_16_bep_anh_nuoi_va_chuyen_xe_cu",
+      "type": "narration",
+      "location": "Bếp Hậu Cần & Sân Đỗ Xe — Thiên Lang",
+      "mood": "warm",
+      "text": "Khác với sự nghiêm cẩn của bàn chỉ huy phía trước, khoảng sân sau trạm giao liên Thiên Lang lúc bốn giờ chiều ấm sực mùi củi khô, mùi gừng nướng và tiếng nồi quân dụng sôi lục bục. Vài chiếc xe tải hai cầu lấm bùn đang dừng nghỉ máy, chờ bốc dỡ những kiện sách giáo khoa và thuốc men về các xã vùng sâu.\n\nChính ở những vùng đất ngập úng này hồi Chương V, bữa cơm nóng bọc lá chuối và những chuyến xe chở thuốc vượt đập tràn đã giữ cho người dân không bỏ làng, giữ cho bộ đội không gục giữa mùa nước nổi. Lịch sử thường ghi tên những mũi tiến công lớn, nhưng sự sống sót của cả vùng đồng bằng lại dựa vào những chuyến xuồng cơm và lốp xe bám bùn ấy.\n\nTôi bước lại gần gian bếp lợp tôn mát rượi gió đồng, ánh mắt tìm kiếm bóng dáng quen thuộc của người anh nuôi từng vá góc cờ đại đội và tay lái già của tuyến đường trường.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "tam" },
+              { "charState": { "char": "tam", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_17a_tam_va_cuon_so_cu"
+        }
+      ],
+      "next": "ch8_ep2_17b_noi_com_dong_doi_vang_tam"
+    },
+    {
+      "id": "ch8_ep2_17a_tam_va_cuon_so_cu",
+      "type": "dialogue",
+      "location": "Gian Bếp Dã Chiến Thiên Lang",
+      "speaker": "tam",
+      "speakerTitle": "Trần Văn Tám (Anh nuôi)",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "tam" },
+          { "charState": { "char": "tam", "state": "alive" } }
+        ]
+      },
+      "text": "Chà chà, chú em Tổng Tư Lệnh mò xuống tận bếp củi làm gì mà áo mưa ướt sũng rứa ni! Đứng yên đó cho tui coi nào — hồi nãy nghe mùi khói bếp chắc bụng cồn cào chứ gì, ngồi xuống cái ghế gỗ ni tui múc cho chén canh gừng nóng hổi mới bắc xuống.\n\n*Vỗ nhẹ túi áo ngực.*\n\nThấy chưa, hộp kim chỉ nhỏ hồi vá góc cờ rách bên Huyền Ưng tới giờ tui vẫn cất ngay túi áo ngực đó nghe, bữa mô rảnh lại khâu giùm mấy đứa dân quân cái quai nón. Hồi lũ Thiên Lang dâng ngập nóc nhà mà không có lệnh cắt xe xuống cứu dân với giữ bếp đỏ lửa thì chắc tụi tui không còn mặt mũi gặp bà con vùng ni đâu.\n\nTrong biên bản chiến công ngoài Thủ đô người ta hay viết tên pháo binh với xe tăng, chớ cái tụi cầm vá cầm muôi tụi tui thì chỉ mong nồi cơm không bị ướt giữa mùa lũ thôi chú em. Ăn xong chén cháo nóng rồi ra ngoài sân đỗ xe kia coi thử coi, có người đang chờ chú em ở đó đó.",
+      "effects": [
+        { "addRel": { "char": "tam", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "charState": { "char": "bay", "state": "alive" } },
+              { "flag": "cuu_dan_vung_lu_thien_lang" }
+            ]
+          },
+          "next": "ch8_ep2_18a_bay_va_keo_gung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "charState": { "char": "bay", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_18a_bay_va_keo_gung"
+        }
+      ],
+      "next": "ch8_ep2_18b_banh_xe_dap_tran_thien_lang"
+    },
+    {
+      "id": "ch8_ep2_17b_noi_com_dong_doi_vang_tam",
+      "type": "narration",
+      "location": "Gian Bếp Dã Chiến Thiên Lang",
+      "mood": "somber",
+      "text": "Trên vách gỗ cạnh bếp lửa vẫn còn treo ngay ngắn một chiếc hộp thiếc đựng kim chỉ nhỏ đã ngả màu đồng xỉn. Cô cấp dưỡng trẻ đang đảo nồi canh cho biết anh em ở đây vẫn giữ nguyên góc treo ấy để nhớ về Binh nhất Trần Văn Tám — người đã ngã xuống giữa dòng nước lũ khi cố chèo xuồng đưa từng nắm cơm nóng ra tiền tiêu.\n\nKhông có huân chương lấp lánh nào nằm trong gian bếp ám khói này, nhưng mùi cơm chín và ngọn lửa ấm áp vẫn bền bỉ cháy qua hết mùa mưa này sang mùa nắng khác. Cô cấp dưỡng kể rằng bà con quanh vùng ngập mỗi lần đi chợ ngang qua vẫn ghé gửi bó củi khô hoặc mấy củ gừng tươi để giữ lửa bếp không tắt.\n\nĐó là tượng đài thầm lặng nhất của những người lính hậu cần không tên tuổi trên toàn tuyến Quân Lộ.\n\nTôi cúi đầu cảm ơn cô cấp dưỡng rồi lặng lẽ bước ra sân đỗ xe tải phía trước, nơi những chiếc xe vận tải sơn xanh đang chuẩn bị lăn bánh vào buổi chiều tà.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "charState": { "char": "bay", "state": "alive" } },
+              { "flag": "cuu_dan_vung_lu_thien_lang" }
+            ]
+          },
+          "next": "ch8_ep2_18a_bay_va_keo_gung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "charState": { "char": "bay", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_18a_bay_va_keo_gung"
+        }
+      ],
+      "next": "ch8_ep2_18b_banh_xe_dap_tran_thien_lang"
+    },
+    {
+      "id": "ch8_ep2_18a_bay_va_keo_gung",
+      "type": "dialogue",
+      "location": "Sân Đỗ Xe Tải Thiên Lang",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "bay" },
+          { "charState": { "char": "bay", "state": "alive" } }
+        ]
+      },
+      "text": "Ái chà, chú em Tổng Tư Lệnh! Ngó bộ mặt phong trần đi xe không máy lạnh kia là biết nhớ mùi dầu nhớt với mùi đường trường của tui rồi chứ gì!\n\n*Lục hộc táp-lô.*\n\nNè, cầm hai viên kẹo gừng ngậm cho ấm cổ họng đi chú em, vẫn thứ kẹo gừng hồi xưa tui giấu trong ca-bin chuyến xe đẩy dốc bùn Quang Trung đó. Đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người — bữa nay xe tui hết chở đạn rồi, nguyên thùng phía sau toàn vở học sinh với đèn năng lượng mặt trời chuẩn bị chở thẳng vô Long Vũ đây nè!\n\nMấy lá thư cảm ơn của tụi nhỏ vùng xa tui vẫn dán đầy sau tấm che nắng ca-bin đó Thủ trưởng. Bà con vùng trũng Thiên Lang tới giờ vẫn nhắc hoài chuyện xe bộ đội lội nước vô cứu lúa cứu người hồi năm đó.\n\nĐi bình an nghe chú em, mai mốt về ngồi ghế lớn trên Thủ đô cũng đừng quên cái dốc bùn hồi năm nhất tụi mình đẩy xe thuốc dưới mưa nghen!",
+      "effects": [
+        { "addRel": { "char": "bay", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_19_tram_xa_va_ban_do_but_chi"
+    },
+    {
+      "id": "ch8_ep2_18b_banh_xe_dap_tran_thien_lang",
+      "type": "narration",
+      "location": "Đầu Đập Tràn Thiên Lang",
+      "mood": "somber",
+      "text": "Cách sân đỗ xe không xa, ngay đầu đập tràn bê tông mới xây lại, người dân địa phương đã dựng một bệ đá nhỏ đặt vòng lốp xe vận tải cũ sơn sạch sẽ. Trên mặt đá, ai đó mới đặt mấy nhánh hoa dại và một chiếc hộp thiếc nhỏ đựng kẹo gừng còn nguyên giấy gói.\n\nTôi đứng lặng nhìn dòng nước chảy êm qua đập tràn, nhớ như in tiếng cười sang sảng kiểu miền Tây của bác tài Phan Văn Bảy trong những đêm mưa trơn trượt từ Quang Trung tới Thiên Lang. Người lái xe đường trường ấy từng tin rằng chỉ cần còn dầu và còn người thì dốc cao mấy cũng bò qua được — và ông đã giữ đúng lời hứa đó cho đến mét đường ngập nước cuối cùng.\n\nTôi nhặt một viên kẹo gừng đặt lên lòng bàn tay, hơi cay ấm lan ra như lời dặn dò không bao giờ tắt của tuyến hậu cần phía sau.\n\nTừ trạm y tế dã chiến bên kia sân cỏ, ánh đèn điện sáng trưng hắt qua khung cửa sổ mở rộng.",
+      "next": "ch8_ep2_19_tram_xa_va_ban_do_but_chi"
+    },
+    {
+      "id": "ch8_ep2_19_tram_xa_va_ban_do_but_chi",
+      "type": "narration",
+      "location": "Trạm Xá Quân Dân Y Kết Hợp — Ngã Ba Thiên Lang",
+      "mood": "calm",
+      "text": "Tôi bước ngang qua dãy hành lang mới quét vôi trắng của trạm xá khu vực. Đường dây điện trung thế từ trạm biến áp mới dựng đã kéo thẳng tới từng phòng bệnh, tiếng máy lọc không khí và tủ bảo quản vắc-xin chạy đều đều thay thế hoàn toàn cho những ngọn đèn dầu tù mù thời chiến.\n\nTrên bức tường hành lang treo một tấm bản đồ vùng rộng lớn vẽ lại toàn bộ mạng lưới trạm xá liên thông giữa Thiên Lang, Long Vũ và vùng núi Bắc Vực. Những chấm bút chì nhỏ xíu ngày trước từng khiến người ta phải tranh cãi nảy lửa trong phòng họp chỉ huy nay đều đã được tô bằng mực xanh ổn định.\n\nNgoài hiên, mấy người dân vừa đưa trẻ nhỏ đi tiêm phòng về đang ngồi nghỉ chân dưới mái tôn mát, câu chuyện rôm rả chẳng còn nhắc đến tiếng pháo hay đường chạy hầm.\n\nPhía cuối dãy bàn tiếp nhận hồ sơ bệnh nhân, tiếng bút sột soạt và mùi cồn sát trùng quen thuộc vẫn đều đặn vang lên trong buổi chiều yên ả.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } },
+              { "notFlag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch8_ep2_20a_ha_va_but_chi_2b"
+        }
+      ],
+      "next": "ch8_ep2_20b_ha_giu_khoang_cach_tram_xa"
+    },
+    {
+      "id": "ch8_ep2_20a_ha_va_but_chi_2b",
+      "type": "dialogue",
+      "location": "Phòng Hành Chính — Trạm Xá Thiên Lang",
+      "speaker": "ha",
+      "speakerTitle": "Trung tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } },
+          { "notFlag": "ha_bat_dong_bac_vuc" }
+        ]
+      },
+      "text": "Tôi vừa kiểm kho thuốc cuối ngày xong thì thấy chiếc xe quen đỗ ngoài sân — đúng là chỉ có Thủ trưởng mới tự đi kiểm tra thực địa trước ngày nhậm chức chính thức thôi.\n\n*Rút cây bút chì 2B trên vành mũ xuống.*\n\nAnh nhìn tấm bản đồ treo tường kia đi: tất cả các điểm trạm xá thiếu điện hồi Bắc Vực và khu hang đá Bến Đá bây giờ đều đã sáng đèn trở lại, không còn cảnh y sĩ phải khâu vết thương dưới ánh đèn pin sắp cạn nữa. Chị em quân y dưới này nhờ tôi gửi lời cảm ơn anh vì những lần anh dám giữ lại giới hạn nhân tâm trước sức ép hỏa lực.\n\nTụi nhỏ ở các lớp học vùng xa cũng có sổ y bạ theo dõi sức khỏe định kỳ rồi, không còn cảnh thiếu thuốc hạ sốt giữa mùa đông rét buốt nữa.\n\nNhưng tôi vẫn cài cây bút chì 2B này ở đây đấy nhé — mai mốt chính sách hậu chiến mà bỏ sót bản làng nào là tôi lại mang bản đồ lên tận Bộ Tổng Tham Mưu cãi tiếp với Tổng Tư Lệnh đấy!",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_21a_thao_va_ho_so_khep_lai"
+        }
+      ],
+      "next": "ch8_ep2_21b_ho_so_niem_phong_cua_thao"
+    },
+    {
+      "id": "ch8_ep2_20b_ha_giu_khoang_cach_tram_xa",
+      "type": "narration",
+      "location": "Phòng Hành Chính — Trạm Xá Thiên Lang",
+      "mood": "somber",
+      "text": "Trên bàn trực của trạm xá, quyển sổ bàn giao thuốc men vẫn còn nguyên nét chữ nghiêng sắc sảo của Y sĩ Nguyễn Thu Hà ký nhận hồi đầu tháng. Nhưng hỏi ra mới biết, chị đã tự nguyện xin chuyển xuống hẳn đội y tế lưu động trên những điểm bản cao nhất biên giới, từ chối mọi đợt triệu tập về hội đồng trung ương.\n\nCô điều dưỡng trẻ ngập ngừng kể lại rằng trước khi rời đi, bác sĩ Hà chỉ kẹp lại cây bút chì 2B đã gọt cùn vào trang bản đồ vùng trắng rồi dặn mọi người đừng bao giờ tin tuyệt đối vào số liệu báo cáo trên giấy nếu chưa tự chân bước xuống bệnh xá.\n\nNhững rạn nứt từ những quyết định nghiệt ngã tại Bắc Vực hay Bến Đá không dễ gì xóa nhòa chỉ bằng một tờ lệnh tái thiết thời bình. Tôi lặng lẽ khép quyển sổ trực của trạm xá lại, cảm nhận rõ sức nặng lạnh lẽo của những mất mát niềm tin.\n\nBước ra phòng lưu trữ nhỏ sát bên hành lang, một xấp hồ sơ bìa xám gấp góc đang nằm chờ sẵn trên chiếc bàn gỗ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_21a_thao_va_ho_so_khep_lai"
+        }
+      ],
+      "next": "ch8_ep2_21b_ho_so_niem_phong_cua_thao"
+    },
+    {
+      "id": "ch8_ep2_21a_thao_va_ho_so_khep_lai",
+      "type": "dialogue",
+      "location": "Phòng Lưu Trữ Tạm — Ngã Ba Thiên Lang",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá Lê Phương Thảo",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "thao" },
+          { "charState": { "char": "thao", "state": "alive" } }
+        ]
+      },
+      "text": "Tôi đoán Thủ trưởng sẽ ghé tuyến này trước tối nên mang sẵn tập hồ sơ giải mật cuối cùng của Khối Thiết Phong và vụ thanh tra hậu cần xuống đây trình ký sơ bộ.\n\n*Gấp đôi góc tờ bìa mật trước khi đặt lên bàn.*\n\nGiấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được — toàn bộ đường dây làm giả số liệu thương vong quanh Phạm Quang Hùng lẫn biên bản bàn giao tù binh từ phía Hắc Ưng đều đã được đối chiếu khớp từng con số. Từ ranh giới cầu Xích Thủy tới mặt trận Bắc Vực, không còn đầu mối nội gián nào còn hoạt động nữa.\n\nBản thân tôi cũng đã hoàn tất phần đối soát sổ gốc kho đạn và chứng từ tiếp tế qua bảy chương chiến trận, không để một tờ biên bản nào thất lạc.\n\nNhưng trước khi niêm phong kho lưu trữ thời chiến cho lịch sử, Thủ trưởng cần quyết định xem nên xử lý tập hồ sơ nhạy cảm này theo hướng nào trước phiên họp sáng mai.",
+      "effects": [
+        { "addRel": { "char": "thao", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_22_choice_xu_ly_tai_lieu_thoi_chien"
+    },
+    {
+      "id": "ch8_ep2_21b_ho_so_niem_phong_cua_thao",
+      "type": "narration",
+      "location": "Phòng Lưu Trữ Tạm — Ngã Ba Thiên Lang",
+      "mood": "tense",
+      "text": "Trên bàn gỗ nhỏ trong phòng văn thư, một tập hồ sơ bìa xám được gấp đôi góc rất chuẩn mực — dấu hiệu quen thuộc của Sĩ quan phản gián Lê Phương Thảo — đang nằm cạnh hòm niêm phong đồng bộ. Dù người nữ sĩ quan xứ Huế không có mặt tại đây sau những biến động nhân sự gay gắt ở hậu phương, dấu vết điều tra tỉ mỉ của cô vẫn còn nguyên vẹn.\n\nTừng trang phụ lục ghi chép rành mạch những sai lệch báo cáo quanh nhóm Phạm Quang Hùng cũng như các tài liệu phân tích xác suất thu được từ chiến dịch đối đầu với Tư lệnh Hắc Ưng. Những tờ giấy khô khốc ấy nhắc nhở rằng chiến trường bên trong hàng ngũ đôi khi còn khắc nghiệt hơn cả mặt trận ngoài biên ải.\n\nSĩ quan trực ban hành chính đứng cạnh cửa khẽ hắng giọng hỏi tôi chỉ thị niêm phong cuối cùng cho kiện hồ sơ nhạy cảm này trước khi đoàn xe văn thư quay về Thủ đô.",
+      "next": "ch8_ep2_22_choice_xu_ly_tai_lieu_thoi_chien"
+    },
+    {
+      "id": "ch8_ep2_22_choice_xu_ly_tai_lieu_thoi_chien",
+      "type": "choice",
+      "location": "Phòng Lưu Trữ Tạm — Ngã Ba Thiên Lang",
+      "text": "Trước mặt bạn là toàn bộ tập hồ sơ hậu chiến ghi rõ cả công trạng lẫn những vết nứt nội bộ, sai phạm số liệu và hồ sơ đối đầu với Khối Thiết Phong. Mỗi phương án xử lý đều sẽ định hình cách thế hệ sau nhìn lại cuộc chiến này.\n\nBạn quyết định xử lý kiện tài liệu này ra sao trước ngày công bố di sản?",
+      "choices": [
+        {
+          "id": "c23_cong_khai_minh_bach_ho_so",
+          "label": "Giải mật và công khai minh bạch toàn bộ hồ sơ kiểm toán thương vong cùng sai phạm nội bộ để lịch sử phán xét công bằng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_23_buoi_chieu_len_nui_da_voi"
+        },
+        {
+          "id": "c23_niem_phong_giu_danh_du_don_vi",
+          "label": "Công bố đầy đủ danh sách liệt sĩ và chiến công, nhưng niêm phong phần điều tra mâu thuẫn nội bộ trong ba mươi năm để giữ ổn định hậu chiến",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } }
+          ],
+          "next": "ch8_ep2_23_buoi_chieu_len_nui_da_voi"
+        },
+        {
+          "id": "c23_gui_ban_sao_ve_hoc_vien",
+          "label": "Chuyển bản sao đầy đủ toàn bộ bài học tác chiến và phản gián về Học Viện Quang Trung làm giáo trình thực tế không tô hồng cho khóa sau",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_ho_so_quang_trung",
+                "title": "Hồ Sơ Thực Chiến Về Quang Trung",
+                "entry": "Chỉ thị đưa nguyên vẹn các hồ sơ kiểm toán và bài học xương máu thời chiến về làm tài liệu giảng dạy tại Học Viện Quân Sự Quang Trung."
+              }
+            }
+          ],
+          "next": "ch8_ep2_23_buoi_chieu_len_nui_da_voi"
+        },
+        {
+          "id": "c23_lap_quy_ho_tro_gia_dinh",
+          "label": "Khóa sổ điều tra hình thức và dồn toàn bộ ngân sách tồn đọng từ kho hậu cần sang quỹ hỗ trợ gia đình thương binh, liệt sĩ vùng xa",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } }
+          ],
+          "next": "ch8_ep2_23_buoi_chieu_len_nui_da_voi"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_23_buoi_chieu_len_nui_da_voi",
+      "type": "narration",
+      "location": "Sườn Núi Đá Vôi — Đường Lên Bản Sương Mù",
+      "mood": "calm",
+      "text": "Rời ngã ba Thiên Lang lúc hoàng hôn bắt đầu nhuộm tím rặng núi đá vôi phía Bắc, chiếc xe jeep rẽ vào con đường độc đạo uốn lượn lên vùng đệm Thiên Minh. Không khí loãng dần và lạnh buốt khi xe leo qua từng tầng sương mù trắng đục đặc trưng của vùng cao.\n\nĐến một mỏm đá bằng phẳng nhìn bao quát cả thung lũng phía dưới, tôi bảo tài xế táp vào lề nghỉ máy mười phút. Tôi mở chiếc ba lô cũ đặt lên nắp ca-pô còn ấm hơi máy, lần lượt bày ra những kỷ vật mình đã cất giữ suốt bảy chương khói lửa.\n\nTrong ánh tà dương tắt dần sau dãy núi đá, từng món đồ nhỏ bé nhuốm bụi đường ấy bỗng trở nên nặng trĩu ký ức hơn mọi huân chương sáng bóng trên ngực áo lễ phục.\n\nTrước khi bước lên Bản Sương Mù và vọng gác Thiên Minh lần cuối, tôi muốn tự kiểm lại xem mình đã giữ được những gì từ tay đồng đội và đã đánh rơi điều gì giữa bão đạn.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "hasRelic": "so_bia_xanh" },
+              { "hasRelic": "ban_do_thien_lang" }
+            ]
+          },
+          "next": "ch8_ep2_24a_hai_ky_vat_goc_nho"
+        }
+      ],
+      "next": "ch8_ep2_24b_trang_giay_va_net_chi_thieu"
+    },
+    {
+      "id": "ch8_ep2_24a_hai_ky_vat_goc_nho",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "warm",
+      "text": "Nằm ngay ngắn trên nắp ca-pô là Cuốn Sổ Bìa Xanh sờn gáy từ ngày đầu tiên ở Quang Trung, và kẹp gọn giữa bìa sau là Tấm Bản Đồ Nhỏ Thiên Lang còn in rõ những đường bút chì 2B mảnh khảnh của Y sĩ Thu Hà.\n\nTôi khẽ lật từng mép giấy đã ố vàng bởi mồ hôi và nước mưa rừng. Mỗi cái tên ghi vội từ thuở gác đêm, mỗi con đường mòn nối lớp học trẻ em với trạm xá vùng ngập lũ đều nhắc tôi nhớ rằng chiến lược vĩ mô nhất rốt cuộc cũng chỉ để bảo vệ những mái nhà nhỏ bé dưới kia.\n\nKhông một chấm đỏ nào trên sa bàn Bộ Tổng Tham Mưu có quyền đè lên những đường chì mảnh khảnh ấy mà không trả giá. Hai kỷ vật giấy mực này chưa từng phản bội tôi một lần nào suốt chặng đường từ binh nhì lên tới Tổng Tư Lệnh.\n\nTôi vuốt nhẹ nếp gấp bản đồ rồi chuyển ánh mắt sang những vật dụng kim loại nhỏ đặt bên cạnh.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "hasRelic": "bat_lua_khang" },
+              {
+                "any": [
+                  { "hasRelic": "dong_ho_nut" },
+                  { "flag": "dong_ho_khang_nut" }
+                ]
+              }
+            ]
+          },
+          "next": "ch8_ep2_25a_bat_lua_va_mat_kinh_nut"
+        }
+      ],
+      "next": "ch8_ep2_25b_nhung_manh_ky_uc_cua_khang"
+    },
+    {
+      "id": "ch8_ep2_24b_trang_giay_va_net_chi_thieu",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "somber",
+      "text": "Cuốn Sổ Bìa Xanh đặt trên nắp xe vẫn dày dặn những trang ghi chép kín chữ qua tám năm quân ngũ, nhưng phần kẹp bìa sau lại trống trải vì thiếu vắng tấm bản đồ gấp tay của vùng ngập Thiên Lang. Những lần chuyển vị trí gấp gáp và những đêm sập điện ở tuyến sau đã khiến nhiều nét bút chì dân sự không kịp lưu lại trong cặp hành trang.\n\nTôi nhìn xuống thung lũng mờ sương phía dưới, tự nhủ rằng từ ngày mai trở đi, chính phủ và Bộ Tổng Tham Mưu sẽ phải vẽ lại từng tuyến trường học và trạm xá bằng mực không phai chứ không thể để thiếu sót thêm một lần nào nữa.\n\nSự trống trải ở kẹp bìa sau nhắc tôi về những khoảng trắng dân sinh mà người chỉ huy dễ bỏ quên khi chỉ nhìn vào bản đồ quân sự cỡ lớn.\n\nÁnh mắt tôi chuyển sang chỗ trống hay những vật dụng kim loại nhỏ đặt cạnh cuốn sổ cũ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "hasRelic": "bat_lua_khang" },
+              {
+                "any": [
+                  { "hasRelic": "dong_ho_nut" },
+                  { "flag": "dong_ho_khang_nut" }
+                ]
+              }
+            ]
+          },
+          "next": "ch8_ep2_25a_bat_lua_va_mat_kinh_nut"
+        }
+      ],
+      "next": "ch8_ep2_25b_nhung_manh_ky_uc_cua_khang"
+    },
+    {
+      "id": "ch8_ep2_25a_bat_lua_va_mat_kinh_nut",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "tense",
+      "text": "Bên cạnh cuốn sổ là hai vật gợi nhiều day dứt nhất: chiếc bật lửa kim loại trầy xước của Lê Minh Khang và chiếc đồng hồ đeo tay mặt kính nứt từ trận cầu Xích Thủy. Tôi cầm chiếc bật lửa lên bật nhẹ một tiếng *tách* giữa chiều núi lạnh, rồi gập nắp lại mà không châm lửa.\n\nMảnh giấy Khang từng kẹp theo món quà này thuở tôi lên tiểu đoàn trưởng — *\"Đừng biến thành người chỉ nhìn bản đồ\"* — như vẫn nằm nguyên trong lòng bàn tay. Còn vết nứt chéo trên mặt kính đồng hồ là chứng tích cho thấy thời gian trên chiến trường không bao giờ trôi êm như trong phòng họp.\n\nMỗi lần kim giây nhích qua vết nứt sắc cạnh ấy, tôi lại nhớ đến tiếng pháo gầm trên sông Xích Thủy và đôi vai bạn mình chắn phía sau đội hình.\n\nTôi đặt cả hai kỷ vật ngay ngắn trở lại, rồi kiểm tra nốt những dấu vết còn lại trong ngăn nhỏ ba lô.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "hasRelic": "bang_morse_linh" },
+              { "hasRelic": "ho_so_mat_thao" }
+            ]
+          },
+          "next": "ch8_ep2_26a_dong_khac_morse_va_goc_giay_gap"
+        }
+      ],
+      "next": "ch8_ep2_26b_nhung_dau_vet_con_lai"
+    },
+    {
+      "id": "ch8_ep2_25b_nhung_manh_ky_uc_cua_khang",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "somber",
+      "text": "Góc nắp ca-pô bên cạnh cuốn sổ chỉ còn lại một phần kỷ vật — hoặc mặt kính đồng hồ nứt vương khói Xích Thủy, hoặc khoảng trống lạnh lẽo thiếu hẳn cả chiếc bật lửa kim loại cũ của Lê Minh Khang. Qua quá nhiều đợt điều chuyển khẩn cấp và những khúc quanh sinh tử, không phải kỷ vật thân mật nào thời lính trẻ cũng theo kịp tôi tới chặng cuối.\n\nĐôi khi giữa ánh đèn trắng của Sảnh Kính Bộ Tổng Tham Mưu, tôi lại thấy thèm được nghe một tiếng *tách* bật lửa vụn vặt hay cái gõ hai lần lên vai nhắc giữ đội hình như thuở còn chung giường tầng.\n\nDù món kỷ vật ấy còn nằm trong túi áo hay chỉ còn trong trí nhớ, lời cảnh báo đừng để bản đồ lừa mắt vẫn luôn đứng cạnh tôi trước mọi bản mệnh lệnh.\n\nTôi hít một hơi không khí núi lạnh buốt để trấn tĩnh lại, rồi lần tay kiểm tra nốt những kỷ vật thông tin và hồ sơ trong ngăn trong.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "hasRelic": "bang_morse_linh" },
+              { "hasRelic": "ho_so_mat_thao" }
+            ]
+          },
+          "next": "ch8_ep2_26a_dong_khac_morse_va_goc_giay_gap"
+        }
+      ],
+      "next": "ch8_ep2_26b_nhung_dau_vet_con_lai"
+    },
+    {
+      "id": "ch8_ep2_26a_dong_khac_morse_va_goc_giay_gap",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "calm",
+      "text": "Ở ngăn cuối cùng là tấm Bảng Mã Morse Khắc Đồng của Trần Mỹ Linh cùng Tập Hồ Sơ Mật Gấp Góc do Lê Phương Thảo gửi trao giữa bão lửa Thiên Lang. Một mảnh đồng mỏng giúp nghe thấu cái bẫy dưới làn sóng sạch, và một xấp giấy gấp góc giúp giữ sạch sự thật trước màn sương dối trá nội bộ.\n\nCả hai kỷ vật ấy cùng nhắc tôi nhớ một điều: bảo vệ một đội quân không chỉ là chuyện súng đạn ngoài tuyến trước, mà còn là sự tỉnh táo giữ cho đường dây liên lạc không bị nhiễu và chữ ký chỉ huy không bị bẻ cong.\n\nTôi gói ghém lại toàn bộ sáu kỷ vật vào ba lô cẩn thận như cất giữ một phần xương thịt của cả tám năm chiến trận. Ngoài kia, sương chiều đã phủ trắng lối rẽ xuống thung lũng đầu bản.\n\nTôi bước lại vào ghế phụ và ra hiệu cho người lái xe chạy chậm tiến vào Bản Sương Mù.",
+      "next": "ch8_ep2_27_ban_suong_mu_khoi_bep"
+    },
+    {
+      "id": "ch8_ep2_26b_nhung_dau_vet_con_lai",
+      "type": "narration",
+      "location": "Mỏm Đá Nhìn Xuống Thung Lũng",
+      "mood": "calm",
+      "text": "Dù còn giữ đủ tấm bảng mã Morse khắc đồng của Linh hay tập hồ sơ mật gấp góc của Thảo hoặc chỉ còn lại phần mảnh ghép ký ức từ những trận đánh giữ sóng và thanh tra nội bộ, tôi đều hiểu cái giá của sự tỉnh táo nơi tầng chỉ huy. Có những người đã lặng lẽ đứng sau màn hình radar và bàn hồ sơ mật để chặn cho tiền tuyến khỏi sập bẫy.\n\nMặt trời đã khuất hẳn sau dãy núi đá, để lại khoảng trời tím thẫm lạnh giá. Từ khe núi phía trước, mùi khói củi quen thuộc pha mùi lá rừng bắt đầu bay ra nhẹ nhẹ trong màn sương.\n\nTiếng suối chảy róc rách dưới chân vách đá hòa vào sự tĩnh lặng mênh mông của vùng đệm Thiên Minh.\n\nTôi thu gọn mọi thứ vào ba lô, ra hiệu cho người lái xe chạy chậm tiến vào Bản Sương Mù.",
+      "next": "ch8_ep2_27_ban_suong_mu_khoi_bep"
+    },
+    {
+      "id": "ch8_ep2_27_ban_suong_mu_khoi_bep",
+      "type": "narration",
+      "location": "Bản Sương Mù — Vùng Đệm Thiên Minh",
+      "mood": "warm",
+      "text": "Ánh đèn năng lượng mặt trời vàng ấm hắt ra từ những nếp nhà sàn gỗ của Bản Sương Mù khi chiếc xe jeep dừng bánh ngay đầu dốc đá. Khác hẳn cảnh tượng hoang tàn và tiếng pháo gầm năm nào ở Chương II, tối nay cả bản làng vang tiếng trẻ con đọc bài hòa lẫn tiếng nước chảy từ máng tre đầu ngõ.\n\nMấy người dân bản nhận ra màu áo mưa bộ đội liền hồ hởi bước ra mở cổng rào gỗ, gọi nhau í ới mời khách vào sưởi ấm bên bếp lửa giữa nhà sàn lớn. Dưới ánh lửa bập bùng, ký ức về con đường mòn suối đá bí mật và đêm sơ tán dân bản giữa làn pháo bỗng ùa về ấm áp mà cay mắt.\n\nMùi cơm nếp mới đồ thơm lừng từ gian bếp hòa cùng tiếng cười trong trẻo của lũ trẻ đang học ghép vần bên ngọn đèn sáng.\n\nTrên bậc đá dẫn lên ngôi nhà sàn giữa bản, tiếng gậy trúc gõ khẽ hay bóng cây đa cổ thụ đang chờ đón bước chân người trở lại.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "gia_lang" },
+              { "charState": { "char": "gia_lang", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_28a_gia_lang_ben_bep_lua"
+        }
+      ],
+      "next": "ch8_ep2_28b_cay_da_va_gay_truc_gia_kien"
+    },
+    {
+      "id": "ch8_ep2_28a_gia_lang_ben_bep_lua",
+      "type": "dialogue",
+      "location": "Nhà Sàn Già Kiên — Bản Sương Mù",
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Ông Năm Kiên)",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "gia_lang" },
+          { "charState": { "char": "gia_lang", "state": "alive" } }
+        ]
+      },
+      "text": "*Cốc... cốc.* Già nghe tiếng bước chân chậm lại dưới chân dốc đá là biết anh chỉ huy năm xưa lên tới nơi rồi. Rừng không giấu dấu chân người vội, nhưng hôm nay anh đi thong thả quá, chắc trong lòng đã nhẹ bớt tiếng súng rồi phải không?\n\nNgồi xuống bên bếp lửa uống chén nước lá vối với già đi. Tụi nhỏ trong bản bây giờ buổi tối được thắp đèn sáng, không còn phải chạy núp vào hang đá như hồi con đường mòn suối cạn còn dính khói đạn nữa. Người bản Sương Mù không bao giờ quên bộ đội cắt quân xuống đưa bà con tránh pháo năm ấy đâu.\n\nCon đường mòn suối đá già vẽ cho chú hồi đó giờ vẫn còn nguyên dấu chân tuần tra nhưng cỏ non mọc xanh mướt hai bên lề rồi. Con nước mùa khô rồi mùa lũ cứ xoay vòng mãi ở thung lũng này thôi anh chỉ huy ạ.\n\nTrước khi anh đi nốt lên vọng gác trên đỉnh đồi kia, già chỉ hỏi một câu: hòa bình về rồi, bộ đội và dân bản mình giữ cái tình núi rừng này với nhau bằng cách chi?",
+      "effects": [
+        { "addRel": { "char": "gia_lang", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_29_choice_ban_suong_mu"
+    },
+    {
+      "id": "ch8_ep2_28b_cay_da_va_gay_truc_gia_kien",
+      "type": "narration",
+      "location": "Gốc Đa Đầu Bản Sương Mù",
+      "mood": "somber",
+      "text": "Dưới gốc đa cổ thụ đầu bản, nơi Già Kiên từng chống gậy trúc chỉ lối đường mòn cho bộ đội, người dân dựng một bệ đá nhỏ có mái che gỗ. Đặt trang trọng ngay ngắn trên bệ là cây gậy trúc đã lên nước bóng loáng của vị già làng năm nào ở lại giữa làn pháo để đưa từng đứa trẻ cuối cùng xuống hầm trú ẩn.\n\nMấy người lớn tuổi trong bản đứng vây quanh bếp lửa đầu ngõ kể lại với tôi rằng tiếng gõ gậy trúc và câu dặn 'Rừng không giấu dấu chân người vội' của Già Kiên vẫn được họ nhắc cho con cháu nghe mỗi mùa nước lũ. Sự hy sinh lặng lẽ của dân bản vùng đệm là món nợ mà suốt đời binh nghiệp tôi không bao giờ trả hết bằng văn bản khen thưởng.\n\nMột cậu bé cầm nhánh hoa rừng chạy tới đặt khẽ bên bệ đá rồi chạy ùa về phía lớp học tối bên nhà sàn, ánh mắt trong veo không chút ám ảnh chiến tranh.\n\nChén nước lá vối nóng được bưng ra đặt vào tay tôi, và ánh mắt trông chờ của các trưởng bản thế hệ mới khiến tôi phải suy nghĩ thật kỹ về cách quân đội gắn bó cùng biên ải thời bình.",
+      "next": "ch8_ep2_29_choice_ban_suong_mu"
+    },
+    {
+      "id": "ch8_ep2_29_choice_ban_suong_mu",
+      "type": "choice",
+      "location": "Bản Sương Mù — Bên Bếp Lửa Tối",
+      "text": "Trong hơi ấm của bếp lửa Bản Sương Mù và ánh mắt tin cậy của bà con dân bản trước giờ leo lên đỉnh vọng gác Thiên Minh, mọi lời hứa suông sẽ chẳng có giá trị gì nếu không gắn với đời sống thật dưới chân núi đá vôi.\n\nBạn đưa ra cam kết thiết thực nào cho mối quan hệ quân dân nơi vùng đệm biên giới suốt những thập kỷ hòa bình sắp tới?",
+      "choices": [
+        {
+          "id": "c23_ban_giao_duong_tuan_tra_thanh_duong_dan",
+          "label": "Cam kết mở rộng toàn bộ đường mòn tuần tra cũ thành tuyến đường bê tông y tế và đường đi học do bộ đội cùng dân bản chung tay bảo trì",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_30_duong_len_vong_gac_thien_minh"
+        },
+        {
+          "id": "c23_giu_tram_lien_ket_phong_lu",
+          "label": "Duy trì một tổ công binh và cảnh báo lũ quét cắm chốt thường trực phối hợp cùng các trưởng bản giữ an toàn mùa mưa bão",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_30_duong_len_vong_gac_thien_minh"
+        },
+        {
+          "id": "c23_ghi_ten_ban_lang_vao_bia_tuong_niem",
+          "label": "Đề xuất khắc tên những người dân dẫn đường và già làng đã cứu bộ đội lên cùng bia tưởng niệm Thiên Minh, không tách riêng quân với dân",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } }
+          ],
+          "next": "ch8_ep2_30_duong_len_vong_gac_thien_minh"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_30_duong_len_vong_gac_thien_minh",
+      "type": "narration",
+      "location": "Đường Mòn Đá Vôi Lên Vọng Gác Thiên Minh",
+      "mood": "calm",
+      "text": "Tám giờ tối, tôi tự mình đi bộ theo bậc đá mòn quen thuộc leo lên đỉnh đồi **Vọng Gác Thiên Minh**, bảo người lái xe ở lại dưới chân dốc nghỉ ngơi. Gió núi thổi qua rặng thông đá vi vút y như cái đêm giông sét sập lưới điện ở cuối Chương I.\n\nKhi đặt chân lên nền xi măng của chòi gác tiền tiêu, tôi ngẩng lên nhìn bầu trời đầy sao vừa hé sau lớp mây tan, rồi nhìn xuống thung lũng phía sau. Cụm đèn vàng của khu doanh trại hậu phương vẫn sáng dịu dàng trong đêm tối — đúng thứ ánh sáng năm xưa tôi từng bám vào để không rùng mình giữa ca gác đầu đời.\n\nMọi chi tiết nhỏ bé của trạm gác năm xưa từ bệ kê súng đến hốc đá chắn gió vẫn nằm nguyên ở đó, chứng kiến một cậu binh bét giờ đã trở thành Tổng Tư Lệnh quay lại đứng gác dưới trời đêm.\n\nBên trong căn chòi gỗ đã được gia cố sạch sẽ, máy liên lạc ngắn tầm bất ngờ phát ra một chuỗi tín hiệu kiểm tra tần số quen thuộc từ dãy trạm biên phòng lân cận.",
+      "next": "ch8_ep2_31_dispatch_tin_hieu_cu_thien_minh"
+    },
+    {
+      "id": "ch8_ep2_31_dispatch_tin_hieu_cu_thien_minh",
+      "type": "dispatch",
+      "location": "Vọng Gác Thiên Minh — Tần Số Điểm Danh Đêm",
+      "mood": "warm",
+      "text": "[TÍN HIỆU ĐIỂM CANH ĐÊM — TẦN SỐ DỰ PHÒNG TIỂU ĐỘI 1 THIÊN MINH]\n\n\"Đây là trạm chuyển tiếp sườn Bắc gọi về vọng gác tiền tiêu Thiên Minh. Toàn tuyến biên giới từ Bắc Vực tới Long Vũ đêm nay trời quang, không có tín hiệu nhiễu lạ, các tổ tuần tra đã về vị trí an toàn.\"\n\n\"Hệ thống cảnh giới từ các đỉnh radar vẫn thông suốt không gián đoạn từ sau chiến dịch mùa đông tới nay. Xin phép chuyển lời chào đêm của các kíp vô tuyến trẻ gửi tới vị Tổng Tư Lệnh từng bắt đầu ca gác đầu tiên tại chính mỏm đá này — chúc ngọn đèn vàng phía sau thung lũng luôn sáng bình yên.\"",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "linh" },
+              { "charState": { "char": "linh", "state": "alive" } },
+              { "flag": "bao_ve_tram_radar_bac_vuc" }
+            ]
+          },
+          "next": "ch8_ep2_32a_linh_ben_may_dien_dam_thien_minh"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "linh" },
+              { "charState": { "char": "linh", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_32a_linh_ben_may_dien_dam_thien_minh"
+        }
+      ],
+      "next": "ch8_ep2_32b_dai_vo_tuyen_im_ang_ten_linh"
+    },
+    {
+      "id": "ch8_ep2_32a_linh_ben_may_dien_dam_thien_minh",
+      "type": "dialogue",
+      "location": "Phòng Máy Vô Tuyến — Vọng Gác Thiên Minh",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "linh" },
+          { "charState": { "char": "linh", "state": "alive" } }
+        ]
+      },
+      "text": "Hồi nãy em nghe tiếng bước chân trên bậc đá là biết anh về tới Thiên Minh rồi, nên cố tình bật lại tần số dự phòng năm xưa phát lời chào đón anh đấy.\n\n*Gõ nhẹ đầu ngón tay theo nhịp Morse lên mặt bàn gỗ.*\n\nThói quen này từ hồi trực tổng đài ở đây tới đỉnh radar Bắc Vực em vẫn không bỏ được. Ngày xưa em hay nói 'Sóng sạch quá mới là sóng có bẫy', nhưng tối nay em kiểm tra toàn phổ tần rồi — bầu trời của mình thật sự sạch và yên rồi, Thủ trưởng ạ.\n\nHồi trên đỉnh radar Bắc Vực nếu anh không kịp điều kíp cơ động giữ sống trạm máy, chắc em cũng chẳng còn ngồi đây nghe tiếng gió thông cùng anh được. Cảm ơn anh vì chưa bao giờ bỏ mặc người lính vô tuyến một mình giữa cơn bão nhiễu sóng.\n\nMấy đứa lính trực ca ở trạm dưới đang chuẩn bị lên thay phiên lúc chín giờ. Thủ trưởng định ở lại gác trọn đêm nay trên vọng gác này hay quay xuống xe luôn để kịp giờ về Quang Trung sáng sớm mai?",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_33_choice_vong_gac_thien_minh"
+    },
+    {
+      "id": "ch8_ep2_32b_dai_vo_tuyen_im_ang_ten_linh",
+      "type": "narration",
+      "location": "Phòng Máy Vô Tuyến — Vọng Gác Thiên Minh",
+      "mood": "somber",
+      "text": "Sau tiếng hồi đáp từ trạm sườn Bắc, căn phòng máy nhỏ của vọng gác Thiên Minh lại rơi vào tĩnh lặng. Bên cạnh chiếc máy phát sóng ngắn đời mới, người trực ban vẫn giữ nguyên một bàn gỗ cũ có khắc mảnh tên Trần Mỹ Linh nhỏ xíu ở góc bàn — nơi người nữ chiến sĩ vô tuyến từng ngồi dò từng nhịp nhiễu sóng cứu cả trung đội.\n\nTôi đặt nhẹ đầu ngón tay lên mặt gỗ ấy, nhớ lại giọng nói điềm tĩnh của Linh giữa những cơn bão điện từ tại Bắc Vực trước khi cô nằm lại trên đỉnh núi đá giữ trọn tín hiệu cảnh giới cho đồng đội. Không còn những cái gõ nhịp Morse lách cách từ cô nữa, nhưng từng tần số sạch đang truyền đi đêm nay đều mang dấu vết đôi tay cô.\n\nGió đêm thổi qua cửa sổ chớp mang theo tiếng ù đều đều của ăng-ten trên nóc chòi gác, giống như âm thanh của một nhịp tim bền bỉ chưa từng ngừng nghỉ.\n\nĐồng hồ đeo tay điểm chín giờ tối. Trước mặt tôi là khoảng sân vọng gác Thiên Minh lộng gió sao trời, và con đường trở về Học Viện Quang Trung cho buổi sáng mai.",
+      "next": "ch8_ep2_33_choice_vong_gac_thien_minh"
+    },
+    {
+      "id": "ch8_ep2_33_choice_vong_gac_thien_minh",
+      "type": "choice",
+      "location": "Vọng Gác Thiên Minh — Ca Gác Đêm",
+      "text": "Đứng trên mỏm đá Thiên Minh nơi đời binh sĩ của bạn từng bắt đầu bằng bóng tối và giông sét, ánh đèn vàng phía thung lũng vẫn sáng như lời nhắc về những ngày còn chia nhau ca gác hai tiếng một lần.\n\nBạn quyết định gắn bó với đêm gác cuối cùng trước ngày bàn giao trọng trách theo cách nào?",
+      "choices": [
+        {
+          "id": "c23_o_lai_truc_tron_ca_gac_dem",
+          "label": "Xin miễn phiên trực cho lính trẻ, một mình ở lại vọng gác Thiên Minh trực trọn ca đêm bình yên cuối cùng và ký sắc lệnh giữ trạm làm điểm truyền thống cựu binh",
+          "effects": [
+            { "setFlag": "tro_ve_vong_gac_thien_minh" },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_dem_gac_thien_minh",
+                "title": "Đêm Gác Cuối Ở Thiên Minh",
+                "entry": "Ở lại trực ca đêm yên bình trên vọng gác Thiên Minh và quyết định bảo tồn điểm tiền tiêu này làm nơi gặp gỡ truyền thống của cựu binh."
+              }
+            }
+          ],
+          "next": "ch8_ep2_34a_dem_gac_yen_binh_thien_minh"
+        },
+        {
+          "id": "c23_cung_linh_tre_dung_gac_giu_chot",
+          "label": "Đứng gác chung hai canh giờ cùng kíp chiến sĩ mới, chỉ lại góc khuất núi đá rồi ký quyết định giữ nguyên vọng gác Thiên Minh làm trạm truyền lửa",
+          "effects": [
+            { "setFlag": "tro_ve_vong_gac_thien_minh" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_dem_gac_thien_minh",
+                "title": "Truyền Lửa Tại Vọng Gác Thiên Minh",
+                "entry": "Cùng chiến sĩ trẻ đứng gác tại Thiên Minh và giữ lại trạm gác tiền tiêu như biểu tượng nhắc nhớ trách nhiệm của người chỉ huy."
+              }
+            }
+          ],
+          "next": "ch8_ep2_34a_dem_gac_yen_binh_thien_minh"
+        },
+        {
+          "id": "c23_chuyen_thanh_tram_tu_dong_roi_nui",
+          "label": "Chuyển vọng gác Thiên Minh thành trạm cảm biến tự động để lính trẻ không phải chịu rét gác đêm nữa, rồi xuống núi lên đường về Quang Trung ngay",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_34b_roi_vong_gac_truoc_nua_dem"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_34a_dem_gac_yen_binh_thien_minh",
+      "type": "narration",
+      "location": "Vọng Gác Thiên Minh — Nửa Đêm",
+      "mood": "warm",
+      "text": "Đêm trên đỉnh Thiên Minh trôi chậm rãi như một bản nhạc không lời. Không có tiếng rít của gió bão, cũng không còn ánh chớp sét đánh sập đường dây điện cao thế như đêm đầu tiên tôi đứng gác cùng Khang. Chỉ có tiếng côn trùng rả rích trong hốc đá và ánh đèn vàng ấm áp phía thung lũng sau lưng.\n\nKhoác chiếc áo mưa cũ ngồi tựa lưng vào cột gỗ vọng gác, lần đầu tiên sau tám năm ròng rã tôi thấy bờ vai mình thực sự buông lỏng. Những ngôi sao trên cầu vai Tổng Tư Lệnh bỗng nhẹ bẫng đi khi đặt giữa bầu trời đêm đầy sao thật sự của đất nước bình yên.\n\nTôi nhớ lại từng bóng dáng đã đi qua mỏm đá này — Khang, Nam, Dũng, Lộc, Linh — và mỉm cười vì cuối cùng tất cả những đêm thức trắng ấy đã đổi được một giấc ngủ yên lành cho hàng triệu mái nhà bên dưới.\n\nĐến ba giờ rưỡi sáng, khi tiếng gà rừng đầu tiên gáy xa xa từ phía Bản Sương Mù, tôi khép cửa gỗ vọng gác lại, bước xuống xe chuẩn bị hướng thẳng về Học Viện Quân Sự Quang Trung kịp giờ tập hợp buổi sớm.",
+      "next": "ch8_ep2_35_cong_quang_trung_va_san_soi_do"
+    },
+    {
+      "id": "ch8_ep2_34b_roi_vong_gac_truoc_nua_dem",
+      "type": "narration",
+      "location": "Đường Xuống Núi Thiên Minh — Trước Nửa Đêm",
+      "mood": "calm",
+      "text": "Tôi viết xong tờ đề xuất lắp đặt trạm cảm biến năng lượng mặt trời thay thế ca gác người trần tại mỏm đá Thiên Minh, rồi khép cửa sổ gỗ lại lần cuối. Thời đại mới đòi hỏi người lính biết dùng kỹ thuật để đỡ đần xương máu, chứ không thể giữ mãi những nhọc nhằn cũ chỉ vì hoài niệm.\n\nHai ánh đèn pha xe jeep quét ngang qua những gốc thông già, đưa tôi xuống khỏi dãy núi đá vôi khi đồng hồ chỉ mười một giờ đêm. Từ phía sau lưng, bóng tối trên mỏm Thiên Minh hòa vào dải núi yên bình, không còn bóng dáng vọng gác chênh vênh nào cần phải thức trắng trong gió rét.\n\nDù thế hệ mai sau có thể sẽ không còn hiểu cảm giác run rẩy giữa màn sương đặc quánh nơi chòi gác cũ, đó lại chính là mục tiêu lớn nhất mà thế hệ chúng tôi đã đổ mồ hôi để giành lấy.\n\nChạy xuyên qua màn sương đêm về hướng bán sơn địa, xe dừng lại ngoài cổng Học Viện Quân Sự Quang Trung đúng lúc bình minh chưa kịp ló dạng.",
+      "next": "ch8_ep2_35_cong_quang_trung_va_san_soi_do"
+    },
+    {
+      "id": "ch8_ep2_35_cong_quang_trung_va_san_soi_do",
+      "type": "narration",
+      "location": "Sân Tập Sỏi Đỏ — Học Viện Quân Sự Quang Trung",
+      "mood": "calm",
+      "text": "Sáu giờ kém mười lăm sáng, sương tháng Chạp lại đặc quánh như nước vo gạo đổ xuống hai hàng bạch đàn trước cổng sắt Học Viện Quân Sự Quang Trung. Tôi bước qua vạch sơn trắng quen thuộc, lắng nghe tiếng đế giày cao su lạo xạo trên nền sỏi đỏ y hệt buổi sáng đầu tiên bước chân vào đời lính.\n\nThời gian ở đây dường như có cùng một thứ mùi vị bất biến: mùi đất ẩm bán sơn địa, mùi khói bếp tập thể và sự trang nghiêm không ồn ào. Trên sân tập sỏi đỏ, một trung đội học viên khóa mới đang chạy đều bước trong tiếng còi giòn giã.\n\nĐột nhiên, ở cuối hàng bên trái, một cậu học viên trẻ hớt hải chạy từ khu nội trú xuống, tay giữ mũ kê-pi, tay kéo vội dây lưng vì một bên dây giày vải còn bị tuột. Cậu ta đặt chân vào đội hình chậm đúng ba nhịp đếm so với khẩu lệnh cuối cùng.\n\nNgười cán bộ trung đội trẻ đứng đầu hàng lập tức đưa tay lên môi chuẩn bị tuýt còi phạt nặng trước toàn đội hình đang im phăng phắc.",
+      "next": "ch8_ep2_36_choice_san_soi_do"
+    },
+    {
+      "id": "ch8_ep2_36_choice_san_soi_do",
+      "type": "choice",
+      "location": "Rìa Sân Tập Sỏi Đỏ — Học Viện Quang Trung",
+      "text": "Nhìn cảnh cậu học viên trẻ loay hoay với đôi dây giày ẩm sương, chậm đúng ba nhịp giống hệt chính bạn tám năm về trước giữa hàng quân im lặng trên sân sỏi đỏ, lòng bạn chợt dâng lên cảm giác vừa thân quen vừa xót thương.\n\nBạn phản ứng ra sao trước khung cảnh quen thuộc này?",
+      "choices": [
+        {
+          "id": "c23_nhac_thay_giao_cho_ba_nhip",
+          "label": "Bước lại gần người cán bộ trẻ, khẽ nhắc quy tắc cũ của thầy Vinh: cho cậu ta chạy thêm một vòng cuối hàng rồi mới hỏi lý do chứ không quát trước mặt trung đội",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } }
+          ],
+          "next": "ch8_ep2_37_thu_vien_luu_tru_quang_trung"
+        },
+        {
+          "id": "c23_tu_tay_chinh_day_giay",
+          "label": "Chờ đội hình chạy qua góc sân rồi bước tới cúi xuống chỉ cho cậu học viên cách cột nút dây kép chống tuột trên nền sỏi ướt",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } }
+          ],
+          "next": "ch8_ep2_37_thu_vien_luu_tru_quang_trung"
+        },
+        {
+          "id": "c23_dung_im_ngoai_hang_cay",
+          "label": "Đứng lặng yên sau hàng xà cừ không lộ diện để học viện tự rèn kỷ luật theo đúng nếp truyền thống từ bao đời nay",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_37_thu_vien_luu_tru_quang_trung"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_37_thu_vien_luu_tru_quang_trung",
+      "type": "narration",
+      "location": "Thư Viện Lưu Trữ Sổ Truyền Thống — Quang Trung",
+      "mood": "calm",
+      "text": "Rời sân sỏi đỏ, tôi bước lên bậc thềm gạch cũ dẫn vào thư viện lưu trữ của học viện. Mùi giấy cũ, mùi gỗ lim đánh véc-ni và ánh nắng sớm xiên qua khung cửa kính cao tạo thành một khoảng lặng gần như tách biệt hẳn với thế giới bên ngoài.\n\nChính tại chiếc bàn gỗ dài cạnh ô cửa sổ hướng ra đồi thông này, hồi Chương I Đại úy Trần Quốc Vinh đã đặt vào tay tôi Cuốn Sổ Bìa Xanh khi đó còn trắng tinh chưa một nét chữ. Tám năm đi qua đủ mọi cấp bậc từ Học viên lên Binh nhì, Úy, Tá rồi Đại Tướng và Tổng Tư Lệnh, tôi chưa bao giờ quên câu dặn đầu tiên của thầy.\n\nTừng hàng tủ kính xếp ngay ngắn những tập nhật ký thao trường của các thế hệ trước như đang dõi theo bước chân người học trò cũ quay về trả bài tốt nghiệp cuối đời.\n\nPhía cuối dãy kệ gỗ lưu trữ sổ truyền thống, tiếng sột soạt của trang giấy lật mở và một bóng dáng quen thuộc hay chiếc ghế gỗ lặng lẽ đang chờ tôi bước tới.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "charState": { "char": "vinh", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_38a_thay_vinh_trong_thu_vien"
+        }
+      ],
+      "next": "ch8_ep2_38b_ghe_da_tuong_niem_thay_vinh"
+    },
+    {
+      "id": "ch8_ep2_38a_thay_vinh_trong_thu_vien",
+      "type": "dialogue",
+      "location": "Bàn Sổ Truyền Thống — Thư Viện Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "vinh" },
+          { "charState": { "char": "vinh", "state": "alive" } }
+        ]
+      },
+      "text": "Cậu vào ngồi đây đi, thầy vừa pha xong ấm trà nhài đặt ngay góc bàn cũ của khóa cậu đấy.\n\n*Chỉnh lại mép tờ giấy trên bàn rồi gõ nhẹ đuôi bút hai tiếng.*\n\nThầy hay nói 'Chậm ba nhịp là mất nửa đội hình rồi đấy', nhưng sáng nay nhìn cậu đứng bên rìa sân sỏi đỏ, thầy thấy bước chân của cậu không còn vội vã mà cũng chẳng bao giờ chậm nhịp nữa. Từ ngày cậu rời cổng trường này mang theo cuốn sổ bìa xanh, thầy chỉ giữ đúng một thói quen: đợi xem cậu có giữ được lời hứa 'Đừng viết điều mình chưa làm được' hay không.\n\nCả tên đồng đội cũ cậu ghi ở trang đầu lẫn những dòng tự sửa sai qua từng chiến dịch đều nằm trọn trong cuốn sổ sờn góc trên tay cậu rồi. Thầy không hỏi cậu thắng bao nhiêu trận, thầy chỉ mừng vì ánh mắt cậu hôm nay vẫn thẳng như ngày đầu nhập học.\n\nBây giờ đứng ở đỉnh cao nhất rồi, cậu mang Cuốn Sổ Bìa Xanh trở về thư viện này là định đặt nó lại vào giá sách truyền thống cùng một trang trống cuối cùng, hay vẫn giữ nó bên mình ra mặt trận chính trị ngày mai?",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_39_choice_so_phan_cuon_so_bia_xanh"
+    },
+    {
+      "id": "ch8_ep2_38b_ghe_da_tuong_niem_thay_vinh",
+      "type": "narration",
+      "location": "Hàng Hiên Thư Viện — Ghế Kỷ Niệm Thầy Vinh",
+      "mood": "somber",
+      "text": "Chiếc bàn gỗ dài bên cửa sổ thư viện hôm nay không có bóng dáng thầy Trần Quốc Vinh ngồi chỉnh mép giấy như mọi khi. Trước hiên đá nhìn ra sân sỏi đỏ, nhà trường đã đặt một chiếc ghế gỗ tưởng niệm có gắn tấm biển đồng nhỏ ghi tên người giảng viên kỳ cựu đã dành cả đời bảo vệ chuẩn mực đạo đức cho học viện.\n\nTrên mặt bàn đọc sách cũ ngay cạnh khung cửa vẫn còn đặt một khay gỗ đựng cây bút bi bình dân của thầy — vật chứng lặng lẽ của những ngày thầy kiên quyết không chịu ký khống bất kỳ bản báo cáo thành tích nào bất chấp áp lực từ hậu phương.\n\nTôi ngồi xuống chiếc ghế gỗ ấy, đặt Cuốn Sổ Bìa Xanh lên mặt bàn lạnh, nhớ lại cái gõ nhẹ đuôi bút và câu hỏi ngược thâm trầm của người thầy năm nào.\n\nSau khi đã đi hết con đường từ cổng trường này ra tới biên giới rồi quay lại, trang giấy trắng cuối cùng trong sổ nên được đặt ở đâu để xứng đáng với điều thầy từng gửi gắm?",
+      "next": "ch8_ep2_39_choice_so_phan_cuon_so_bia_xanh"
+    },
+    {
+      "id": "ch8_ep2_39_choice_so_phan_cuon_so_bia_xanh",
+      "type": "choice",
+      "location": "Thư Viện Lưu Trữ — Học Viện Quân Sự Quang Trung",
+      "text": "Cuốn Sổ Bìa Xanh mở rộng trên bàn gỗ thư viện. Mọi trang giấy ghi tên đồng đội từ trang đầu tới tận trận cuối cùng ở Bến Đá, những lỗi sai tự gạch sửa và chữ ký của những người gác chung ca đêm đều đã kín mực, chỉ còn duy nhất một trang giấy trắng cuối cùng chưa chạm ngòi bút.\n\nBạn quyết định số phận của kỷ vật xuyên suốt tám chương quân ngũ này ra sao?",
+      "choices": [
+        {
+          "id": "c23_gui_so_vao_tu_luu_tru_trang_trong",
+          "label": "Chỉ ghi ngày tháng trở về ở góc dưới trang áp chót, rồi gửi Cuốn Sổ Bìa Xanh lại tủ lưu trữ Quang Trung với trọn một trang trắng cuối cho khóa học viên sau",
+          "effects": [
+            { "setFlag": "gui_so_bia_xanh_ve_thu_vien" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_gui_so_thu_vien",
+                "title": "Gửi Sổ Bìa Xanh Về Thư Viện",
+                "entry": "Đặt lại Cuốn Sổ Bìa Xanh vào tủ lưu trữ Học Viện Quang Trung với một trang trống cuối cùng dành cho thế hệ tiếp nối."
+              }
+            }
+          ],
+          "next": "ch8_ep2_40a_tu_kinh_thu_vien_quang_trung"
+        },
+        {
+          "id": "c23_viet_ten_liet_si_roi_gui_thu_vien",
+          "label": "Nắn nót chép lại tên những người đồng đội không thể đi cùng về đến Quang Trung vào nửa đầu trang cuối, để trống nửa dưới rồi gửi vào thư viện trường",
+          "effects": [
+            { "setFlag": "gui_so_bia_xanh_ve_thu_vien" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_gui_so_thu_vien",
+                "title": "Trang Cuối Ghi Tên Đồng Đội",
+                "entry": "Ghi tên những người ngã xuống vào nửa trang cuối Cuốn Sổ Bìa Xanh rồi gửi lưu trữ trang trọng tại thư viện Quang Trung."
+              }
+            }
+          ],
+          "next": "ch8_ep2_40a_tu_kinh_thu_vien_quang_trung"
+        },
+        {
+          "id": "c23_giu_so_ben_minh_toi_ngay_nham_chuc",
+          "label": "Gấp sổ bỏ lại vào túi áo khoác Tổng Tư Lệnh, giữ kỷ vật bên mình thêm qua đêm nay cho tới khi hoàn thành quyết định lịch sử ngày mai",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_40b_cuon_so_trong_tui_ao"
+        },
+        {
+          "id": "c23_sao_chep_ban_chinh_giu_ban_goc",
+          "label": "Sao chép cẩn thận phần ghi chép chiến thuật để lại kho tư liệu học viện, còn cuốn sổ gốc sờn gáy giữ làm vật tùy thân bên bàn làm việc",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } }
+          ],
+          "next": "ch8_ep2_40b_cuon_so_trong_tui_ao"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_40a_tu_kinh_thu_vien_quang_trung",
+      "type": "narration",
+      "location": "Tủ Kính Truyền Thống — Thư Viện Quang Trung",
+      "mood": "warm",
+      "text": "Cuốn Sổ Bìa Xanh được đặt ngay ngắn vào ngăn gỗ sồi giữa thư viện, bên cạnh những cuốn nhật ký huấn luyện của các khóa học viên đi trước. Ánh nắng buổi sớm rọi qua ô cửa kính làm bìa sổ màu xanh sẫm đã sờn góc ánh lên vẻ trầm mặc mà ấm áp.\n\nTrang giấy trắng cuối cùng mở hé nhẹ dưới tấm kính chắn bụi, như một lời mời thầm lặng gửi tới những cậu học viên khóa sau sẽ bước qua cổng sắt Quang Trung vào mùa đông sang năm. Tôi không dùng quyền lực Tổng Tư Lệnh để đóng dấu chân lý vào trang cuối ấy, bởi lịch sử của quân đội luôn cần những người trẻ tự viết tiếp phần việc của thời đại họ.\n\nKhóa tủ kính lại bằng tiếng lách cách êm dịu, tôi cảm thấy một gánh nặng vô hình vừa được đặt xuống đúng chỗ của nó suốt tám năm qua.\n\nKhi tôi bước ra khỏi cửa thư viện xuống hàng hiên gạch, một tốp sĩ quan đang đứng đợi sẵn dưới tán xà cừ trước sân trường.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_41a_quang_dong_hanh_quang_trung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "rival" } }
+            ]
+          },
+          "next": "ch8_ep2_41b_quang_dung_ngoai_hanh_lang"
+        }
+      ],
+      "next": "ch8_ep2_41c_lop_si_quan_tre_quang_trung"
+    },
+    {
+      "id": "ch8_ep2_40b_cuon_so_trong_tui_ao",
+      "type": "narration",
+      "location": "Hành Lang Thư Viện Quang Trung",
+      "mood": "calm",
+      "text": "Tôi khép nắp Cuốn Sổ Bìa Xanh lại và cất gọn vào ngăn túi áo trong sát ngực. Sức nặng quen thuộc của xấp giấy viết tay suốt tám năm qua làm tôi cảm thấy vững vàng hơn trước chặng quyết định cuối cùng vẫn đang chờ ở Thủ đô vào sáng ngày mai.\n\nChiếc vỏ sổ sờn rách từng đi qua bùn đất Thiên Minh và cơn bão tuyết Bắc Vực không chỉ là một món kỷ vật để trưng bày trong tủ kính. Nó vẫn còn cần phải có mặt ngay bên cạnh bàn họp Hội Đồng Quốc Phòng để nhắc tôi không đi chệch khỏi con đường mình đã chọn.\n\nTừ ô cửa thư viện nhìn ra, lớp học viên mới đang xếp hàng bước vào giảng đường gạch cũ, bắt đầu những giờ học sa bàn đầu tiên của đời sĩ quan.\n\nBước qua ngưỡng cửa thư viện ra khoảng sân ngập nắng sớm, tôi bắt gặp những gương mặt sĩ quan trẻ đại diện cho lớp kế cận đang đứng chờ bàn giao phần tài liệu kinh nghiệm tác chiến.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "alive" } }
+            ]
+          },
+          "next": "ch8_ep2_41a_quang_dong_hanh_quang_trung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "rival" } }
+            ]
+          },
+          "next": "ch8_ep2_41b_quang_dung_ngoai_hanh_lang"
+        }
+      ],
+      "next": "ch8_ep2_41c_lop_si_quan_tre_quang_trung"
+    },
+    {
+      "id": "ch8_ep2_41a_quang_dong_hanh_quang_trung",
+      "type": "dialogue",
+      "location": "Hàng Hiên Giảng Đường Cũ — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Đại tá Tham mưu Vũ Minh Quang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "quang" },
+          { "charState": { "char": "quang", "state": "alive" } }
+        ]
+      },
+      "text": "Chào Tổng Tư Lệnh — hay hôm nay ở chính sân trường này tôi được phép gọi 'cậu' như hồi chúng ta tranh luận bài địa hình trên sa bàn năm nhất chứ?\n\n*Xoay nắp bút máy ba vòng rồi mới cất vào túi áo.*\n\nHồi mới ra trường tôi cứ nói 'Cảm tính không giữ nổi chốt đâu', cứ bảo cậu 'Tính bằng xác suất đi'. Nhưng đi qua từ Vân Long, Xích Phong tới đại chiến khu hôm nay, tôi mới thừa nhận mô hình xác suất của tôi thiếu mất một biến số lớn nhất mà cậu luôn giữ chặt: lòng tin của người lính và dân thường dưới tuyến đầu.\n\nTôi với các sĩ quan trẻ thế hệ tiếp theo — kể cả Linh và nhóm truyền tin ngoài Bắc Vực — đều đã sẵn sàng nhận bàn giao tập tài liệu kinh nghiệm tác chiến để viết lại bộ giáo trình thực tế cho học viện. Nhưng quyền giữ ngọn đuốc học thuyết ấy, Thủ trưởng muốn giao xuống cho lớp tụi tôi ngay từ bây giờ hay vẫn giữ ở Bộ Tổng Tham Mưu?",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": 1 } }
+      ],
+      "next": "ch8_ep2_42_choice_trao_ngon_duoc_ke_nhiem"
+    },
+    {
+      "id": "ch8_ep2_41b_quang_dung_ngoai_hanh_lang",
+      "type": "dialogue",
+      "location": "Hành Lang Gạch Cũ — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "quang" },
+          { "charState": { "char": "quang", "state": "rival" } }
+        ]
+      },
+      "text": "Báo cáo Tổng Tư Lệnh. Tôi về Quang Trung sáng nay để bàn giao nốt phần hồ sơ lưu trữ của nhóm tham mưu cũ theo đúng thủ tục điều lệnh, không ngờ lại gặp cậu ngay dưới mái hiên này.\n\n*Xoay nắp bút máy ba vòng, giọng đều và lạnh.*\n\nTừng có lúc tôi tin tuyệt đối vào con đường hiệu suất của Phạm Quang Hùng, tin rằng bỏ qua vài sai số nhỏ trên giấy sẽ giúp bộ máy chiến tranh chạy nhanh hơn. Kết cục chiến dịch vừa qua đã chứng minh tính toán xác suất của tôi sai một chỗ: tôi đánh giá thấp sức bền của những người sẵn sàng giữ sự thật đến cùng như cậu.\n\nTôi không xin quay lại ghế tham mưu trung tâm đâu, nhưng ngoài sân kia còn cả một thế hệ sĩ quan trẻ — trong đó có những người từ trạm vô tuyến và giảng đường này — đang chờ xem cậu trao quyền biên soạn học thuyết thời bình cho ai.",
+      "next": "ch8_ep2_42_choice_trao_ngon_duoc_ke_nhiem"
+    },
+    {
+      "id": "ch8_ep2_41c_lop_si_quan_tre_quang_trung",
+      "type": "narration",
+      "location": "Sân Giảng Đường Cũ — Quang Trung",
+      "mood": "calm",
+      "text": "Đứng chờ dưới tán xà cừ trước giảng đường cũ là một nhóm sĩ quan trẻ xuất thân từ cả tuyến thông tin lẫn ban tham mưu tác chiến, tay ôm những tập giáo trình thực nghiệm dày cộp còn thơm mùi mực in mới. Dù những gương mặt từng cùng tôi thi thố thuở Quang Trung đã mỗi người rẽ một ngả, lớp sĩ quan kế nhiệm này vẫn giữ ánh mắt sáng và thái độ cầu thị đáng tin cậy.\n\nNgười đội trưởng trẻ tiến lên báo cáo ngắn gọn rằng ban biên soạn học thuyết quân sự mới đang thiếu một sự phân quyền dứt khoát từ cấp cao nhất: liệu những kinh nghiệm thực chiến thô ráp, không che giấu khuyết điểm có được phép trao toàn quyền cho thế hệ trẻ tự đối chiếu, sửa đổi và lưu truyền hay không.\n\nGió sáng thổi qua sân trường mang theo tiếng bước chân đều tăm tắp từ bãi tập sỏi đỏ vọng lại, đặt trước mặt tôi quyết định trao truyền di sản trí tuệ của cả một cuộc chiến.",
+      "next": "ch8_ep2_42_choice_trao_ngon_duoc_ke_nhiem"
+    },
+    {
+      "id": "ch8_ep2_42_choice_trao_ngon_duoc_ke_nhiem",
+      "type": "choice",
+      "location": "Sân Học Viện Quân Sự Quang Trung",
+      "text": "Trước thế hệ sĩ quan kế cận đại diện cho cả bộ máy tham mưu và tuyến thông tin thực địa, ánh nắng ban mai chiếu rõ lên những tập tài liệu chiến trường còn vương bụi sỏi đỏ trên tay họ.\n\nBạn quyết định chuyển giao quyền gìn giữ và biên soạn lại kho tàng kinh nghiệm tác chiến Quân Lộ như thế nào?",
+      "choices": [
+        {
+          "id": "c23_trao_quyen_luu_giu_cho_the_he_sau",
+          "label": "Trao toàn bộ nhật ký chiến trường, sổ giao ca và quyền biên soạn tài liệu kinh nghiệm tác chiến cho thế hệ Quang, Linh và lớp sĩ quan trẻ tự quyết định tương lai",
+          "effects": [
+            { "setFlag": "trao_so_cho_quang_va_linh" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_trao_duoc_ke_nhiem",
+                "title": "Trao Đuốc Cho Thế Hệ Kế Cận",
+                "entry": "Chuyển giao quyền gìn giữ tài liệu kinh nghiệm tác chiến và cải cách học thuyết cho thế hệ Quang, Linh và các sĩ quan trẻ."
+              }
+            }
+          ],
+          "next": "ch8_ep2_43a_trao_tay_ngon_duoc"
+        },
+        {
+          "id": "c23_lap_nhom_bien_soan_doc_lap",
+          "label": "Thành lập hội đồng biên soạn độc lập giao cho nhóm Quang và Linh chủ trì, cho phép phản biện thẳng thắn mọi sai lầm chỉ huy thời chiến",
+          "effects": [
+            { "setFlag": "trao_so_cho_quang_va_linh" },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch8_ep2_trao_duoc_ke_nhiem",
+                "title": "Hội Đồng Phản Biện Thời Bình",
+                "entry": "Trao quyền chủ trì hội đồng biên soạn học thuyết độc lập cho thế hệ kế cận để bài học Quân Lộ không bị tô hồng."
+              }
+            }
+          ],
+          "next": "ch8_ep2_43a_trao_tay_ngon_duoc"
+        },
+        {
+          "id": "c23_giu_quyen_phe_duyet_tai_bo_tong",
+          "label": "Tạm giữ quyền phê duyệt hệ thống tài liệu tại Bộ Tổng Tham Mưu để tự mình rà soát từng chương trước khi giao xuống các trường quân sự",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch8_ep2_43b_giu_trong_trach_tai_bo_tong"
+        }
+      ]
+    },
+    {
+      "id": "ch8_ep2_43a_trao_tay_ngon_duoc",
+      "type": "narration",
+      "location": "Cổng Sắt Học Viện Quân Sự Quang Trung",
+      "mood": "warm",
+      "text": "Tôi đặt xấp bản thảo kinh nghiệm tác chiến cùng chìa khóa kho tài liệu huấn luyện vào tay những người kế cận đang đứng nghiêm trước hàng xà cừ. Không cần những bài diễn văn hoa mỹ, chỉ một cái bắt tay chắc nịch giữa hai thế hệ đã đủ nói hết sự tin tưởng.\n\nỞ mặt trận ngày mai của thời bình, kẻ thù không còn là pháo binh hay thiết giáp của Khối Thiết Phong nữa, mà là thói tự mãn, sự quan liêu và những báo cáo tô hồng sự thật. Chỉ khi thế hệ trẻ được trao quyền tự soi lại sai lầm của chính thế hệ đi trước thì Quân Lộ mới không bị đóng khung trong quá khứ.\n\nNhìn các sĩ quan trẻ ôm xấp bản thảo rảo bước về phía giảng đường gạch cũ, tôi bỗng thấy bóng dáng mình và Khang ngày nào mới đặt chân qua cổng sắt.\n\nChiếc xe jeep nổ máy lăn bánh qua cánh cổng sắt Quang Trung hướng ngược trở về Thủ đô, nơi ánh nắng ban trưa đã trải vàng rực trên mặt đường quốc lộ.",
+      "next": "ch8_ep2_44_duong_ve_thu_do_truoc_binh_minh"
+    },
+    {
+      "id": "ch8_ep2_43b_giu_trong_trach_tai_bo_tong",
+      "type": "narration",
+      "location": "Cổng Sắt Học Viện Quân Sự Quang Trung",
+      "mood": "calm",
+      "text": "Tôi gật đầu ghi nhận tâm huyết của các sĩ quan trẻ nhưng vẫn giữ nguyên xấp bản thảo gốc trong cặp công tác mang theo về Bộ Tổng Tham Mưu. Những vết thương của đất nước mới vừa liền da, và người mang quân hàm Tổng Tư Lệnh phải tự tay chịu trách nhiệm rà soát câu chữ cuối cùng trước khi đưa bất kỳ bộ giáo trình nào vào giảng đường.\n\nTrách nhiệm trên vai người chỉ huy cao nhất đôi khi đồng nghĩa với việc chưa thể vội vã buông tay ngay cả khi muốn tin tưởng lớp kế sau. Tôi chào tạm biệt sân sỏi đỏ Quang Trung lần cuối trước khi bước lên xe quay đầu về hướng Đông.\n\nTiếng bước chân chạy đều vòng sân tập vẫn vọng theo sau lưng cho đến khi hàng bạch đàn khuất hẳn qua gương chiếu hậu.\n\nCon đường quốc lộ thẳng tắp mở ra trước mũi xe, đưa tôi trở về nhịp đập khẩn trương của Thủ đô trong những giờ phút cuối cùng trước ngày phán quyết di sản.",
+      "next": "ch8_ep2_44_duong_ve_thu_do_truoc_binh_minh"
+    },
+    {
+      "id": "ch8_ep2_44_duong_ve_thu_do_truoc_binh_minh",
+      "type": "narration",
+      "location": "Đường Về Thủ Đô — Hoàng Hôn Chương VIII",
+      "mood": "calm",
+      "text": "Chiều muộn, chiếc xe jeep nhập lại vào dòng xe cộ tấp nập ở cửa ngõ Thủ đô. Chỉ trong hơn một ngày đêm đi ngược lại toàn bộ Quân Lộ từ Xích Thủy, Vân Long, Thiên Lang, Bản Sương Mù, Thiên Minh cho tới Quang Trung, tôi có cảm giác mình vừa sống lại trọn vẹn tám năm tuổi trẻ một lần nữa.\n\nTừng gương mặt còn sống hay đã khắc tên trên đá xanh, từng kỷ vật giữ được hay đã thất lạc, từng lời hứa với dân bản và đồng đội bây giờ đều đang xếp hàng ngay ngắn trong tâm trí tôi. Không còn sự mơ hồ hay áp lực số liệu nào từ bàn giấy có thể che mờ được những gì mắt tôi vừa tự nhìn thấy dọc đường đất đỏ.\n\nTiếng chuông tan tầm và ánh đèn đường thành phố bắt đầu sáng lên rực rỡ, mang theo sức sống bình dị của những gia đình không còn phải lo tiếng còi báo động.\n\nKhi xe dừng lại trước thềm tòa nhà Bộ Tổng Tham Mưu rực ánh đèn vàng, tôi lặng lẽ kiểm lại ba dấu mốc di sản mình vừa tự đặt ra trên chặng hành hương trở về.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "tro_ve_vong_gac_thien_minh" },
+              { "flag": "gui_so_bia_xanh_ve_thu_vien" },
+              { "flag": "trao_so_cho_quang_va_linh" }
+            ]
+          },
+          "next": "ch8_ep2_45a_ba_di_san_tron_ven"
+        }
+      ],
+      "next": "ch8_ep2_45b_nhung_trang_con_de_ngo"
+    },
+    {
+      "id": "ch8_ep2_45a_ba_di_san_tron_ven",
+      "type": "narration",
+      "location": "Sảnh Kính Chiến Lược — Đêm Trước Ngày Cuối",
+      "mood": "warm",
+      "text": "Lòng tôi bỗng nhẹ bẫng lạ thường khi nhận ra cả ba vòng tròn của cuộc hành trình đều đã khép lại trọn vẹn: ngọn đèn vàng trên vọng gác Thiên Minh vẫn được giữ ấm cho đồng đội; Cuốn Sổ Bìa Xanh đã yên vị trong thư viện Quang Trung với một trang trắng cuối cùng; và ngọn đuốc kinh nghiệm thực chiến đã được trao tận tay thế hệ kế cận.\n\nTừ một học viên đến muộn ba nhịp trên sân sỏi đỏ, tôi đã đi hết đường vòng của quyền lực để trở về đúng điểm xuất phát mà không đánh mất chính mình. Bốn ngôi sao trên vai áo tối nay không còn nặng như khối sắt nữa, mà giống như lời chứng nhận cho một lời hứa đã giữ tròn.\n\nNgoài ô cửa kính rộng lớn của phòng làm việc, bầu trời đêm Thủ đô trong vắt không một vệt khói pháo.\n\nChỉ còn một bức công điện cuối cùng đang chờ trên bàn làm việc trước khi buổi sáng định mệnh của Hồi 24 bắt đầu.",
+      "next": "ch8_ep2_46_dispatch_hoi_dong_cho_binh_minh"
+    },
+    {
+      "id": "ch8_ep2_45b_nhung_trang_con_de_ngo",
+      "type": "narration",
+      "location": "Sảnh Kính Chiến Lược — Đêm Trước Ngày Cuối",
+      "mood": "calm",
+      "text": "Tôi đứng lặng bên khung cửa sổ kính lớn nhìn xuống thành phố sáng đèn, suy ngẫm về những lựa chọn mình vừa thực hiện dọc theo chiều dài Quân Lộ. Có những điều tôi chọn giữ lại bên mình, có những truyền thống tôi chọn đổi mới thay vì bảo tồn nguyên trạng, và có những gánh nặng tôi chưa nỡ buông cho thế hệ sau.\n\nKhông có con đường chỉ huy nào hoàn hảo tuyệt đối trong mắt tất cả mọi người, nhưng điều quan trọng nhất là tôi đã dám tự chân quay lại đối diện với từng gốc cây, nhịp cầu và đồng đội cũ trước khi đặt bút ký quyết định lịch sử ngày mai.\n\nNhững trang giấy còn để ngỏ trên mặt bàn kia sẽ tìm được câu trả lời cuối cùng khi bình minh lên trên Quảng trường Quốc hội.\n\nÁnh đèn xanh trên máy thu công điện khẩn cạnh bàn sa bàn bỗng nhấp nháy báo hiệu thông báo triệu tập cho buổi sáng cuối cùng.",
+      "next": "ch8_ep2_46_dispatch_hoi_dong_cho_binh_minh"
+    },
+    {
+      "id": "ch8_ep2_46_dispatch_hoi_dong_cho_binh_minh",
+      "type": "dispatch",
+      "location": "Văn Phòng Tổng Tư Lệnh — Đêm Trước Hồi Kết",
+      "mood": "calm",
+      "text": "[CÔNG ĐIỆN MẬT — VĂN PHÒNG HỘI ĐỒNG QUỐC PHÒNG TỐI CAO]\n\n\"Kính gửi Tổng Tư Lệnh. Toàn bộ công tác chuẩn bị cho phiên họp đặc biệt lúc 06h00 sáng mai tại Tòa nhà Bộ Chỉ Huy Tối Cao và Quảng trường Quốc hội đã hoàn tất. Đại diện các chiến khu Bắc Vực, Long Vũ, các giảng viên Học Viện Quang Trung cùng thân nhân đại diện các đơn vị tiền phương đều đã có mặt đầy đủ.\"\n\n\"Buổi sáng ngày mai sẽ kiểm toán hồ sơ nhiệm kỳ, ấn định chính thức đường hướng hậu chiến của quốc gia và khép lại chương kết thúc cuối cùng trong lịch sử Quân Lộ. Đề nghị Tổng Tư Lệnh chuẩn bị sẵn sàng cho quyết định sau cùng.\"",
+      "next": "ch8_ep2_bottleneck"
+    },
+    {
+      "id": "ch8_ep2_bottleneck",
+      "type": "narration",
+      "location": "Ban Công Bộ Tổng Tham Mưu — Trước Bình Minh Hồi 24",
+      "mood": "warm",
+      "isChapterEnd": true,
+      "text": "Tôi bước ra khoảng ban công đá hướng về phía Tây, nơi màn sương đêm đang tan dần nhường chỗ cho một vệt hồng nhạt nơi chân trời xa. Chiếc áo mưa dính bụi đỏ từ Vân Long và mùi khói bếp Bản Sương Mù vẫn treo ngay ngắn trên giá gỗ cạnh cửa phòng, như một phần thân thể không thể tách rời của đời lính.\n\nSau lưng tôi là bảy chương máu lửa đã qua và một chuyến hành hương lặng lẽ vừa khép lại ở trang cuối của Cuốn Sổ Bìa Xanh. Từ giờ phút này, mọi kỷ vật, mọi vết sẹo và mọi đồng đội còn hay mất đều đã hội tụ thành một câu hỏi duy nhất chờ câu trả lời vào sáng mai.\n\nÁnh nắng đầu tiên của ngày hòa bình trọn vẹn sắp rọi qua hàng cửa kính vào mặt bàn gỗ lim nơi bốn ngã rẽ lịch sử đang chờ nét bút sau cùng.\n\nTôi hít sâu một hơi gió sớm trong lành, chỉnh lại mép cổ áo quân phục Tổng Tư Lệnh và bước vào bên trong sảnh lớn — sẵn sàng cho Hồi 24 và những kết cục vĩnh viễn của Quân Lộ.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch8_ep2_ket_thuc",
+            "title": "Hoàn Thành Hành Trình Ngược Quân Lộ",
+            "entry": "Trở về thăm lại Cầu Xích Thủy, Vân Long, Thiên Lang, Bản Sương Mù, Vọng Gác Thiên Minh và Học Viện Quang Trung; khép lại phần hồi ký trước giờ quyết định cuối cùng ở Hồi 24."
+          }
+        }
+      ]
+    }
+  ]
+}

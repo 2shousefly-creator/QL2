@@ -1,0 +1,955 @@
+{
+  "id": "ch1_ep2",
+  "episodeOrder": 2,
+  "chapterNumber": 1,
+  "title": "Chương I · Hồi 2: Cuốn Sổ Bìa Xanh",
+  "ql2ChapterId": "beginning",
+  "rankRange": "Học Viên",
+  "nextChapterId": "ch1_ep3",
+  "entryNodeId": "ch1_ep2_01_sa_ban",
+  "summary": "Giữa những buổi diễn tập sa bàn căng thẳng, đêm hành quân đội mưa vượt ngầm suối, bài kiểm tra vô tuyến mười giây dưới làn nhiễu sóng giả định và buổi chiều nhận cuốn sổ bìa xanh từ Đại úy Trần Quốc Vinh, bạn đối mặt với lựa chọn trung thực hay bao che lỗi sổ trực của Lê Minh Khang trước giờ lên xe rời Học Viện Quân Sự Quang Trung.",
+  "nodes": [
+    {
+      "id": "ch1_ep2_01_sa_ban",
+      "type": "narration",
+      "location": "Phòng sa bàn chiến thuật — Học Viện Quân Sự Quang Trung",
+      "mood": "tense",
+      "text": "Tuần huấn luyện thứ ba tại Học Viện Quân Sự Quang Trung mở đầu bằng một cơn mưa dầm kéo dài từ nửa đêm, quất lộp độp vào những ô cửa kính cao của phòng sa bàn phía sau dãy giảng đường gạch cũ. Trong căn phòng dài hẹp, mùi đất sét ẩm, mùn cưa nhuộm xanh và phấn bảng quyện vào hơi áo mưa ướt tạo thành một thứ không khí đặc quánh, lạnh ngắt sống lưng.\n\nGiữa phòng là chiếc khay gỗ rộng bằng hai sải tay, đắp nổi mô hình thung lũng Đèo Mây Mù với những dải đồi đá vôi xám xịt, một con đường độc đạo uốn lượn ven sườn dốc và ba ngọn cờ vải đỏ cắm sát khe suối hẹp. Cả trung đội đứng vòng quanh mép gỗ, cổ áo cài kín cúc, mắt dõi theo từng mũi tên gỗ nhỏ đặt dọc tuyến đường tiếp vận giả định.\n\nĐại úy Trần Quốc Vinh đứng ở đầu bàn bên phía cửa sổ, tay cầm chiếc thước gỗ chỉ huy dài quá khuỷu tay. Thầy không bật quạt trần, cũng không cho phép ai ghi chép vội trước khi nhìn thật kỹ địa hình cát đắp trước mặt. Bên trái tôi, Vũ Minh Quang đã kẹp sẵn cuốn sổ tay kẻ ô ly sát mép bàn; còn bên phải, Lê Minh Khang hơi nghiêng vai, ngón tay mân mê chiếc bật lửa kim loại trong túi áo ngực.",
+      "next": "ch1_ep2_02_vinh_mo_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_02_vinh_mo_sa_ban",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Các đồng chí nhìn thẳng vào đoạn thắt cổ chai giữa dốc Đá Bạc và cầu gỗ số 2 trên sa bàn. Bài tập sáng nay không có đáp án đẹp trên giấy, chỉ có một tình huống thực tế: đoàn xe bốn chiếc chở đạn và quân y phải vượt qua cửa đèo trước hai giờ sáng, đúng lúc mưa lớn làm nước khe dâng nhanh và trạm liên lạc chính bị nhiễu sóng từng đợt.\n\nNếu các đồng chí giữ nguyên đội hình hành quân nối đuôi như sách giáo khoa, hai xe sau sẽ bị kẹt cứng ngay khi xe đầu trượt bánh ở khúc cua chữ Z. Còn nếu tách đôi đội hình từ chân dốc, kíp chỉ huy phải tự chịu trách nhiệm khi một nửa đoàn xe mất liên lạc vô tuyến trong hai mươi phút vượt sườn khuất.\n\nTôi chia các đồng chí thành các tổ ba người tính phương án trong bảy phút. Nhớ kỹ điều này: trên bàn cát khô ráo, mười phân đất sét trông rất bằng phẳng; nhưng chậm ba nhịp là mất nửa đội hình rồi đấy.",
+      "branches": [
+        {
+          "condition": { "flag": "hop_tac_voi_quang_quang_trung" },
+          "next": "ch1_ep2_03a_quang_hop_tac"
+        },
+        {
+          "condition": { "flag": "canh_tranh_thang_quang" },
+          "next": "ch1_ep2_03b_quang_canh_tranh"
+        }
+      ],
+      "next": "ch1_ep2_03c_quang_mac_dinh"
+    },
+    {
+      "id": "ch1_ep2_03a_quang_hop_tac",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "warm",
+      "text": "Hôm trước gộp bảng ghi chú ở giảng đường, sai số ước lượng thời gian hành quân của tổ mình giảm gần bốn phút so với các nhóm khác. Lần này thầy Vinh đặt thêm biến số nước lũ với nhiễu sóng, một mình tôi tính độ dốc trên giấy không đủ kiểm chứng đâu.\n\nTôi vừa xoay nắp bút đo lại tỷ lệ thước xích trên sa bàn: từ chân dốc tới cầu gỗ số 2 dài đúng bốn cây số rưỡi đường đất đỏ. Nếu xe tải chạy tốc độ mười lăm cây số một giờ trong mưa, thời gian vượt đoạn xung yếu là mười tám phút, chưa tính phần dừng tránh sạt lở.\n\nCậu đọc giùm tôi điểm tụ nước ở hai khe nhánh bên sườn tây, tôi ghép vào bảng xác suất nghẽn đường. Hai đứa mình chốt khung thời gian trước, rồi để Khang kiểm tra xem chỗ nào xe tải hay sa lầy thực tế.",
+      "next": "ch1_ep2_04_khang_ben_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_03b_quang_canh_tranh",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Bài thực địa hôm trước cậu thắng tôi một bước nhờ chọn lối vòng ven suối, tôi công nhận. Nhưng hôm nay là sa bàn chiến thuật, không phải cuộc chạy đua sức bền ngoài bãi sỏi đỏ đâu.\n\nTrên mặt cắt địa hình này, mọi quyết định phải tính bằng xác suất và tải trọng trục xe, không thể cứ thấy khe hẹp là lao vào theo cảm tính được. Tôi đã chia xong khung tọa độ ba chặng và điểm dừng kỹ thuật của riêng phương án tôi, ghi rõ từng phút dự phòng.\n\nCậu cứ tự lên phương án của cậu đi. Chút nữa thầy Vinh chấm điểm công khai trước cả lớp, xem giữa cảm giác thực địa với bảng tính chính xác của tôi, cái nào giữ được đoàn xe qua cầu gỗ số 2.",
+      "next": "ch1_ep2_04_khang_ben_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_03c_quang_mac_dinh",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Theo điều lệnh vận tải dã chiến, cự ly tối thiểu giữa các xe khi leo dốc trơn là năm mươi mét để tránh dồn toa nếu xe trước tụt dốc. Với bốn xe, chỉ riêng chiều dài đội hình đã chiếm gần hai trăm mét mặt đường rồi.\n\nTôi tính bằng xác suất mưa lớn hai tiếng liên tục: khả năng sạt lở tại khúc cua chữ Z lên tới hơn sáu mươi phần trăm. Cảm tính không giữ nổi chốt đâu, nên tôi đề xuất cho hai xe đi trước mở đường, hai xe sau chờ tín hiệu xác nhận.\n\nCậu xem phần rìa suối phía đông có đủ độ rộng để quay đầu nếu cầu gỗ số 2 bị ngập hay không, rồi chốt phương án trình thầy Vinh.",
+      "next": "ch1_ep2_04_khang_ben_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_04_khang_ben_sa_ban",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "tense",
+      "text": "Ê, hai ông coi giùm tui chỗ mô hình cái ngầm đá sát chân cầu gỗ kìa. Trên bàn này thầy đắp đất sét bằng phẳng ngon ơ, sơn xanh đỏ sạch bong, nhưng coi chừng cái bản đồ nó lừa mắt mình đó nha.\n\nHôm kia tui phụ bác tài Bảy xuống kho dầu, nghe ổng kể đường đất đỏ gặp mưa dầm hai tiếng là mặt trên trơn như mỡ bò, còn bên dưới bùn nhão lún nửa bánh xe. Xe chở đạn nặng trịch mà bò chậm mười lăm cây số một giờ như tính toán trên giấy là quay bánh tại chỗ liền.\n\nĐừng có nói chuyện kiểu trên giấy với tui, ông tính đường nào thì tính, miễn sao xe quân y không bị kẹt chết giữa hai vách đá khi nước từ thượng nguồn đổ về. Lính dưới thùng xe không có thời gian chờ mấy ông sửa bài trên bảng đâu.",
+      "next": "ch1_ep2_05_choice_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_05_choice_sa_ban",
+      "type": "choice",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "mood": "tense",
+      "text": "Chiếc đồng hồ bấm giờ trên tay Đại úy Vinh chỉ còn hai phút. Mép khay gỗ hằn vết phấn trắng dưới ánh đèn tuýp lạnh, cả tổ đang chờ bạn đứng ra chốt phương án báo cáo trước sa bàn.",
+      "choices": [
+        {
+          "id": "c_sa_ban_phoi_hop",
+          "label": "Kết hợp bảng tính thời gian của Quang với điểm đặt gỗ lót bánh xe mà Khang chỉ ra ở mép bùn",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 1 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_06a_sa_ban_phoi_hop"
+        },
+        {
+          "id": "c_sa_ban_thuc_dia",
+          "label": "Bác bỏ giả định chạy đều của Quang, yêu cầu cho tổ trinh sát đi bộ dò độ lún trước mỗi khúc cua",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_06b_sa_ban_thuc_dia"
+        },
+        {
+          "id": "c_sa_ban_hau_can",
+          "label": "Đưa xe quân y và thùng thuốc vượt đèo theo nhịp đầu trước khi nước dâng, dồn xe đạn nặng đi sau khi đã gia cố cầu",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } }
+          ],
+          "next": "ch1_ep2_06c_sa_ban_hau_can"
+        },
+        {
+          "id": "c_sa_ban_tham_muu",
+          "label": "Chọn phương án chia đôi đội hình theo xác suất của Quang và khóa chặt các mốc giờ báo cáo vô tuyến",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addRel": { "char": "quang", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch1_ep2_06d_sa_ban_tham_muu"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_06a_sa_ban_phoi_hop",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "warm",
+      "text": "Hợp lý đấy. Nếu bớt một phần tải đạn ở xe đầu để chở theo vỉ sắt và gỗ lót bùn theo đúng vị trí Khang đánh dấu, hệ số trượt bánh tại cua chữ Z giảm được gần một nửa.\n\nTôi vừa xoay nắp bút sửa lại bảng thời gian: tốc độ giảm xuống mười hai cây số một giờ ở đoạn ngập, cộng thêm sáu phút rải vỉ gỗ, tổng hành trình vẫn kịp vượt cầu số 2 trước hai giờ kém mười lăm. Như thế cả xe đầu lẫn xe sau đều giữ được nhịp nối đuôi có kiểm soát.\n\nCậu trình bày phần ghép giữa số liệu và thực địa như vậy trước lớp đi, còn phần tọa độ điểm dừng dự phòng tôi đứng cạnh đọc bổ sung nếu thầy Vinh hỏi vặn.",
+      "next": "ch1_ep2_07_vinh_ket_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_06b_sa_ban_thuc_dia",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Cậu cho người đi bộ dò từng khúc cua giữa đêm mưa thì đoàn xe bò với tốc độ bốn cây số một giờ à? Như thế không sa lầy nhưng chắc chắn chậm giờ qua cầu, kẹt thẳng giữa trận địa nước lũ luôn.\n\nThôi được, cậu đã chọn phương án an toàn mặt đất thì tôi cũng ghi chú rõ độ trễ tối đa lên tới ba mươi lăm phút vào biên bản sa bàn. Lát nữa thầy Vinh hỏi vì sao đội hình phơi lưng ngoài đèo quá nửa tiếng, cậu tự giải trình phần tốc độ đó nhé.\n\nÍt nhất phương án của cậu không để xe đầu lao xuống hố bùn mù quáng, điểm ấy tôi ghi nhận, nhưng đừng kỳ vọng bảng điểm tham mưu cho điểm cao.",
+      "next": "ch1_ep2_07_vinh_ket_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_06c_sa_ban_hau_can",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Tách xe quân y nhẹ tải đi qua cầu trước khi lũ lên đỉnh là một nước tính có lý. Xe nhẹ ít phá mặt cầu gỗ đang yếu, lại kịp đưa thuốc men vào trạm trước khi tuyến đường bị cắt hoàn toàn.\n\nNhưng cậu nhìn lại khoảng cách giữa hai nửa đoàn xe trên sa bàn đi. Khi xe quân y qua bên kia suối mà cầu gỗ trôi mất nhịp giữa, hai xe đạn phía sau sẽ cô lập hoàn toàn giữa hẻm núi không có bác sĩ đi kèm.\n\nBiết ưu tiên cứu người là tốt, song người chỉ huy phải tính luôn đường quay lại đón phần đội hình nặng phía sau chứ không được bỏ mặc nửa đuôi.",
+      "next": "ch1_ep2_07_vinh_ket_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_06d_sa_ban_tham_muu",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "tense",
+      "text": "Ông chốt theo bảng xác suất của thằng Quang cũng gọn mặt giấy tờ thiệt, giờ giấc chia khúc rõ ràng y như đồng hồ Thụy Sĩ luôn. Nhìn trên bàn cát thấy mấy mũi tên đỏ xếp hàng ngay ngắn cũng đã mắt lắm.\n\nNhưng mà lát nữa mưa xuống thiệt, bùn đất đỏ nó không chịu nghe theo mốc giờ ông viết bằng bút chì đỏ đâu nghe. Hai xe đi sau mà đứt vô tuyến hai mươi phút giữa hẻm đá, tới lúc chạy lên không thấy xe đầu đâu thì ông tính sao?\n\nThôi, lỡ trình thầy rồi thì ráng giữ đúng nhịp đừng để lỡ giờ hẹn, chứ lệch một phút là nửa đoàn xe đứng trơ ngoài mưa đó.",
+      "next": "ch1_ep2_07_vinh_ket_sa_ban"
+    },
+    {
+      "id": "ch1_ep2_07_vinh_ket_sa_ban",
+      "type": "dialogue",
+      "location": "Phòng sa bàn chiến thuật — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Các tổ hạ thước xuống, nghe tôi chốt lại bài tập sáng nay. Không có phương án nào trên bàn cát đảm bảo an toàn trăm phần trăm cả; chọn tốc độ thì chịu rủi ro trượt dốc, chọn chắc chắn thì chịu rủi ro lỡ giờ vượt cầu.\n\nĐiều tôi muốn các đồng chí nhìn ra qua hai tiếng vừa rồi là sự khác biệt giữa hai kiểu người trong một tổ chỉ huy: người nhìn thấy con số và xác suất trên giấy, với người nhìn thấy lớp bùn dính ở gầm xe và hơi thở của lính đi bộ. Cả hai góc nhìn đều cần, thiếu một bên là gãy.\n\nChiều nay các đồng chí kiểm tra lại dây đeo ba lô, bọc kín túi đựng tài liệu bằng nilon hai lớp. Tối nay trời mưa thế này là điều kiện tốt nhất để kiểm chứng xem chân các cậu có chạy kịp miệng các cậu nói bên sa bàn hay không.",
+      "next": "ch1_ep2_08_lenh_hanh_quan"
+    },
+    {
+      "id": "ch1_ep2_08_lenh_hanh_quan",
+      "type": "narration",
+      "location": "Đường lâm nghiệp đồi sau — Hành quân đêm Quang Trung",
+      "mood": "urgent",
+      "text": "Năm giờ rưỡi chiều, trời tối sầm xuống như úp chiếc chậu sắt lên dãy đồi thông. Chưa kịp nuốt trôi bát cơm chiều, ba hồi còi báo động khẩn đã réo lên dồn dập khắp sân sỏi đỏ: lệnh hành quân dã ngoại mười tám cây số qua tuyến đường đất đỏ vòng sau học viện, mang đầy đủ ba lô mười bốn ký và súng tập.\n\nMưa rừng đổ xuống từng cơn xối xả, quất rát mặt và thấm qua cổ áo mưa dã chiến chỉ sau nửa giờ đầu tiên. Mỗi bước chân nhấc lên khỏi lớp bùn sét nặng như đeo chì, tiếng thở dốc phả ra khói trắng lẫn vào tiếng nước chảy róc rách hai bên rãnh đường.\n\nTới cây số thứ bảy, gần cây cầu gỗ bắc qua khe cạn, ánh đèn pha xanh mờ bị che bạt của một chiếc xe tải quân sự đang nổ máy chờ bên vệ đường bỗng lóe lên yếu ớt giữa màn nước. Đứng cạnh bánh trước lấm đầy bùn đỏ là bác tài Phan Văn Bảy đang gõ kiểm tra lại bộ xích chống trơn quấn quanh lốp xe.",
+      "branches": [
+        {
+          "condition": { "flag": "giup_bay_tram_y_te" },
+          "next": "ch1_ep2_09a_bay_nho_on"
+        }
+      ],
+      "next": "ch1_ep2_09b_bay_duong_doc"
+    },
+    {
+      "id": "ch1_ep2_09a_bay_nho_on",
+      "type": "dialogue",
+      "location": "Vệ đường cây số 7 — Tuyến hành quân Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Ủa, chú em đội mưa đẩy thùng thuốc bữa trước giúp tui ở dốc trạm y tế nè! Trời đất ơi, tối thui vầy mà nhìn cái dáng xốc ba lô là tui nhận ra liền luôn đó, gặp lại mừng hết lớn!\n\nThấy mấy chú đi bộ đêm mưa tội nghiệp quá, tui mới giấu sẵn trong túi áo mưa mấy phong kẹo gừng nóng nè. Chú em cầm chia cho thằng Khang với tổ mình ngậm cho ấm cổ họng, đi đêm sương lạnh dễ khản tiếng lắm, hồi sau còn hét lệnh nữa chứ.\n\nÀ, nghe tui dặn nhỏ khúc này: cách đây bốn cây có cái ngầm Đá Bạc nước đang chảy xiết ngang đầu gối, bên bờ trái có cây si đổ ngã chắn xoáy, bám men theo rễ cây phía trên thì đỡ trượt chân hơn đi thẳng giữa dòng nha chú em!",
+      "effects": [
+        { "addStat": { "stat": "TiepTe", "delta": 3 } },
+        { "addRel": { "char": "bay", "delta": 1 } }
+      ],
+      "next": "ch1_ep2_10_ngam_nuoc_mua"
+    },
+    {
+      "id": "ch1_ep2_09b_bay_duong_doc",
+      "type": "dialogue",
+      "location": "Vệ đường cây số 7 — Tuyến hành quân Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Chào mấy chú em học viên, đêm mưa mà cõng ba lô nặng đi khí thế dữ ha! Tui chạy xe tiếp tế ngang đây thấy cầu gỗ ướt nhẹp nên dừng lại bọc xích bánh xe cho chắc ăn trước khi leo qua con dốc bên kia.\n\nCầm lấy mấy viên kẹo gừng trong hộp táp-lô tui mới lấy ra nè, ngậm vô cho ấm ngực mà bước tiếp. Nghề lính hay nghề tài xế cũng vậy thôi, đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người.\n\nKhúc phía trước đất nhão dữ lắm đó nghe, mấy chú bước nối gót nhau cho khít, đừng để hụt chân xuống rãnh thoát nước bên taluy âm kẻo bong gân giữa rừng.",
+      "next": "ch1_ep2_10_ngam_nuoc_mua"
+    },
+    {
+      "id": "ch1_ep2_10_ngam_nuoc_mua",
+      "type": "narration",
+      "location": "Ngầm Đá Bạc — Cây số 11, Đêm hành quân Quang Trung",
+      "mood": "urgent",
+      "text": "Vị cay nồng của viên kẹo gừng chưa kịp tan hết nơi đầu lưỡi thì cả trung đội đã nghe tiếng nước gầm réo từ hẻm núi phía trước. Tới cây số mười một, con suối cạn mang tên ngầm Đá Bạc trong tập bản đồ chiều nay giờ đã biến thành dòng nước đỏ ngầu cuộn sóng ngang bắp chân, xô từng mảnh củi mục va lạch cạch vào vách đá.\n\nVừa lội xuống mép nước lạnh buốt, gót giày vải của Vũ Minh Quang bất ngờ đạp trúng một rễ cây trơn trượt dưới đáy bùn, khiến cậu khuỵu mạnh xuống, cổ chân phải trẹo đi đau điếng. Cùng lúc đó, chiếc quai phụ bên hông ba lô của Khang bục mất một mắt khâu khiến hộp đạn tập nặng trĩu cứ chực văng ra khỏi vai.\n\nPhía sau lưng, tiếng nước từ khe núi đổ xuống mỗi lúc một dày, đèn pin bọc vải đỏ của cán bộ đi sau nhấp nháy giục cả hàng không được dồn cục giữa lòng ngầm. Bầu không khí chùng xuống rồi căng thẳng tức thì khi dòng nước bắt đầu xoáy mạnh quanh đầu gối.",
+      "next": "ch1_ep2_11_choice_vuot_ngam"
+    },
+    {
+      "id": "ch1_ep2_11_choice_vuot_ngam",
+      "type": "choice",
+      "location": "Ngầm Đá Bạc — Đêm mưa Quang Trung",
+      "mood": "urgent",
+      "text": "Nước lũ đang dâng nhanh lên quá đầu gối, tiếng mưa át gần hết giọng nói. Bạn chỉ có vài chục giây để xử lý đội hình tổ ba người qua ngầm Đá Bạc an toàn.",
+      "choices": [
+        {
+          "id": "c_vuot_ngam_diu_quang",
+          "label": "Tháo bớt hộp đạn của Quang sang vai mình, dùng khăn tam giác băng chặt cổ chân cho cậu rồi dìu qua ngầm",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_12a_diu_quang"
+        },
+        {
+          "id": "c_vuot_ngam_cang_day",
+          "label": "Bám theo mép rễ cây phía thượng lưu căng dây dù nối ba người thành một trục ngang để vượt dòng xiết",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_12b_cang_day_ngam"
+        },
+        {
+          "id": "c_vuot_ngam_xung_phong",
+          "label": "Giữ nhịp đi gắt, giật lấy bao đạn bục quai của Khang kẹp vào nách rồi kéo cả tổ băng thẳng sang bờ bên kia",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_12c_vuot_nhanh"
+        },
+        {
+          "id": "c_vuot_ngam_tui_tin",
+          "label": "Tạm dừng hai phút dưới hốc đá ven bờ để buộc lại toàn bộ túi đựng tài liệu và dây trang bị trước khi lội nước",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } }
+          ],
+          "next": "ch1_ep2_12d_kiem_tra_tui_tin"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_12a_diu_quang",
+      "type": "dialogue",
+      "location": "Bờ bắc ngầm Đá Bạc — Đêm mưa Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "warm",
+      "text": "Khụ... nước lạnh tới thấu xương luôn. Cảm ơn cậu lúc nãy phản ứng kịp, chậm thêm vài giây là cái mắt cá chân này sưng vù không lết nổi lên bờ rồi.\n\nCậu cõng thêm hộp đạn của tôi suốt gần bảy cây số đường trơn còn lại chắc vai cũng rát lắm hả? Tôi biết tính tôi hay nói thẳng, nhiều lúc hơi cứng nhắc chuyện bảng biểu và xác suất, nhưng đêm nay coi như cậu gánh cho tôi một đoạn đường khó.\n\nTrả lại hộp đạn cho tôi tự xách đoạn đường bằng cuối đi, tới trạm tập kết tôi còn đứng thẳng lưng nghe thầy Vinh điểm danh được chứ không để ai phải dìu trước hàng.",
+      "next": "ch1_ep2_13_bep_cui_sau_hanh_quan"
+    },
+    {
+      "id": "ch1_ep2_12b_cang_day_ngam",
+      "type": "dialogue",
+      "location": "Trạm nghỉ cuối tuyến — Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Hồi nãy xe tui chạy vòng đường cái lên trước bãi tập kết để giao nước uống nóng cho mấy chú, nghe thầy Vinh khen tổ của chú em biết căng dây bám mép rễ cây vượt ngầm Đá Bạc gọn ơ luôn đó!\n\nMấy tốp đi sau cũng bắt chước sợi dây dù tổ chú căng sẵn mà qua lẹ, không có anh nào bị nước cuốn trôi mất giỏ đựng súng hay ướt tập bản đồ hết trơn. Thiệt tình là tui chạy đường trường hai chục năm, nể nhất mấy anh biết nhìn con nước chứ không nhắm mắt lội bừa.\n\nĐó thấy chưa, chịu khó ngó trước ngó sau không bao giờ thừa đâu! Ngồi xuống hơ tay bên bếp củi cho đỡ tê rồi húp chén nước gừng đi.",
+      "next": "ch1_ep2_13_bep_cui_sau_hanh_quan"
+    },
+    {
+      "id": "ch1_ep2_12c_vuot_nhanh",
+      "type": "dialogue",
+      "location": "Bờ bắc ngầm Đá Bạc — Đêm mưa Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "tense",
+      "text": "Trời đất, ông chụp cái hộp đạn của tui lẹ như cắt vậy cha nội! Hồi đó ông kéo một phát làm tui mém ngã sấp mặt xuống dòng nước, nhưng nhờ vậy mà qua được cái khúc xoáy mạnh nhất trước khi nước dâng tới bụng.\n\nThằng Quang bị trẹo chân bước cà nhắc phía sau cũng ráng lết theo kịp nhịp, không thằng nào rớt lại sau đội hình hết. Mà công nhận cái ngầm này khác một trời một vực với cục đất sét trên sa bàn hồi sáng ha, đúng là nói chuyện trên giấy không bằng một bước chân xuống sình.\n\nThôi, trả tui cái hộp đạn kẹp nách đi ông, sáu cây số cuối tui tự ôm được rồi kẻo ông sái vai.",
+      "next": "ch1_ep2_13_bep_cui_sau_hanh_quan"
+    },
+    {
+      "id": "ch1_ep2_12d_kiem_tra_tui_tin",
+      "type": "dialogue",
+      "location": "Trạm nghỉ cuối tuyến — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "tense",
+      "text": "Tổ các cậu về tới bãi tập kết chậm hơn giờ quy định bốn phút, và tôi thấy rõ các cậu đã dừng lại dưới hốc đá trước khi lội ngầm Đá Bạc.\n\nVề mặt chỉ huy hành quân, tự ý dừng đội hình ngay sát mép lũ đang lên là mất nhịp, dễ kéo dồn cả trung đội phía sau vào thế bị động trên sườn dốc trơn. Lần này tôi trừ điểm thời gian của tổ cậu vào sổ đánh giá tuần.\n\nTuy nhiên, trong ba tổ về sau cùng, chỉ có tổ các cậu giữ được túi bản đồ và pin bộ đàm khô ráo hoàn toàn. Lần sau hãy buộc kín đồ từ lúc còn ở doanh trại, đừng đợi tới mép nước mới dừng lại sửa dây.",
+      "next": "ch1_ep2_13_bep_cui_sau_hanh_quan"
+    },
+    {
+      "id": "ch1_ep2_13_bep_cui_sau_hanh_quan",
+      "type": "dialogue",
+      "location": "Mái tôn bếp dã chiến — Sau đêm hành quân",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "warm",
+      "text": "Ngồi sát vô đống than củi đây ông, cởi đôi tất ướt nhẹp ra hơ lên thanh tre cho nó bớt mùi bùn đất. Hồi nãy dưới ngầm nước xiết tối thui như hũ nút, nhiều lúc quay lại không thấy mặt mũi đâu chỉ nghe tiếng thở phì phò sát sau lưng.\n\nThiệt tình là tui vẫn thấy cái quy ước hôm bữa mình đặt ra nó linh nghiệm ghê luôn. Lúc bàn tay ông chạm nhẹ hai cái lên vai tui ở bên kia bờ ngầm Đá Bạc, tự dưng cái bụng tui nhẹ hẫng liền, biết chắc sau lưng mình còn nguyên đồng đội.\n\nCòn nghe nhau là còn đội hình, mệt rã giò tới mấy cũng ráng lết về tới bếp củi này cho đủ mặt. Uống nốt ca nước nóng đi rồi chợp mắt một tiếng, bảy giờ sáng thầy Vinh lại lôi ra hầm vô tuyến kiểm tra nữa đó.",
+      "next": "ch1_ep2_14_tram_vo_tuyen_da_chien"
+    },
+    {
+      "id": "ch1_ep2_14_tram_vo_tuyen_da_chien",
+      "type": "narration",
+      "location": "Hầm thông tin Đồi 42 — Khu diễn tập Quang Trung",
+      "mood": "tense",
+      "text": "Chưa kịp tan hết cơn đau nhức nơi bắp chân sau đêm hành quân đội mưa, bảy giờ sáng hôm sau cả trung đội đã phải kéo lên căn hầm bê tông lạnh ẩm trên Đồi 42 để bước vào bài thi thực hành chỉ huy thông tin chiến thuật. Bên trong hầm, mùi dầu máy phát điện nồng gắt hòa với hơi lạnh bốc lên từ bức tường đá chẻ đọng sương.\n\nMỗi học viên lần lượt ngồi vào bàn điều khiển đặt chiếc máy vô tuyến dã chiến cũ kỹ, tai nghe chụp kín đầu, trước mặt là bản đồ lưới ô vuông và bảng mã tần số dự phòng. Phía phòng bên cạnh, tổ kỹ thuật liên tục phát sóng tạp âm mô phỏng đòn gây nhiễu điện tử cường độ cao của đối phương.\n\nKhi tới lượt tôi đeo tai nghe, tiếng rít chói tai lập tức ập vào màng nhĩ. Bên cạnh bàn trực, Vũ Minh Quang đứng cầm tập phiếu đối chiếu tọa độ, còn Đại úy Trần Quốc Vinh lặng lẽ bấm sẵn chiếc đồng hồ kim trên tay.",
+      "next": "ch1_ep2_15_vinh_giao_bai_vo_tuyen"
+    },
+    {
+      "id": "ch1_ep2_15_vinh_giao_bai_vo_tuyen",
+      "type": "dialogue",
+      "location": "Hầm thông tin Đồi 42 — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "urgent",
+      "text": "Nghe rõ đề bài của phiên trực giả định này: một đoàn xe vận tải tiếp tế đang đi vào đoạn đường độc đạo hướng Cầu 2 đúng lúc địch mở màn gây nhiễu toàn dải tần số chính.\n\nTrên thực địa thật, không ai cho cậu thời gian ngồi nắn nót đọc lại từng con số trong sổ mã đâu. Khi tiếng nhiễu đè lên sóng chỉ huy, đoàn xe phía dưới chỉ cách điểm pháo kích giả định đúng một khúc cua và có hai luồng tin xung đột nhau đang chen vào máy.\n\nTừ giây phút bức công điện nhấp nháy hiện lên, cậu có đúng mười giây để khóa lệnh cho xe dẫn đầu. Hoặc cứu được đội hình bằng câu lệnh dứt khoát, hoặc do dự để cả đoàn xe đi thẳng vào tọa độ chết.",
+      "next": "ch1_ep2_16_dispatch_nhieu_song"
+    },
+    {
+      "id": "ch1_ep2_16_dispatch_nhieu_song",
+      "type": "dispatch",
+      "location": "Tần số chính 46.85 MHz — Diễn tập Đồi 42",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN KHẨN · ĐỘ NHIỄU 68% · GIỜ G+04]\nTỪ: TRẠM TRUNG CHUYỂN ALPHA / BETA (TÍN HIỆU CHỒNG LẤN)\nĐẾN: BÀN CHỈ HUY HỌC VIÊN — ĐỒI 42\n\n— Kênh Alpha: \"...Đoàn xe Bảy-Một... rẹt... cách Cầu 2 ba trăm mét... nghi có trinh sát pháo... rẹt... xin lệnh...\"\n— Kênh Beta (xen sóng lạ): \"...Cầu 2 an toàn, giữ nguyên tốc độ vượt cầu ngay... rẹt...\"\n— Quang (đọc gấp bên cạnh): \"Tín hiệu Beta sạch bất thường, lệch chuẩn mã giờ hai giây! Đổi lộ phụ B hay gọi xác nhận trực tiếp?\"\n\n[CẢNH BÁO: SÓNG ĐÈ ĐANG TĂNG LÊN 85% — CÒN 10 GIÂY ĐỂ PHÁT LỆNH]",
+      "next": "ch1_ep2_17_choice_giai_lenh_khan"
+    },
+    {
+      "id": "ch1_ep2_17_choice_giai_lenh_khan",
+      "type": "choice",
+      "location": "Bàn máy vô tuyến — Hầm Đồi 42",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c_do_du_mat_nhip",
+      "text": "Tiếng rít điện tử xé ngang tai nghe khiến thái dương căng buốt. Hai luồng tin trái ngược chồng lên nhau trong khi đoàn xe giả định sắp chạm đầu cầu.",
+      "choices": [
+        {
+          "id": "c_chuyen_kenh_du_phong",
+          "label": "Bỏ qua kênh Beta, phát mật lệnh chuẩn chuyển toàn bộ đoàn xe sang lộ phụ B và khóa im lặng vô tuyến 3 phút",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": 1 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_18a_xu_ly_chuan"
+        },
+        {
+          "id": "c_xac_minh_truc_tiep_bay",
+          "label": "Cắt ngang nhiễu bằng mật danh riêng của xe dẫn đầu bác tài Bảy, ép xác nhận mốc địa hình thực tế trước khi bẻ lái",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addRel": { "char": "bay", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": -1 } }
+          ],
+          "next": "ch1_ep2_18b_goi_xe_dan"
+        },
+        {
+          "id": "c_tao_tin_gia_nghi_binh",
+          "label": "Phát lặp tọa độ cũ ở kênh chính để hút máy gây nhiễu, đồng thời đánh tín hiệu đèn hiệu bên sườn cho đội hình rẽ nhánh",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addRel": { "char": "khang", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": -1 } }
+          ],
+          "next": "ch1_ep2_18c_nghi_binh_song"
+        },
+        {
+          "id": "c_do_du_mat_nhip",
+          "label": "Lật lại bảng mã giấy để đối chiếu kỹ thêm một nhịp trước khi bấm tổ hợp phát lệnh",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": -4 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addRel": { "char": "vinh", "delta": -1 } }
+          ],
+          "next": "ch1_ep2_18d_cham_ba_nhip"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_18a_xu_ly_chuan",
+      "type": "dialogue",
+      "location": "Hầm thông tin Đồi 42 — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Sáu giây rưỡi từ lúc bức điện kết thúc đến lúc cậu khóa lệnh chuyển lộ phụ B và ra lệnh im lặng vô tuyến. Động tác ngắt kênh sạch gọn, không thừa một chữ giải thích vô ích trên sóng mở.\n\nTín hiệu Beta sạch bất thường kia đúng là bẫy đánh lừa mà tổ kỹ thuật cài vào để dụ những người ham đường ngắn. Khóa im lặng ba phút giúp đoàn xe thoát khỏi vùng trinh sát định vị hướng sóng của địch.\n\nLần này cậu không chỉ kịp nhịp mà còn tin đúng dấu hiệu lệch chuẩn mà đồng đội đọc được bên cạnh. Giữ lấy sự tỉnh táo đó khi ra tuyến thực chiến ngoài kia.",
+      "next": "ch1_ep2_19_choice_phan_hoi_quang"
+    },
+    {
+      "id": "ch1_ep2_18b_goi_xe_dan",
+      "type": "dialogue",
+      "location": "Hầm thông tin Đồi 42 — Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Ê chú em, hồi nãy trong phòng mô phỏng tui ngồi đọc thoại giả làm xe dẫn đầu mà hú hồn luôn á! Giữa lúc sóng nhiễu rẹt rẹt muốn điếc tai, tự dưng nghe chú em gọi đúng mật danh xe tui hỏi cây cầu gỗ bên trái còn nguyên hay sập, tui tỉnh ngủ liền!\n\nMấy ông thầy bên ban thông tin thì lắc đầu nói cậu gọi thẳng tiếng lóng hơi tốn thêm ba giây mở sóng, dễ bị máy dò phát hiện. Nhưng đứng ở góc thằng cầm vô lăng dưới đèo, nghe được giọng người chỉ huy quen biết gọi xác minh còn sống hay chết nó vững tâm gấp trăm lần nghe mật mã lạnh tanh.\n\nĐoàn xe giả định thắng kịp ngay trước mép cầu đó chú em, giữ được cả bốn xe nguyên vẹn.",
+      "next": "ch1_ep2_19_choice_phan_hoi_quang"
+    },
+    {
+      "id": "ch1_ep2_18c_nghi_binh_song",
+      "type": "dialogue",
+      "location": "Hầm thông tin Đồi 42 — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Cậu liều thật đấy! Phát lặp tọa độ giả trên kênh chính để hút nhiễu rồi dùng đèn hiệu bên sườn bẻ hướng xe không có trong bài mẫu sáng nay đâu.\n\nKết quả trên màn hình chấm điểm cho thấy tổ kỹ thuật bên kia bị mất dấu xe dẫn đầu trong bốn phút, tức là về mặt chiến thuật cậu thắng tình huống này. Nhưng cậu có nghĩ nếu sương mù dày hơn một cấp và xe sau không nhìn thấy đèn hiệu bên sườn thì đội hình đứt làm đôi không?\n\nThầy Vinh chỉ gật đầu ghi chú một câu vào sổ: sáng tạo sắc bén, nhưng đánh cược quá cao vào tầm nhìn ban đêm.",
+      "next": "ch1_ep2_19_choice_phan_hoi_quang"
+    },
+    {
+      "id": "ch1_ep2_18d_cham_ba_nhip",
+      "type": "dialogue",
+      "location": "Hầm thông tin Đồi 42 — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "somber",
+      "text": "Hết mười hai giây. Chiếc kim đồng hồ bấm giờ vừa đi qua vạch đỏ thì mô hình đoàn xe giả định cũng lăn bánh qua mép Cầu 2 và nhận cờ báo hỏng toàn bộ trên sa bàn điều khiển.\n\nCậu nhìn kỹ xuống trang bảng mã giấy trên đầu gối mình đi. Không sai một ký tự nào cả, nét chữ đối chiếu rất cẩn thận, rất chỉn chu. Chỉ tiếc rằng khi cậu còn đang so hai cột số thì đoàn xe bên dưới đã ăn trọn loạt đạn pháo giả định rồi.\n\nTôi từng nhắc cậu ngay ngày đầu trên sân sỏi đỏ: chậm ba nhịp là mất nửa đội hình. Thà phát một lệnh khẩn gọn ghẽ để xe dừng lại kiểm tra, còn hơn đứng yên tìm phương án hoàn hảo.",
+      "next": "ch1_ep2_19_choice_phan_hoi_quang"
+    },
+    {
+      "id": "ch1_ep2_19_choice_phan_hoi_quang",
+      "type": "choice",
+      "location": "Cửa hầm Đồi 42 — Sau ca diễn tập vô tuyến",
+      "mood": "calm",
+      "text": "Bước ra khỏi hầm bê tông, mưa đã tạnh hẳn. Vũ Minh Quang tháo kính lau nước mưa bám trên gọng, xoay nắp chiếc bút máy ba vòng rồi nhìn thẳng vào bạn:\n\n\"Tôi vẫn thấy trong phòng chỉ huy, bảng mã và xác suất là thứ giữ người ta khỏi hoảng loạn. Cậu nghĩ sao sau phiên trực vừa rồi?\"",
+      "choices": [
+        {
+          "id": "c_phan_hoi_bat_tay",
+          "label": "Thừa nhận độ chính xác của Quang và rủ cậu tối nay tập thêm bài đọc mã mù không cần soi đèn",
+          "effects": [
+            { "addRel": { "char": "quang", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_20a_bat_tay_quang"
+        },
+        {
+          "id": "c_phan_hoi_thuc_te",
+          "label": "Phản biện thẳng: bảng mã chỉ là cái khung, còn giọng nói và phán đoán người cầm máy mới quyết định sống còn",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addRel": { "char": "quang", "delta": -1 } }
+          ],
+          "next": "ch1_ep2_20b_tranh_luan_quang"
+        },
+        {
+          "id": "c_phan_hoi_can_bang",
+          "label": "Nhắc Quang rằng mọi con số lẫn tiếng còi chỉ huy đều đang đặt lên mạng sống người lính chạy xe dưới đèo",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_20c_giu_can_bang"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_20a_bat_tay_quang",
+      "type": "dialogue",
+      "location": "Cửa hầm Đồi 42 — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "warm",
+      "text": "Tập đọc mã mù ban đêm à? Được đấy, ít học viên chịu ngồi lì tập lại cái món khô khan đó khi không có điểm kiểm tra lắm. Bảy giờ tối ở bàn cuối giảng đường gạch cũ, tôi mang theo bộ tai nghe dự phòng với tập giấy nháp.\n\nThú thật với cậu, ở học viện này tôi quen tự tính một mình từ lâu rồi, nhưng qua bài sa bàn với phiên vô tuyến hôm nay, có một người chịu nghe số liệu rồi phản biện lại ngay bên cạnh vẫn chắc tay hơn nhiều.\n\nMai mốt ra đơn vị mỗi đứa một ngả, chưa chắc chung tiểu đội đâu, nên tranh thủ mấy ngày cuối khóa luyện cho ăn ý luôn đi.",
+      "next": "ch1_ep2_21_thu_vien_gach_cu"
+    },
+    {
+      "id": "ch1_ep2_20b_tranh_luan_quang",
+      "type": "dialogue",
+      "location": "Cửa hầm Đồi 42 — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Cậu vẫn giữ quan điểm đó à? Tôi không phủ nhận trực giác người chỉ huy có giá trị trong khoảnh khắc khẩn cấp, nhưng khi lên tới cấp đại đội hay tiểu đoàn, không có bảng tính chuẩn thì trực giác của cậu cũng biến thành phỏng đoán mù thôi.\n\nTôi với cậu khác nhau ở chỗ bắt đầu: cậu tin vào nhịp thở của lính dưới bùn, còn tôi tin vào quy trình không cho phép sai số tích lũy trên bàn chỉ huy.\n\nRồi thời gian ra chiến trường sẽ trả lời xem cách nào đi được đường dài hơn. Bây giờ về lau súng đi, chiều nay có lệnh kiểm tra thư viện và quân trang đấy.",
+      "next": "ch1_ep2_21_thu_vien_gach_cu"
+    },
+    {
+      "id": "ch1_ep2_20c_giu_can_bang",
+      "type": "dialogue",
+      "location": "Cửa hầm Đồi 42 — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "calm",
+      "text": "Nghe ông nói câu đó làm thằng Quang nó nín thinh luôn kìa. Hai ông cãi nhau số má với trực giác từ sáng tới giờ, cuối cùng vẫn phải nhớ sau cái tai nghe rè rè kia là người sống bằng xương bằng thịt chứ đâu phải mấy cục gỗ trên bàn cát.\n\nThằng Quang nó gật đầu rồi bỏ đi trước mà không vặn vẹo thêm câu nào, coi như nó cũng phục lý đó ông. Đi xuống bếp rửa mặt cái đi, chiều nay thầy Vinh gọi riêng ông lên dãy thư viện gạch cũ kìa.\n\nKhông biết thầy kêu làm gì nữa, chắc dặn dò trước khi chốt danh sách điều động ngày mai đó.",
+      "next": "ch1_ep2_21_thu_vien_gach_cu"
+    },
+    {
+      "id": "ch1_ep2_21_thu_vien_gach_cu",
+      "type": "narration",
+      "location": "Thư viện gạch cũ — Học Viện Quân Sự Quang Trung",
+      "mood": "calm",
+      "text": "Ba giờ rưỡi chiều, mây xám cuối cùng cũng chịu giãn ra, để lộ những vệt nắng vàng hanh hao xiên qua khung cửa vòm cao của thư viện gạch cũ nằm khuất sau hàng xà cừ. Bước qua bậu cửa gỗ mòn vẹt, tiếng bước chân ngoài sân tập sỏi đỏ như lùi lại rất xa, chỉ còn mùi giấy cũ, mùi gỗ long não chống mối mọt và hương trà mạn thoang thoảng từ góc bàn cuối phòng.\n\nDọc hai bên tường là những giá gỗ cao chạm trần xếp đầy sổ tay truyền thống, sổ trực ban cũ gáy vải sờn bạc màu từ nhiều khóa học viên trước. Dưới vệt nắng nghiêng đầy bụi sáng lấp lánh, Đại úy Trần Quốc Vinh đang ngồi lật chậm từng trang một cuốn sổ bọc bìa xám đã ố nước mưa ở góc giấy.\n\nNghe tiếng tôi báo cáo ngoài cửa, thầy không đứng dậy ngay mà khẽ gõ nhẹ đuôi bút lên mặt bàn gỗ, ra hiệu cho tôi ngồi xuống chiếc ghế đối diện. Trên mặt bàn sồi chỉ có hai chén trà ấm và một cuốn sổ nhỏ mới tinh bọc bìa vải xanh thẫm nằm ngay ngắn bên cạnh hộp bút.",
+      "next": "ch1_ep2_22_choice_hoi_thay_vinh"
+    },
+    {
+      "id": "ch1_ep2_22_choice_hoi_thay_vinh",
+      "type": "choice",
+      "location": "Thư viện gạch cũ — Quang Trung",
+      "mood": "calm",
+      "text": "Thầy Vinh đẩy chén trà về phía bạn, nói khẽ rằng hai chục năm qua thầy vẫn giữ lệ cất các cuốn sổ tay cũ của học trò ở đây chứ không chỉ lưu hồ sơ trên máy tính.\n\nÁnh mắt thầy dừng lại trên bìa cuốn sổ cũ đặt giữa bàn, như chờ bạn hỏi điều vẫn băn khoăn suốt ba tuần qua.",
+      "choices": [
+        {
+          "id": "c_hoi_ban_do_giay",
+          "label": "Hỏi thầy vì sao phải giữ thói quen ghi tay trong khi bản đồ số và công điện mã hóa đã nhanh hơn rất nhiều",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addRel": { "char": "vinh", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_23a_vinh_noi_ve_ban_do"
+        },
+        {
+          "id": "c_hoi_ten_gach_chan",
+          "label": "Hỏi về những cái tên được gạch hai nét bút chì đỏ dưới chân trang trong cuốn sổ cũ thầy đang mở",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_23b_vinh_noi_ve_ten_nguoi"
+        },
+        {
+          "id": "c_hoi_sai_lam",
+          "label": "Hỏi thầy làm sao một người chỉ huy trẻ không trở nên liều mạng quá đà mà cũng không tê liệt vì sợ mắc lỗi",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_23c_vinh_noi_ve_sai_lam"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_23a_vinh_noi_ve_ban_do",
+      "type": "dialogue",
+      "location": "Thư viện gạch cũ — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Máy tính và công điện mã hóa giúp cậu truyền lệnh đi xa trong một giây, điều đó không ai chối cãi. Nhưng cũng chính vì nó quá nhanh, quá sạch sẽ nên người chỉ huy rất dễ quên mất trọng lượng thật của từng nét chữ mình gõ ra.\n\nKhi cậu phải tự tay viết tên một đồng đội xuống giấy, ngòi bút chạy chậm đủ để cậu nhớ mặt mũi cậu ta, nhớ giọng nói, nhớ cả gia đình phía sau lưng cậu ta nữa. Lúc ấy cậu mới không biến người lính thành một con số tiêu hao trên màn hình.\n\nVà nếu chẳng may mất điện, mất sóng như bài tập sáng nay thì một cuốn sổ bỏ túi với nét chữ rõ ràng vẫn cứu được cả đội hình.",
+      "next": "ch1_ep2_24_vinh_trao_so_bia_xanh"
+    },
+    {
+      "id": "ch1_ep2_23b_vinh_noi_ve_ten_nguoi",
+      "type": "dialogue",
+      "location": "Thư viện gạch cũ — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "somber",
+      "text": "Mắt cậu tinh đấy. Những dòng gạch hai nét chì đỏ này là danh sách các học viên khóa trước của tôi không trở về từ tuyến Bắc Vực trong mùa đông năm ấy.\n\nTrên bia đá hay báo cáo tổng kết quân khu, người ta chỉ xếp họ gọn trong một dòng số lượng hy sinh theo phiên hiệu tiểu đoàn. Nhưng chủ nhân cuốn sổ này đã chép lại từng cái tên kèm một dòng ghi chú rất nhỏ: người thích uống trà gừng, người hay buộc nhầm dây giày, người nhận ca gác thay bạn lúc sốt.\n\nChính những dòng ghi chú nhỏ ấy mới giữ cho người sống không quên mình đang bảo vệ điều gì, và không bao giờ coi nhẹ một mệnh lệnh xuất quân.",
+      "next": "ch1_ep2_24_vinh_trao_so_bia_xanh"
+    },
+    {
+      "id": "ch1_ep2_23c_vinh_noi_ve_sai_lam",
+      "type": "dialogue",
+      "location": "Thư viện gạch cũ — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "warm",
+      "text": "Câu hỏi ấy đúng vào chỗ khó nhất của nghề chỉ huy đấy. Người trẻ mới cầm quân thường vấp vào một trong hai thái cực: hoặc xốc nổi lao lên để chứng tỏ mình không sợ chết, hoặc run tay đùn đẩy vì sợ ký một chữ sai là mất ghế.\n\nMuốn không mắc hai bệnh đó thì phải tập thói quen tự đối diện với lỗi của mình ngay khi nó còn nhỏ. Đừng giấu lỗi vào ngăn kéo, cũng đừng đem lỗi người khác ra làm bậc thang cho mình.\n\nSai chỗ nào thì tự gạch sửa rõ ràng chỗ ấy rồi bước tiếp. Con người trưởng thành lên bằng những nét tự gạch sửa trung thực như vậy, chứ không phải bằng bảng điểm đẹp.",
+      "next": "ch1_ep2_24_vinh_trao_so_bia_xanh"
+    },
+    {
+      "id": "ch1_ep2_24_vinh_trao_so_bia_xanh",
+      "type": "dialogue",
+      "location": "Thư viện gạch cũ — Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "warm",
+      "text": "Sáng mai làm lễ tốt nghiệp đợt đầu xong là có quyết định điều động các cậu rời khỏi cổng Quang Trung, ra thẳng tuyến tiểu đội thực địa chứ không còn ai đứng sau đếm nhịp cho nữa.\n\nCầm lấy cuốn sổ bìa xanh này cất vào túi áo ngực bên trái đi. Đây không phải sổ công tác chấm thi đua, càng không phải nơi chép thành tích — thành tích đã có phòng văn thư lưu hộ cậu rồi.\n\nQuy ước của cuốn sổ này rất đơn giản: ghi tên những người mình không muốn quên, ghi tên người nhận ca kế tiếp sau lưng mình, và ghi lại những lỗi sai tự nhủ không bao giờ được phép lặp lại. Đừng viết điều mình chưa làm được, nhé.",
+      "effects": [
+        { "unlockRelic": "so_bia_xanh" },
+        {
+          "addJournal": {
+            "id": "jrn_so_bia_xanh",
+            "title": "Cuốn sổ bìa xanh của thầy Vinh",
+            "entry": "Tại thư viện gạch cũ Quang Trung, Đại úy Trần Quốc Vinh trao cho tôi cuốn sổ bìa xanh với lời dặn: chỉ ghi tên những người không muốn quên, người nhận ca kế tiếp và những lỗi sai không được phép lặp lại."
+          }
+        }
+      ],
+      "next": "ch1_ep2_25_san_hau_can_gap_bay"
+    },
+    {
+      "id": "ch1_ep2_25_san_hau_can_gap_bay",
+      "type": "dialogue",
+      "location": "Sân hậu cần gần căn-tin — Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Ơ, chú em mới từ thư viện gạch cũ đi ra hả? Coi cái mép bìa vải xanh lấp ló ngay túi áo ngực trái kia kìa, thầy Vinh mới trao sổ truyền thống cho chú phải không? Tui chạy xe ở trường này sáu năm trời, chỉ thấy những đứa biết giữ nhịp với biết ngó trước ngó sau mới được thầy gọi vô phòng đó tặng sổ riêng thôi à.\n\nSáng mai chính xe tui chở tốp của chú với thằng Khang lên tuyến tiền tiêu đó nha! Chiều nay tui đang chất sẵn thùng lương khô với thuốc men lên sàn xe cho kịp giờ xuất phát sớm.\n\nCầm thêm bịch kẹo gừng này bỏ túi đi chú em. Mai mốt có leo cao tới chức gì đi nữa cũng nhớ đừng quên mấy thằng lái xe với mấy ông anh nuôi bếp củi tụi tui nghen.",
+      "next": "ch1_ep2_26_dem_mi_tom_duoi_gam_giuong"
+    },
+    {
+      "id": "ch1_ep2_26_dem_mi_tom_duoi_gam_giuong",
+      "type": "narration",
+      "location": "Khu nhà ở giường tầng Phòng B2 — Đêm cuối ở Quang Trung",
+      "mood": "tense",
+      "text": "Mười giờ rưỡi tối, tiếng kẻng tắt đèn vang lên ngân dài qua các dãy nhà gạch. Cả phòng tập thể chìm vào bóng tối lạnh lẽo, chỉ còn một vệt sáng vàng vọt từ ngọn đèn hành lang hắt chéo qua khung cửa vào nền xi măng ẩm hơi sương.\n\nDưới gầm giường tầng của hai đứa, Lê Minh Khang lúi húi bẻ đôi gói mì tôm sống giấu kỹ từ căn-tin, dúi vào tay tôi một nửa cùng gói muối ớt nhàu nhĩ. Hai đứa ngồi bó gối dựa lưng vào vách sắt lạnh, nhai mì rồm rộp thật khẽ cho đỡ căng thẳng trước buổi kiểm tra thu sổ lúc sáu giờ sáng mai.\n\nVừa nhai vừa rà lại cuốn sổ trực hành lang và bàn giao khóa tủ súng để sáng nộp thầy Vinh chốt lệnh điều động, ngón tay tôi bỗng khựng phắt lại trên trang cuối cùng. Ở phần ca trực từ hai giờ đến bốn giờ sáng đêm qua của Khang, đúng hai dòng kiểm tra niêm phong tủ súng và chữ ký xác nhận bàn giao bị bỏ trống trơn, trắng hớ dưới ánh đèn hành lang.",
+      "next": "ch1_ep2_27_khang_lo_so_truc"
+    },
+    {
+      "id": "ch1_ep2_27_khang_lo_so_truc",
+      "type": "dialogue",
+      "location": "Khu nhà ở giường tầng Phòng B2 — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "tense",
+      "text": "Chết cha tui rồi ông ơi... Hồi bốn giờ kém mười đêm qua lúc chuẩn bị đổi ca, thằng bạn bên phòng kế tự dưng lên cơn sốt rét run cầm cập, tui vội cõng nó chạy xuống trạm xá rồi đưa chìa khóa miệng cho thằng trực ca sau, quên khuấy khúc quay lại ký sổ luôn.\n\nBây giờ mà cầm bút ký lùi giờ vô hai dòng trống đó là thành sửa sổ trực trái quy định sau giờ đóng ca, thầy Vinh nhìn nét mực khác màu với giờ khác là lộ liền. Còn sáng mai xách cuốn sổ trống hai dòng khóa tủ súng lên báo thẳng thì lạng quạng ban huấn luyện giữ tui lại kiểm điểm thêm đợt nữa, lỡ mất chuyến xe biên chế cùng ông ra đơn vị mới chứ chẳng chơi.\n\nSáu giờ sáng thầy Vinh thu sổ chốt quân số rồi, bây giờ chỉ có tao với mày biết hai dòng trống này thôi. Mày tính sao đây?",
+      "next": "ch1_ep2_28_choice_so_truc_khang"
+    },
+    {
+      "id": "ch1_ep2_28_choice_so_truc_khang",
+      "type": "choice",
+      "location": "Khu nhà ở giường tầng Phòng B2 — Quang Trung",
+      "mood": "tense",
+      "text": "Chưa đầy bảy tiếng nữa là toàn khóa đứng hàng ngang trước sân sỏi đỏ nhận quyết định điều động. Trang sổ trực mở rộng trên đầu gối, hai dòng trống lạnh ngắt dưới bóng đèn hành lang như thử thách đầu tiên dành cho cuốn sổ bìa xanh trong túi ngực bạn.",
+      "choices": [
+        {
+          "id": "c_che_giau_ganh_thay",
+          "label": "Tự viết tên mình nhận kiểm tra muộn ở dòng kế tiếp để gánh thay phần thiếu sót cho Khang",
+          "effects": [
+            { "setFlag": "che_giau_loi_khang" },
+            { "addRel": { "char": "khang", "delta": 2 } },
+            { "addRel": { "char": "vinh", "delta": -2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } }
+          ],
+          "next": "ch1_ep2_29a_ganh_thay_khang"
+        },
+        {
+          "id": "c_bao_cao_trung_thuc",
+          "label": "Gạch chéo hai dòng trống đúng điều lệnh và cùng Khang lên báo thẳng thầy Vinh lúc sáu giờ kém",
+          "effects": [
+            { "setFlag": "bao_cao_trung_thuc_quang_trung" },
+            { "addRel": { "char": "khang", "delta": -1 } },
+            { "addRel": { "char": "vinh", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } }
+          ],
+          "next": "ch1_ep2_29b_bao_cao_thang"
+        },
+        {
+          "id": "c_kiem_tra_bo_sung",
+          "label": "Rủ Khang xuống kiểm tra lại khóa niêm phong tủ súng ngay trong đêm, lập biên bản bổ sung trung thực và cùng chịu phạt tập thể",
+          "effects": [
+            { "setFlag": "bao_cao_trung_thuc_quang_trung" },
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addRel": { "char": "vinh", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch1_ep2_29c_kiem_tra_bo_sung"
+        },
+        {
+          "id": "c_ky_lui_gio",
+          "label": "Che đèn pin dưới chăn để Khang ký lùi giờ cho khớp dòng trống trước khi nộp sổ sáng mai",
+          "effects": [
+            { "setFlag": "che_giau_loi_khang" },
+            { "addRel": { "char": "khang", "delta": -1 } },
+            { "addRel": { "char": "vinh", "delta": -3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -8 } },
+            { "addStat": { "stat": "TiepTe", "delta": 1 } }
+          ],
+          "next": "ch1_ep2_29d_ky_lui_gio"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_29a_ganh_thay_khang",
+      "type": "dialogue",
+      "location": "Khu nhà ở giường tầng Phòng B2 — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "warm",
+      "text": "Ê... ông viết tên ông vô nhận kiểm tra muộn giùm tui thiệt hả? Thầy Vinh mà nhìn giờ bàn giao chéo không khớp với ca trực đêm qua là ông ăn kiểm điểm vô hồ sơ ngày tốt nghiệp luôn đó chứ không giỡn đâu!\n\nTui nợ ông một cái gật đầu nặng ký đó nha. Nhưng nghe tui dặn kỹ chuyện này nè: lần này tui ẩu thiệt nên mới để ông gánh, mai mốt ra tới đơn vị chiến đấu ngoài kia ông tuyệt đối đừng bao giờ che giấy giùm tui kiểu đó nữa.\n\nỞ ngoài kia súng nổ thiệt chứ không phải kiểm điểm miệng đâu, sai khúc nào để tự thân tui đứng ra chịu khúc đó. Ngủ đi ông, sáng mai lên đường cùng nhau.",
+      "next": "ch1_ep2_30a_vinh_kiem_tra_ganh"
+    },
+    {
+      "id": "ch1_ep2_29b_bao_cao_thang",
+      "type": "dialogue",
+      "location": "Hành lang khu nhà ở — Năm giờ rưỡi sáng",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "tense",
+      "text": "Thì ông gạch chéo hai dòng đó đi, đúng nguyên tắc quá rồi còn gì nữa. Tui biết ông mới nhận cuốn sổ bìa xanh của thầy Vinh hồi chiều nên chắc trong đầu ông cũng nhớ từng chữ thầy dặn không được làm giả sổ sách.\n\nTui không trách ông cứng nhắc đâu, lỗi là do tui bỏ quên chữ ký thiệt. Chỉ hơi xót ruột nếu sáng nay ban huấn luyện giữ tui ở lại thêm nửa tháng, bỏ ông lên xe một mình ra đơn vị mới.\n\nThôi, cài chặt cúc cổ áo vô rồi đi cùng tui lên phòng trực ban gặp thầy Vinh. Chuyện tới đâu chịu tới đó, không trốn.",
+      "next": "ch1_ep2_30b_vinh_kiem_tra_trung_thuc"
+    },
+    {
+      "id": "ch1_ep2_29c_kiem_tra_bo_sung",
+      "type": "dialogue",
+      "location": "Hành lang phòng trực tủ súng — Đêm Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "calm",
+      "text": "Công nhận ông nghĩ ra cái đường lùi mà vẫn giữ sạch mặt giấy hay thiệt đó! Hai đứa mình xuống tận tủ súng soi đèn kiểm tra lại từng cái dây chì niêm phong ngay trong đêm thế này, lỡ có mất mát gì còn biết đường báo động liền chứ không ngồi đoán mò.\n\nDây chì còn nguyên vẹn hết rồi nè. Ghi rõ vô biên bản bổ sung là đêm qua do cấp cứu đồng đội nên quên ký, hai giờ sáng hôm sau hai đứa tự kiểm tra lại niêm phong, rồi sáng mai cùng đứng trước bàn thầy Vinh chịu phạt chung.\n\nCó bị phạt chạy thêm năm vòng sân lúc trời chưa sáng thì hai thằng cùng chạy cho ấm giò, đỡ áy náy lương tâm.",
+      "next": "ch1_ep2_30b_vinh_kiem_tra_trung_thuc"
+    },
+    {
+      "id": "ch1_ep2_29d_ky_lui_gio",
+      "type": "dialogue",
+      "location": "Khu nhà ở giường tầng Phòng B2 — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "somber",
+      "text": "Rồi... tui ký xong rồi đó, tắt đèn pin đi kẻo trực ban đi ngang thấy ánh sáng lọt khe chăn. Mà thiệt tình lúc cầm bút vẽ cái giờ bốn giờ sáng hôm qua lên dòng trống đó, tay tui tự dưng thấy nhớp nháp kỳ cục lắm ông ơi.\n\nHồi chiều ông mới cầm cuốn sổ bìa xanh thầy Vinh trao về, nói ghi lỗi để sửa mà tối nay tụi mình lại rủ nhau che đèn pin vá sổ cho đẹp trang trước giờ kiểm tra.\n\nThôi nằm xuống ngủ đi, coi như xong một chuyện. Chỉ cầu mong sáng mai thầy Vinh lướt mắt qua nhanh, đừng soi kỹ nét mực mới này.",
+      "next": "ch1_ep2_30c_vinh_kiem_tra_ky_lui"
+    },
+    {
+      "id": "ch1_ep2_30a_vinh_kiem_tra_ganh",
+      "type": "dialogue",
+      "location": "Phòng trực ban học viên — Sáu giờ kém mười",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "tense",
+      "text": "Ngồi yên đấy chưa cần đứng lên vội. Tôi nhìn nét chữ viết tên nhận kiểm tra muộn ở dòng cuối cuốn sổ trực này là hiểu ngay chuyện gì xảy ra tối qua rồi, không cần hai cậu phải diễn thêm kịch đâu.\n\nTôi vẫn ký duyệt cho Khang theo đúng danh sách điều động sáng nay vì cậu ta cứu bạn sốt rét không phải hành vi bỏ chốt tư lợi. Nhưng riêng cậu, người vừa nhận cuốn sổ bìa xanh chiều qua, cậu tự hỏi lại mình xem cái tình bạn kiểu đứng ra viết thay vào sổ trực ấy giúp được đồng đội hay đang tập cho nhau thói quen che giấu sai sót?\n\nTôi ghi một nhắc nhở kỷ luật vào phiếu đánh giá cuối khóa của cậu. Ra đơn vị rồi, đừng dùng tình cảm che lấp chữ ký trách nhiệm nữa.",
+      "next": "ch1_ep2_31_hanh_lang_truoc_le"
+    },
+    {
+      "id": "ch1_ep2_30b_vinh_kiem_tra_trung_thuc",
+      "type": "dialogue",
+      "location": "Phòng trực ban học viên — Sáu giờ kém mười",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Tôi đã nghe đầu đuôi chuyện đưa bạn phòng bên xuống trạm xá đêm qua, và tôi cũng đã kiểm tra lại dây niêm phong tủ súng dưới hành lang. Đáng khen nhất là các cậu không ký khống, không tô vẽ lùi giờ để làm đẹp trang giấy trước buổi tốt nghiệp.\n\nKhang nhớ kỹ: việc tốt giúp đồng đội không xóa được lỗi bỏ trống biên bản khóa tủ súng. Tôi trừ điểm rèn luyện kỳ cuối và phạt chạy bổ sung trước giờ điểm danh, nhưng vẫn giữ nguyên lệnh điều động để cậu đi cùng đợt với bạn mình.\n\nCòn cậu, người giữ nguyên tắc sổ sách đứng cạnh bạn lúc khó nghĩ nhất, chiều qua ở thư viện tôi nói sao thì sáng nay cậu làm đúng như thế. Xách ba lô xuống sân tập hợp đi.",
+      "next": "ch1_ep2_31_hanh_lang_truoc_le"
+    },
+    {
+      "id": "ch1_ep2_30c_vinh_kiem_tra_ky_lui",
+      "type": "dialogue",
+      "location": "Phòng trực ban học viên — Sáu giờ kém mười",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "somber",
+      "text": "Các cậu nhìn kỹ vết mực còn hơi bóng trên hai dòng khóa tủ súng này đi. Đêm qua trời nồm ẩm, mực viết từ bốn giờ sáng hôm trước phải thấm khô lì vào thớ giấy, không thể còn ánh xanh mới toanh như dòng vừa viết dưới ánh đèn yếu lúc nửa đêm thế này.\n\nTôi không giữ Khang lại học viện vì cậu ta đưa người bệnh đi cấp cứu và tủ súng vẫn còn nguyên niêm phong. Nhưng hai cậu vừa tự làm hỏng điều quan trọng nhất trước ngày rời trường: thói quen sửa sổ cho đẹp mắt cấp trên.\n\nChữ ký giả có thể qua được một buổi sáng bận rộn, nhưng không qua được một đêm gác ngoài tiền tiêu đâu. Tôi ghi cảnh cáo vào hồ sơ hai cậu; xuống sân tập hợp ngay đi.",
+      "next": "ch1_ep2_31_hanh_lang_truoc_le"
+    },
+    {
+      "id": "ch1_ep2_31_hanh_lang_truoc_le",
+      "type": "narration",
+      "location": "Hiên khu nhà ở — Trước giờ tập hợp tốt nghiệp",
+      "mood": "calm",
+      "text": "Sáu giờ mười lăm sáng, tiếng kẻng tập hợp chuẩn bị lễ bế giảng vang lên lảnh lót khắp khu nội trú. Học viên các phòng ùa ra hành lang trong bộ quân phục mới thẳng nếp, mùi vải hồ cứng còn thoang thoảng quanh cổ áo, ba lô xếp thành hàng ngay ngắn dọc mép hiên gạch.\n\nTừ dãy nhà văn thư đi sang, Vũ Minh Quang đã cài kín cúc áo, tay ôm tập hồ sơ cá nhân vừa ký xác nhận xong. Thấy tôi và Khang bước xuống bậc tam cấp với quân trang gọn gàng, Quang khẽ dừng bước bên cột hiên, xoay nắp chiếc bút máy ba vòng như thói quen cũ.",
+      "branches": [
+        {
+          "condition": { "flag": "che_giau_loi_khang" },
+          "next": "ch1_ep2_32a_quang_nghi_ho_so"
+        },
+        {
+          "condition": { "flag": "bao_cao_trung_thuc_quang_trung" },
+          "next": "ch1_ep2_32b_quang_ton_trong"
+        }
+      ],
+      "next": "ch1_ep2_32b_quang_ton_trong"
+    },
+    {
+      "id": "ch1_ep2_32a_quang_nghi_ho_so",
+      "type": "dialogue",
+      "location": "Hiên khu nhà ở — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Tôi vừa từ phòng văn thư đi ngang qua lúc các cậu bước ra khỏi phòng trực của thầy Vinh. Nghe phong thanh có chuyện lệch giờ trên sổ trực tủ súng mà cậu dính nhắc nhở cuối khóa à?\n\nTôi không tò mò chuyện riêng của hai cậu đâu, nhưng nói thật một câu trước khi chia tay sân trường: đừng mang thói quen nể nang hay chữa cháy hồ sơ ấy lên tuyến trước.\n\nỞ hậu phương người ta còn châm chước cho cái lý do cứu bạn, chứ lên tới bàn tham mưu chiến trường, một con số bị sửa cho khớp giờ có thể kéo cả trung đội vào chỗ chết đấy. Thôi, còi tập hợp sắp thổi rồi, chỉnh lại cổ áo đi.",
+      "next": "ch1_ep2_33_le_tot_nghiep_vinh"
+    },
+    {
+      "id": "ch1_ep2_32b_quang_ton_trong",
+      "type": "dialogue",
+      "location": "Hiên khu nhà ở — Quang Trung",
+      "speaker": "quang",
+      "speakerTitle": "Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Sáng nay đi ngang phòng trực ban, thấy thầy Vinh cầm cuốn sổ trực có vết gạch chéo chỉnh lại biên bản mà không giữ Khang ở lại, tôi đoán ngay hai cậu đã chọn báo cáo thẳng.\n\nĐổi lại là tôi ở tình huống đó, tôi cũng không chắc mình có đủ kiên quyết gạch bỏ dòng trống cho bạn mình chịu phạt trước giờ lên xe hay không. Ít ra qua chuyện này, tôi biết trên bàn tham mưu sau này nếu nhận được báo cáo từ phía cậu, đó sẽ là số liệu thật chứ không phải giấy tô vẽ.\n\nCòi tập hợp sắp thổi rồi. Chỉnh lại ve áo đi, hôm nay cả khóa nhận quyết định điều động rồi đấy.",
+      "next": "ch1_ep2_33_le_tot_nghiep_vinh"
+    },
+    {
+      "id": "ch1_ep2_33_le_tot_nghiep_vinh",
+      "type": "dialogue",
+      "location": "Cột cờ sân sỏi đỏ — Lễ tốt nghiệp Quang Trung",
+      "speaker": "vinh",
+      "speakerTitle": "Đại úy Trần Quốc Vinh",
+      "mood": "warm",
+      "text": "Các đồng chí giữ nguyên hàng ngũ trước cột cờ. Sau ba tháng rèn luyện qua nắng gió sân sỏi đỏ, phòng sa bàn và đêm hành quân vượt lũ, hôm nay Học Viện Quân Sự Quang Trung đọc quyết định điều động các đồng chí về các đơn vị trực tiếp làm nhiệm vụ.\n\nHọc viên Vũ Minh Quang nhận quyết định về bộ phận tham mưu thông tin khu vực trung chuyển; các đồng chí còn lại trong tổ, trong đó có cậu và Lê Minh Khang, được biên chế về Tiểu Đội 1 Thiên Minh trên dãy núi đá vôi phía Bắc.\n\nQuang Trung chỉ dạy các đồng chí cách đứng thẳng và cầm đúng cây bút, cầm đúng khẩu súng. Từ giờ phút bước qua cánh cổng sắt phía trước kia, trang giấy trắng trong túi áo ngực trái của mỗi người phải tự viết bằng mồ hôi và sự trung thực ngoài thực địa. Toàn trung đội giải tán, lên xe nhận đơn vị!",
+      "next": "ch1_ep2_34_choice_trang_dau_so"
+    },
+    {
+      "id": "ch1_ep2_34_choice_trang_dau_so",
+      "type": "choice",
+      "location": "Bậc thềm cổng sắt — Học Viện Quân Sự Quang Trung",
+      "mood": "warm",
+      "text": "Ngoài cánh cổng sắt sơn xanh, hai chiếc xe tải phủ bạt đã nổ máy chờ sẵn trong nắng sớm loãng sương, bác tài Phan Văn Bảy thò tay vẫy từ buồng lái còn Khang đứng đợi cạnh bậc thềm gạch cũ.\n\nTiếng còi gọi quân lên xe đã giục lần thứ hai. Trên tay bạn là cây bút bi xanh và trang đầu tiên còn trắng tinh, thơm mùi giấy mới của cuốn sổ bìa xanh.",
+      "choices": [
+        {
+          "id": "c_ghi_ten_khang",
+          "label": "Viết ngay tên Lê Minh Khang vào dòng đầu tiên — người bạn giường tầng cùng bước ra từ cổng Quang Trung",
+          "effects": [
+            { "setFlag": "ghi_ten_khang_trang_dau" },
+            { "addRel": { "char": "khang", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_trang_dau_khang",
+                "title": "Dòng tên đầu tiên",
+                "entry": "Trước khi bước lên thùng xe rời Quang Trung đi Thiên Minh, tôi đã viết tên Lê Minh Khang vào dòng đầu tiên của cuốn sổ bìa xanh."
+              }
+            }
+          ],
+          "next": "ch1_ep2_35a_trang_dau_ten_khang"
+        },
+        {
+          "id": "c_ghi_ten_bon_nguoi",
+          "label": "Ghi tên cả bốn người đã giữ nhịp chặng đầu — thầy Vinh, Khang, Quang và bác tài Bảy — kèm ngày rời trường",
+          "effects": [
+            { "setFlag": "ghi_ten_khang_trang_dau" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 1 } },
+            { "addRel": { "char": "bay", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_trang_dau_bon_ten",
+                "title": "Những cái tên ngày rời trường",
+                "entry": "Trang đầu cuốn sổ bìa xanh ghi tên thầy Trần Quốc Vinh, Lê Minh Khang, Vũ Minh Quang và bác tài Phan Văn Bảy trong buổi sáng rời Quang Trung."
+              }
+            }
+          ],
+          "next": "ch1_ep2_35b_trang_dau_bon_ten"
+        },
+        {
+          "id": "c_ghi_loi_sai_dem_qua",
+          "label": "Viết câu nhắc nhở của thầy Vinh về ba nhịp chậm và bài học sổ trực đêm qua lên đầu trang để tự răn mình",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "vinh", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_trang_dau_bai_hoc",
+                "title": "Lời tự răn ở trang đầu",
+                "entry": "Tôi chọn viết bài học kỷ luật và sự trung thực của những đêm đầu ở Quang Trung lên trang một cuốn sổ bìa xanh."
+              }
+            }
+          ],
+          "next": "ch1_ep2_35c_trang_dau_bai_hoc"
+        },
+        {
+          "id": "c_de_trang_cho_thien_minh",
+          "label": "Gấp sổ bỏ lại vào túi áo ngực trái, dành trang đầu tiên cho đêm gác thực chiến đầu tiên tại Thiên Minh",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_trang_dau_de_trong",
+                "title": "Trang đầu để ngỏ cho Thiên Minh",
+                "entry": "Tôi giữ trắng trang đầu cuốn sổ bìa xanh khi rời Quang Trung, chờ đến đêm gác thực chiến đầu tiên ngoài tuyến tiền tiêu."
+              }
+            }
+          ],
+          "next": "ch1_ep2_35d_trang_dau_de_trong"
+        }
+      ]
+    },
+    {
+      "id": "ch1_ep2_35a_trang_dau_ten_khang",
+      "type": "dialogue",
+      "location": "Bậc lên xuống xe tải quân sự — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "warm",
+      "text": "Ủa, ông làm cái gì mà đứng tẩn mẩn viết ngay bên bậc cửa xe vậy cha nội? Khoan... cái nét mực đó là tên tui hả? Ông bày đặt sến sớm y như sắp đi đày không bằng vậy đó!\n\nMà thôi, lỡ viết vô trang đầu cuốn sổ thầy Vinh cho rồi thì ráng giữ chữ cho sạch nha, đừng để mai mốt lên Thiên Minh tui làm bậy rồi ông phải lấy bút gạch ngang tên tui thì kỳ cục lắm.\n\nĐưa cái ba lô đây tui kéo phụ lên thùng xe cho, leo lẹ ngồi góc sát vách gỗ cho đỡ gió lùa vô mặt nè!",
+      "next": "ch1_ep2_36_bay_len_xe_chuyen_tuyen"
+    },
+    {
+      "id": "ch1_ep2_35b_trang_dau_bon_ten",
+      "type": "dialogue",
+      "location": "Bậc lên xuống xe tải quân sự — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "warm",
+      "text": "Trời đất, ông ghi luôn cả tên thầy Vinh, thằng Quang với bác tài Bảy chung một hàng đầu tiên với tui luôn hả? Coi bộ trang giấy của ông chật chội ngay từ bữa xuất quân rồi đó nha!\n\nNhưng mà nhìn bốn cái tên nằm chung một trang lại thấy ấm bụng thiệt. Thằng Quang tuy càu nhàu khó tính mà nó gánh được phần giấy tờ, bác Bảy thì lo phần dầu xe bánh xích, thầy Vinh giữ nhịp đằng sau.\n\nLeo lên xe đi ông, chắc tới khúc cua kia là bác Bảy hú còi chuyển số rồi đó!",
+      "next": "ch1_ep2_36_bay_len_xe_chuyen_tuyen"
+    },
+    {
+      "id": "ch1_ep2_35c_trang_dau_bai_hoc",
+      "type": "dialogue",
+      "location": "Bậc lên xuống xe tải quân sự — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "calm",
+      "text": "Ông ghi câu nhắc ba nhịp với chuyện sổ sách đêm qua vô trang đầu thiệt hả? Nhìn ông viết ngay ngắn vậy tự dưng tui cũng thấy sống lưng mình thẳng theo chút xíu.\n\nKhông ghi tên ai hết mà ghi ngay vết nhắc nhở của mình lên đầu trang cũng đúng kiểu thầy Vinh dặn rồi: đừng viết điều mình chưa làm được, chỉ viết cái lỗi không được phép lặp lại.\n\nThôi cất vô túi áo cài cúc kỹ đi ông, gió trên thùng xe thổi bay trang giấy bây giờ. Đưa ba lô đây tui phụ kéo lên!",
+      "next": "ch1_ep2_36_bay_len_xe_chuyen_tuyen"
+    },
+    {
+      "id": "ch1_ep2_35d_trang_dau_de_trong",
+      "type": "dialogue",
+      "location": "Bậc lên xuống xe tải quân sự — Quang Trung",
+      "speaker": "khang",
+      "speakerTitle": "Lê Minh Khang",
+      "mood": "calm",
+      "text": "Chà, giữ trang đầu trắng trơn chờ lên chốt mới viết luôn hả ông? Cũng có lý của ông lắm, ở trong trường này vẫn còn có tường gạch che gió với thầy cô đứng sau nhắc từng ly từng tí.\n\nChừng nào ra ngoài núi đá vôi gác đêm một mình dưới trời sương mù, lúc đó mới biết nét chữ đầu tiên trong cuốn sổ bìa xanh đáng giá cỡ nào. Đợi tới ca gác đầu tiên ở Thiên Minh rồi mở sổ ra tính sau cũng chưa muộn.\n\nLeo lên thùng xe đi ông, bác tài Bảy đang nhìn kính chiếu hậu giục kìa!",
+      "next": "ch1_ep2_36_bay_len_xe_chuyen_tuyen"
+    },
+    {
+      "id": "ch1_ep2_36_bay_len_xe_chuyen_tuyen",
+      "type": "dialogue",
+      "location": "Buồng lái xe tải vận tải — Cổng Quang Trung",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Đủ mặt trên thùng xe hết chưa mấy chú em ơi? Bám chắc vô thanh gỗ hai bên thành xe nghe, qua khỏi cầu sắt là đường lên rìa núi đá vôi xóc dữ lắm đó!\n\nMà đừng có lo, thùng xe này tui mới kiểm tra thắng với bơm mỡ trục từ tối qua rồi, dầu đầy bình, kẹo gừng cũng còn nguyên một hộp trên táp-lô. Đường dốc tới đâu xe cũng bò qua tới Tiểu Đội 1 Thiên Minh cho mấy chú kịp nhận cơm trưa.\n\nChuẩn bị nghen, tui nhả côn vô số đây! Chào tạm biệt mái ngói Quang Trung đi mấy chú lính mới!",
+      "next": "ch1_ep2_bottleneck"
+    },
+    {
+      "id": "ch1_ep2_bottleneck",
+      "type": "narration",
+      "location": "Thùng xe tải quân sự — Đường lên tuyến tiền tiêu Thiên Minh",
+      "mood": "calm",
+      "isChapterEnd": true,
+      "text": "Động cơ xe tải rền lên một tiếng trầm đục rồi từ từ lăn bánh qua vạch sơn trắng trước vọng gác học viện. Ngồi sát mép sau thùng xe phủ bạt, tôi ngoái đầu nhìn lại qua màn bụi đất đỏ mỏng đang bốc lên sau bánh lốp.\n\nCánh cổng sắt sơn xanh, hàng bạch đàn sương sớm, sân tập sỏi đỏ và dãy mái ngói rêu của thư viện gạch cũ thu nhỏ dần rồi khuất hẳn sau khúc cua đầu dốc. Giữa lớp áo quân phục mới còn vương mùi vải hồ và bụi đường, bàn tay tôi đặt khẽ lên túi áo ngực bên trái, cảm nhận cạnh cứng của cuốn sổ bìa xanh nằm ngay trên nhịp đập lồng ngực.\n\nChặng học viên trên sân trường đã khép lại phía sau lưng. Phía trước mũi xe đang chồm lên con đường đèo mờ sương hướng về dãy núi đá vôi nơi Tiểu Đội 1 Thiên Minh đang chờ.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch1_ep2_ket",
+            "title": "Rời cổng Quang Trung",
+            "entry": "Hoàn thành kỳ huấn luyện tại Học Viện Quân Sự Quang Trung với cuốn sổ bìa xanh trong túi ngực, tôi cùng Lê Minh Khang lên xe bác tài Phan Văn Bảy hướng về Tiểu Đội 1 Thiên Minh."
+          }
+        }
+      ]
+    }
+  ]
+}

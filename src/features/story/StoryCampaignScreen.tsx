@@ -3,6 +3,8 @@ import {
   ArrowLeft,
   BookOpen,
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   Clock,
   Compass,
   Eye,
@@ -24,7 +26,7 @@ import { ArchiveScene } from "../profile/pixi/ArchiveScene";
 import { CommandHeader } from "../../components/military/MilitaryUI";
 import { soundManager } from "../../game/audio";
 import type { GameState } from "../../game/types";
-import { loadStoryChapter, STORY_CHAPTERS_META } from "./storyCatalog";
+import { loadStoryChapter, STORY_CHAPTER_GROUPS, STORY_EPISODES_META } from "./storyCatalog";
 import {
   advanceLinearNode,
   applyChoiceToSave,
@@ -58,6 +60,13 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+function splitParagraphs(text: string): string[] {
+  return text
+    .split(/\r?\n\r?\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
 export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
   state,
   onBack,
@@ -68,6 +77,11 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
   const [activeChapter, setActiveChapter] = useState<StoryChapter | null>(null);
   const [isLoadingChapter, setIsLoadingChapter] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [expandedChapterNum, setExpandedChapterNum] = useState<number>(() => {
+    const initialSave = loadStoryCampaignSave();
+    const ep = STORY_EPISODES_META.find((item) => item.id === initialSave?.currentChapterId);
+    return ep?.chapterNumber ?? 1;
+  });
 
   const [notebookTab, setNotebookTab] = useState<NotebookTab>("stats");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -132,9 +146,9 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
         const chapter = await loadStoryChapter(chapterId);
         let nextSave = saveRef.current;
         if (!nextSave) {
-          const ch1 = chapter.id === "ch1_khoi_dau" ? chapter : await loadStoryChapter("ch1_khoi_dau");
+          const ch1 = chapter.id === "ch1_ep1" ? chapter : await loadStoryChapter("ch1_ep1");
           nextSave = createFreshCampaignSave(ch1);
-          if (chapter.id !== "ch1_khoi_dau") {
+          if (chapter.id !== "ch1_ep1") {
             nextSave = startChapterCleanOrFromSnapshot(nextSave, chapter, false);
           }
         } else if (mode === "fresh") {
@@ -145,7 +159,17 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
           nextSave = startChapterCleanOrFromSnapshot(nextSave, chapter, true);
         }
 
+        if (!chapter.nodes.some((n) => n.id === nextSave.currentNodeId)) {
+          nextSave = {
+            ...nextSave,
+            currentChapterId: chapter.id,
+            currentNodeId: chapter.entryNodeId,
+            history: [{ kind: "node", nodeId: chapter.entryNodeId }],
+          };
+        }
+
         setActiveChapter(chapter);
+        setExpandedChapterNum(chapter.chapterNumber);
         persistSave(nextSave);
         setViewMode("reader");
       } catch (err) {
@@ -222,9 +246,10 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
     clearStoryCampaignSave();
     setIsLoadingChapter(true);
     try {
-      const ch1 = await loadStoryChapter("ch1_khoi_dau");
+      const ch1 = await loadStoryChapter("ch1_ep1");
       const fresh = createFreshCampaignSave(ch1);
       setActiveChapter(ch1);
+      setExpandedChapterNum(1);
       persistSave(fresh);
       setViewMode("reader");
     } finally {
@@ -305,15 +330,35 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
   const unlockedChapterNumbers = useMemo(() => {
     const set = new Set<number>([1]);
     if (!save) return set;
-    const curMeta = STORY_CHAPTERS_META.find((c) => c.id === save.currentChapterId);
+    const curMeta = STORY_EPISODES_META.find((c) => c.id === save.currentChapterId);
     if (curMeta) {
       for (let i = 1; i <= curMeta.chapterNumber; i++) set.add(i);
     }
     for (const doneId of save.completedChapterIds) {
-      const doneMeta = STORY_CHAPTERS_META.find((c) => c.id === doneId);
+      const doneMeta = STORY_EPISODES_META.find((c) => c.id === doneId);
       if (doneMeta) {
         set.add(doneMeta.chapterNumber);
-        if (doneMeta.chapterNumber < 8) set.add(doneMeta.chapterNumber + 1);
+        if (doneMeta.nextChapterId) {
+          const nextEp = STORY_EPISODES_META.find((c) => c.id === doneMeta.nextChapterId);
+          if (nextEp) set.add(nextEp.chapterNumber);
+        }
+      }
+    }
+    return set;
+  }, [save]);
+
+  const unlockedEpisodeOrders = useMemo(() => {
+    const set = new Set<number>([1]);
+    if (!save) return set;
+    const curMeta = STORY_EPISODES_META.find((c) => c.id === save.currentChapterId);
+    if (curMeta) {
+      for (let i = 1; i <= curMeta.episodeOrder; i++) set.add(i);
+    }
+    for (const doneId of save.completedChapterIds) {
+      const doneMeta = STORY_EPISODES_META.find((c) => c.id === doneId);
+      if (doneMeta) {
+        set.add(doneMeta.episodeOrder);
+        if (doneMeta.episodeOrder < 24) set.add(doneMeta.episodeOrder + 1);
       }
     }
     return set;
@@ -321,10 +366,11 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
 
   // === HUB VIEW (inside Hồ Sơ Quân Vụ) ===
   if (viewMode === "hub") {
-    const currentMeta = STORY_CHAPTERS_META.find((c) => c.id === save?.currentChapterId) ?? STORY_CHAPTERS_META[0];
-    const completedCount = save?.completedChapterIds.length ?? 0;
+    const currentMeta = STORY_EPISODES_META.find((c) => c.id === save?.currentChapterId) ?? STORY_EPISODES_META[0];
+    const completedEpisodesCount = save?.completedChapterIds.length ?? 0;
     const unlockedEndingsCount = save?.unlockedEndingIds.length ?? 0;
     const visitedCount = save?.visitedNodeIds.length ?? 0;
+    const totalEndingsCount = STORY_ENDINGS.length;
 
     return (
       <ArchiveScene
@@ -335,7 +381,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
       >
         <CommandHeader
           title="Chiến Dịch Cốt Truyện"
-          subtitle="Phân nhánh 8 chương · 6 kết cục · ~8–10 giờ khám phá"
+          subtitle="Phân nhánh 8 chương · 24 hồi · ~24–30 giờ khám phá"
           icon={<BookOpen />}
           action={
             <button
@@ -363,7 +409,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
           <div className="flex items-start justify-between gap-3">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                {save ? "Đang tiến hành" : "Bắt đầu hành trình mới"}
+                {save ? `Đang tiến hành · Hồi ${currentMeta.episodeOrder}/24` : "Bắt đầu hành trình mới"}
               </span>
               <h2 className="text-base font-extrabold text-slate-100 mt-0.5">
                 {currentMeta.title}
@@ -374,11 +420,13 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
 
           <div className="grid grid-cols-3 gap-2 pt-1">
             <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 text-center">
-              <div className="text-sm font-black text-amber-300">{completedCount}/8</div>
-              <div className="text-[10px] text-slate-400 font-semibold">Chương hoàn tất</div>
+              <div className="text-sm font-black text-amber-300">{completedEpisodesCount}/24</div>
+              <div className="text-[10px] text-slate-400 font-semibold">Hồi hoàn tất</div>
             </div>
             <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 text-center">
-              <div className="text-sm font-black text-emerald-300">{unlockedEndingsCount}/6</div>
+              <div className="text-sm font-black text-emerald-300">
+                {unlockedEndingsCount}/{totalEndingsCount}
+              </div>
               <div className="text-[10px] text-slate-400 font-semibold">Kết cục đã mở</div>
             </div>
             <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 text-center">
@@ -395,7 +443,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
               className="theme-button-primary flex-1 py-2.5 px-4 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg"
             >
               <Play className="w-4 h-4 fill-current" />
-              <span>{save ? "Tiếp Tục Cốt Truyện" : "Bắt Đầu Từ Chương I"}</span>
+              <span>{save ? "Tiếp Tục Cốt Truyện" : "Bắt Đầu Từ Chương I · Hồi 1"}</span>
             </button>
 
             {save && (
@@ -404,7 +452,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                 disabled={isLoadingChapter}
                 onClick={handleResetWholeCampaign}
                 className="py-2.5 px-3 rounded-xl bg-slate-900 border border-slate-700/80 text-xs font-bold text-slate-300 hover:text-rose-300 hover:border-rose-500/40 flex items-center gap-1.5"
-                title="Chơi lại từ đầu Chương I (vẫn giữ danh sách Kết cục đã mở)"
+                title="Chơi lại từ đầu Chương I (vẫn giữ các Kết cục đã khám phá)"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Chơi Lại</span>
@@ -413,12 +461,12 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
           </div>
         </div>
 
-        {/* 8-Chapter Roadmap */}
+        {/* 8-Chapter / 24-Episode Roadmap */}
         <div className="command-panel rounded-2xl bg-slate-900/70 border border-slate-800 p-4 space-y-3 shadow-lg">
           <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
             <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
               <Compass className="w-4 h-4 text-amber-400" />
-              <span>Lộ Trình 8 Chương</span>
+              <span>Lộ Trình 8 Chương · 24 Hồi</span>
             </h3>
             <button
               type="button"
@@ -433,100 +481,145 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                   ? "bg-amber-500/15 border-amber-400/50 text-amber-300"
                   : "bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200"
               }`}
-              title="Bật để đọc thử tự do bất kỳ chương nào"
+              title="Bật để đọc thử tự do bất kỳ hồi nào"
             >
               {save?.freeExploreUnlocked ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
               <span>{save?.freeExploreUnlocked ? "Đọc tự do: Bật" : "Mở khóa đọc tự do"}</span>
             </button>
           </div>
 
-          <div className="space-y-2">
-            {STORY_CHAPTERS_META.map((ch) => {
-              const isUnlocked = Boolean(save?.freeExploreUnlocked) || unlockedChapterNumbers.has(ch.chapterNumber);
-              const isCompleted = save?.completedChapterIds.includes(ch.id);
-              const isCurrent = save?.currentChapterId === ch.id;
+          <div className="space-y-2.5">
+            {STORY_CHAPTER_GROUPS.map((group) => {
+              const episodes = group.episodeIds
+                .map((id) => STORY_EPISODES_META.find((ep) => ep.id === id))
+                .filter((ep): ep is NonNullable<typeof ep> => Boolean(ep));
+              const groupDoneCount = episodes.filter((ep) => save?.completedChapterIds.includes(ep.id)).length;
+              const isGroupCurrent = episodes.some((ep) => ep.id === save?.currentChapterId);
+              const isGroupUnlocked =
+                Boolean(save?.freeExploreUnlocked) || unlockedChapterNumbers.has(group.chapterNumber);
+              const isExpanded = expandedChapterNum === group.chapterNumber;
 
-              return (
-                <button
-                  key={ch.id}
-                  type="button"
-                  disabled={!isUnlocked || isLoadingChapter}
-                  onClick={() => openChapterInReader(ch.id, isCurrent ? "resume" : "snapshot")}
-                  className={`w-full text-left p-3 rounded-xl border transition-all flex items-start justify-between gap-3 ${
-                    isCurrent
-                      ? "bg-amber-950/25 border-amber-500/50 hover:bg-amber-950/35"
-                      : isUnlocked
-                        ? "bg-slate-950/75 border-slate-800 hover:border-slate-600"
-                        : "bg-slate-950/40 border-slate-800/50 opacity-55 cursor-not-allowed"
-                  }`}
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-extrabold text-amber-400">
-                        CHƯƠNG {ch.chapterNumber}
-                      </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 font-semibold">
-                        {ch.rankRange}
-                      </span>
-                      {isCompleted && (
-                        <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
-                          <CheckCircle2 className="w-3 h-3" /> Xong
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs font-bold text-slate-100 mt-1 truncate">{ch.title}</div>
-                    <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">{ch.summary}</div>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    {isUnlocked ? (
-                      <span className="text-[10px] font-mono text-slate-400">~{ch.estimatedMinutes}p</span>
-                    ) : (
-                      <Lock className="w-4 h-4 text-slate-500 mt-1" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 6 Endings Gallery */}
-        <div className="command-panel rounded-2xl bg-slate-900/70 border border-slate-800 p-4 space-y-3 shadow-lg">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-400" />
-              <span>Kho 6 Kết Cục ({unlockedEndingsCount}/6)</span>
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 gap-2">
-            {STORY_ENDINGS.map((end) => {
-              const unlocked = save?.unlockedEndingIds.includes(end.id);
               return (
                 <div
-                  key={end.id}
-                  className={`p-3 rounded-xl border ${
-                    unlocked
-                      ? "bg-emerald-950/20 border-emerald-500/35"
-                      : "bg-slate-950/60 border-slate-800/80"
+                  key={group.chapterNumber}
+                  className={`rounded-xl border transition-all overflow-hidden ${
+                    isGroupCurrent
+                      ? "bg-amber-950/20 border-amber-500/45"
+                      : isGroupUnlocked
+                        ? "bg-slate-950/70 border-slate-800"
+                        : "bg-slate-950/35 border-slate-800/50 opacity-65"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className={`text-xs font-bold ${unlocked ? "text-emerald-300" : "text-slate-300"}`}>
-                      {unlocked ? end.title : "Kết cục chưa mở khóa"}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 font-semibold">
-                      {end.tag}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    {unlocked ? end.summary : `Gợi ý: ${end.hint}`}
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundManager.playClick();
+                      setExpandedChapterNum((prev) => (prev === group.chapterNumber ? -1 : group.chapterNumber));
+                    }}
+                    className="w-full text-left p-3 flex items-start justify-between gap-2.5"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[11px] font-extrabold text-amber-400">
+                          CHƯƠNG {group.chapterNumber}
+                        </span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 font-semibold">
+                          {group.rankRange}
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-400">
+                          {groupDoneCount}/{episodes.length} hồi
+                        </span>
+                      </div>
+                      <div className="text-xs font-bold text-slate-100 mt-1">{group.title}</div>
+                      <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">{group.summary}</div>
+                    </div>
+                    <div className="shrink-0 text-slate-400 mt-1">
+                      {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                    </div>
+                  </button>
+
+                  {isExpanded && (
+                    <div className="px-3 pb-3 pt-1 border-t border-slate-800/70 space-y-2">
+                      {episodes.map((ep) => {
+                        const isEpUnlocked =
+                          Boolean(save?.freeExploreUnlocked) || unlockedEpisodeOrders.has(ep.episodeOrder);
+                        const isEpCompleted = save?.completedChapterIds.includes(ep.id);
+                        const isEpCurrent = save?.currentChapterId === ep.id;
+
+                        return (
+                          <button
+                            key={ep.id}
+                            type="button"
+                            disabled={!isEpUnlocked || isLoadingChapter}
+                            onClick={() => openChapterInReader(ep.id, isEpCurrent ? "resume" : "snapshot")}
+                            className={`w-full text-left p-2.5 rounded-lg border transition flex items-start justify-between gap-2.5 ${
+                              isEpCurrent
+                                ? "bg-amber-950/35 border-amber-400/60 hover:bg-amber-950/45"
+                                : isEpUnlocked
+                                  ? "bg-slate-900/85 border-slate-800 hover:border-slate-600"
+                                  : "bg-slate-950/40 border-slate-800/50 opacity-50 cursor-not-allowed"
+                            }`}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-[10px] font-extrabold text-sky-300 uppercase">
+                                  Hồi {ep.episodeOrder}
+                                </span>
+                                <span className="text-[10px] text-slate-400">· {ep.rankRange}</span>
+                                {isEpCompleted && (
+                                  <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+                                    <CheckCircle2 className="w-3 h-3" /> Xong
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs font-bold text-slate-100 mt-0.5 truncate">{ep.shortTitle}</div>
+                              <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">{ep.summary}</div>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              {isEpUnlocked ? (
+                                <span className="text-[10px] font-mono text-slate-400">~{ep.estimatedMinutes}p</span>
+                              ) : (
+                                <Lock className="w-3.5 h-3.5 text-slate-500 mt-1" />
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         </div>
+
+        {/* Discovered Endings Only (hidden until unlocked) */}
+        {unlockedEndingsCount > 0 && (
+          <div className="command-panel rounded-2xl bg-slate-900/70 border border-slate-800 p-4 space-y-3 shadow-lg">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 className="font-bold text-sm text-slate-100 flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span>
+                  Kết Cục Đã Khám Phá ({unlockedEndingsCount}/{totalEndingsCount})
+                </span>
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              {STORY_ENDINGS.filter((end) => save?.unlockedEndingIds.includes(end.id)).map((end) => (
+                <div key={end.id} className="p-3 rounded-xl border bg-emerald-950/20 border-emerald-500/35">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-emerald-300">{end.title}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 font-semibold">
+                      {end.tag}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">{end.summary}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </ArchiveScene>
     );
   }
@@ -588,7 +681,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                 ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
                 : "bg-slate-900 border-slate-700 text-slate-400"
             }`}
-            title="Ẩn/hiện gợi ý lựa chọn & chỉ số"
+            title="Ẩn/hiện chỉ số chiến dịch"
           >
             {save.showStatsAndHints ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
             <span className="hidden sm:inline">Chỉ số</span>
@@ -652,86 +745,136 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                   const charMeta = node.speaker ? STORY_CHARACTERS_META[node.speaker] : undefined;
                   const speakerLabel = node.speakerTitle || charMeta?.displayName || node.speaker || "Nhân vật";
                   const avatarColor = charMeta?.color || "#94a3b8";
+                  const paragraphs = splitParagraphs(node.text);
 
                   return (
                     <article
                       key={node.id}
-                      className="rounded-xl bg-slate-900/90 border border-slate-800 p-3.5 flex gap-3 items-start shadow-md"
+                      className="rounded-2xl bg-slate-900/95 border border-slate-700/80 border-l-4 p-4 flex gap-3.5 items-start shadow-lg"
+                      style={{ borderLeftColor: avatarColor }}
                     >
                       <div
-                        className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center font-black text-xs text-slate-950"
+                        className="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center font-black text-xs text-slate-950 shadow-sm mt-0.5"
                         style={{ backgroundColor: avatarColor }}
                       >
                         {getInitials(charMeta?.displayName || speakerLabel)}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-baseline justify-between gap-2 flex-wrap mb-1">
-                          <span className="text-xs font-extrabold text-amber-300">{speakerLabel}</span>
+                      <div className="min-w-0 flex-1 space-y-2.5">
+                        <div className="flex items-center justify-between gap-2 flex-wrap border-b border-slate-800/80 pb-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-extrabold tracking-tight" style={{ color: avatarColor }}>
+                              {speakerLabel}
+                            </span>
+                            {charMeta?.region && (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-slate-400 font-semibold">
+                                {charMeta.region}
+                              </span>
+                            )}
+                          </div>
                           {node.location && (
-                            <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
+                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
                               {node.location}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm leading-relaxed text-slate-100">“{node.text}”</p>
+                        <div className="space-y-3 text-[15px] leading-7 text-slate-50 font-medium">
+                          {paragraphs.map((para, pIdx) => (
+                            <p key={pIdx} className="whitespace-pre-line">
+                              {para}
+                            </p>
+                          ))}
+                        </div>
                       </div>
                     </article>
                   );
                 }
 
                 if (node.type === "dispatch") {
+                  const paragraphs = splitParagraphs(node.text);
                   return (
                     <article
                       key={node.id}
-                      className="rounded-xl bg-slate-950 border border-dashed border-amber-500/70 p-4 font-mono text-xs text-amber-200 whitespace-pre-line shadow-inner"
+                      className="rounded-xl bg-slate-950 border border-dashed border-amber-500/70 p-4 font-mono text-xs text-amber-200 shadow-inner space-y-2.5"
                     >
-                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 text-[10px] font-bold tracking-wider mb-2">
-                        <Radio className="w-3 h-3" />
-                        <span>CÔNG ĐIỆN / VÔ TUYẾN</span>
-                      </div>
-                      {node.location && (
-                        <div className="text-[10px] uppercase tracking-wider text-slate-400 mb-1.5">
-                          {node.location}
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 text-[10px] font-bold tracking-wider">
+                          <Radio className="w-3 h-3" />
+                          <span>CÔNG ĐIỆN / VÔ TUYẾN</span>
                         </div>
-                      )}
-                      <div>{node.text}</div>
+                        {node.location && (
+                          <div className="text-[10px] uppercase tracking-wider text-slate-400">
+                            {node.location}
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-2.5 leading-relaxed">
+                        {paragraphs.map((para, pIdx) => (
+                          <p key={pIdx} className="whitespace-pre-line">
+                            {para}
+                          </p>
+                        ))}
+                      </div>
                     </article>
                   );
                 }
 
                 if (node.type === "choice") {
+                  const paragraphs = splitParagraphs(node.text);
                   return (
                     <article
                       key={node.id}
-                      className="rounded-xl bg-amber-950/20 border border-amber-500/40 p-3.5 text-sm text-amber-100 leading-relaxed"
+                      className="rounded-2xl bg-amber-950/25 border border-amber-500/45 p-4 text-[14.5px] text-amber-100 leading-7 space-y-2"
                     >
-                      {node.location && (
-                        <div className="text-[10px] uppercase tracking-wider text-amber-400/80 font-bold mb-1">
-                          {node.location}
-                        </div>
-                      )}
-                      <div>{node.text}</div>
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
+                          TÌNH HUỐNG QUYẾT ĐỊNH
+                        </span>
+                        {node.location && (
+                          <span className="text-[10px] uppercase tracking-wider text-amber-400/80 font-bold">
+                            {node.location}
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-3">
+                        {paragraphs.map((para, pIdx) => (
+                          <p key={pIdx} className="whitespace-pre-line">
+                            {para}
+                          </p>
+                        ))}
+                      </div>
                     </article>
                   );
                 }
 
+                const narrationParagraphs = splitParagraphs(node.text);
                 return (
                   <article
                     key={node.id}
-                    className={`rounded-xl border-l-4 p-4 text-sm leading-relaxed shadow-sm ${
+                    className={`rounded-2xl border p-4 sm:p-5 space-y-2.5 shadow-sm ${
                       node.mood === "urgent"
-                        ? "bg-rose-950/25 border-rose-500 text-slate-100"
+                        ? "bg-rose-950/20 border-rose-500/40 text-slate-200"
                         : node.mood === "warm"
-                          ? "bg-slate-900/75 border-amber-400 text-slate-200"
-                          : "bg-slate-900/70 border-emerald-600/80 text-slate-200"
+                          ? "bg-slate-900/55 border-amber-500/30 text-slate-200"
+                          : "bg-slate-900/50 border-slate-800/90 text-slate-300"
                     }`}
                   >
-                    {node.location && (
-                      <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1.5">
-                        {node.location}
-                      </div>
-                    )}
-                    <div className="whitespace-pre-line">{node.text}</div>
+                    <div className="flex items-center justify-between gap-2 flex-wrap border-b border-slate-800/60 pb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        DẪN CHUYỆN
+                      </span>
+                      {node.location && (
+                        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+                          {node.location}
+                        </span>
+                      )}
+                    </div>
+                    <div className="space-y-3 text-[14.5px] leading-7">
+                      {narrationParagraphs.map((para, pIdx) => (
+                        <p key={pIdx} className="whitespace-pre-line">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
                   </article>
                 );
               })}
@@ -770,7 +913,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                         onClick={handleGoNextChapter}
                         className="theme-button-primary flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold"
                       >
-                        Sang Chương Tiếp Theo →
+                        Sang Hồi Tiếp Theo →
                       </button>
                     )}
 
@@ -779,7 +922,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                       onClick={() => openChapterInReader(activeChapter.id, "snapshot")}
                       className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200"
                     >
-                      Chơi Lại Chương Này
+                      Chơi Lại Hồi Này
                     </button>
 
                     <button
@@ -830,10 +973,9 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                       {idx + 1}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-xs sm:text-sm font-bold text-slate-100">{choice.label}</span>
-                      {save.showStatsAndHints && choice.hint && (
-                        <span className="block text-[11px] text-slate-400 mt-0.5">{choice.hint}</span>
-                      )}
+                      <span className="block text-xs sm:text-sm font-bold text-slate-100 leading-snug">
+                        {choice.label}
+                      </span>
                     </span>
                   </button>
                 ))
@@ -846,7 +988,13 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                       onClick={handleGoNextChapter}
                       className="theme-button-primary flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-extrabold"
                     >
-                      Tiếp Tục Sang Chương {activeChapter.chapterNumber + 1} →
+                      {(() => {
+                        const nextEp = STORY_EPISODES_META.find((ep) => ep.id === activeChapter.nextChapterId);
+                        if (!nextEp) return "Sang Hồi Tiếp Theo →";
+                        return nextEp.chapterNumber === activeChapter.chapterNumber
+                          ? `Tiếp Tục Sang Hồi ${nextEp.episodeOrder} →`
+                          : `Sang Chương ${nextEp.chapterNumber} · Hồi ${nextEp.episodeOrder} →`;
+                      })()}
                     </button>
                   ) : (
                     <button
@@ -854,7 +1002,7 @@ export const StoryCampaignScreen: React.FC<StoryCampaignScreenProps> = ({
                       onClick={() => setViewMode("hub")}
                       className="theme-button-primary flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-extrabold"
                     >
-                      Xem Kho Kết Cục &amp; Lộ Trình
+                      Về Chiến Dịch &amp; Lộ Trình
                     </button>
                   )}
                 </div>

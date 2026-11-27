@@ -1,0 +1,1204 @@
+{
+  "id": "ch6_ep2",
+  "episodeOrder": 17,
+  "chapterNumber": 6,
+  "title": "Chương VI · Hồi 17: Tuyến Sách Long Vũ & Trạm Radar",
+  "ql2ChapterId": "general",
+  "rankRange": "Thượng Tướng",
+  "nextChapterId": "ch6_ep3",
+  "entryNodeId": "ch6_ep2_01_dai_chien_khu_long_vu",
+  "summary": "Thăng quân hàm Thượng Tướng tiếp quản Đại Chiến Khu Long Vũ, nối những dấu chì vùng xa thành tuyến xe chở sách vở cho lớp học hạ lưu và trao tận tay bác tài Phan Văn Bảy lá thư cảm ơn đầu tiên; đối mặt âm mưu đình chỉ Lê Phương Thảo từ Phạm Quang Hùng, trước khi bước vào quyết định sinh tử trong 10 giây cứu Trạm Radar Đỉnh Núi Bắc Vực của Trần Mỹ Linh.",
+  "nodes": [
+    {
+      "id": "ch6_ep2_01_dai_chien_khu_long_vu",
+      "type": "narration",
+      "location": "Quân cảng & Bộ Tư Lệnh Đại Chiến Khu Long Vũ",
+      "mood": "calm",
+      "text": "Chuyến bay vận tải từ dãy núi đá Bắc Vực hạ cánh xuống sân bay dã chiến Long Vũ vào một buổi sớm gió biển thổi mặn chát đầu môi. Chỉ sau bốn giờ rời khỏi màn sương muối đóng băng nơi đèo cao, cái rét cắt thịt đã nhường chỗ cho hơi ẩm phù sa đặc trưng của vùng đồng bằng cửa sông rộng lớn.\n\nTrên chiếc bàn gỗ lim kê sát ô cửa kính nhìn ra cầu cảng số 1, ba ngôi sao vàng Thượng Tướng nằm ngay ngắn cạnh tấm bản đồ nhỏ Thiên Lang sờn mép và cuốn sổ bìa xanh thầy Trần Quốc Vinh trao từ thuở Quang Trung. Ngoài kia, hàng chục cần cẩu giàn sơn vàng đang vươn tay bốc từng kiện hàng xuống xà lan.\n\nLong Vũ không chỉ là cửa ngõ tiếp tế đạn dược cho tuyến Bắc Vực đang gồng mình giữa mùa đông. Nơi đây còn nắm giữ mạch sống hàng trăm nhánh sông, bến phà và những xóm làng hạ lưu vừa oằn mình qua mùa bão lũ cuối năm.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep2_thuong_tuong",
+            "title": "Thượng Tướng — Đại Chiến Khu Long Vũ",
+            "entry": "Nhận quân hàm Thượng Tướng và trọng trách Tư lệnh Đại Chiến Khu Long Vũ, nắm giữ đầu mối cảng biển và mạng lưới tiếp vận hạ lưu chi viện mặt trận Bắc Vực."
+          }
+        }
+      ],
+      "next": "ch6_ep2_02_dispatch_thuong_tuong"
+    },
+    {
+      "id": "ch6_ep2_02_dispatch_thuong_tuong",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Bộ Tư Lệnh Đại Chiến Khu Long Vũ",
+      "mood": "calm",
+      "text": "[QUYẾT ĐỊNH ĐIỀU ĐỘNG CẤP CHIẾN LƯỢC — BỘ TỔNG THAM MƯU]\n\n\"Thăng quân hàm THƯỢNG TƯỚNG đối với Tư lệnh Quân đoàn Bắc Vực, điều động giữ chức Tư lệnh Đại Chiến Khu Long Vũ kể từ 06 giờ 00 ngày hôm nay. Chịu trách nhiệm điều phối toàn bộ cụm cảng tiếp vận duyên hải, dự trữ nhiên liệu mùa đông cho Bắc Vực và bảo đảm an ninh hạ tầng dân sinh vùng cửa sông.\"\n\n\"Lưu ý đặc biệt: Mạng lưới trạm radar cảnh giới tầm thấp giữa Long Vũ và Bắc Vực đang có dấu hiệu nhiễu sóng bất thường. Bộ phận thanh tra tài chính và phản gián chiến khu sẽ tiến hành đối chiếu kho cảng trong tuần đầu nhậm chức.\"",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep2_03a_khang_ben_cang"
+        }
+      ],
+      "next": "ch6_ep2_03b_cau_cang_vang_khang"
+    },
+    {
+      "id": "ch6_ep2_03a_khang_ben_cang",
+      "type": "dialogue",
+      "location": "Cầu cảng số 3 — Đại Chiến Khu Long Vũ",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Chà, ba ngôi sao vàng trên vai áo nhìn bảnh dữ à nghen Thượng Tướng! Tui đứng chờ ngoài trụ neo từ lúc thấy chiếc vận tải hạ cánh tới giờ, sợ mấy tay tham mưu trên sảnh lớn bủa vây ông hết chỗ thở.\n\nThôi bỏ cái giọng công văn sang một bên đi ông bạn giường tầng ơi. Ở đây có hai thằng mình với gió biển thôi, cho tui gõ lại hai cái lên vai coi ông có còn chắc tay như hồi đứng gác Thiên Minh không nào. Còn nghe nhau là còn đội hình!\n\nMà nhận cái chiến khu giàu tàu bè cần cẩu này thì nhớ lời tui dặn hoài đó: coi chừng cái bản đồ nó lừa mắt mình đó nha. Nhìn sơ đồ cảng Long Vũ thấy đường nào cũng thẳng băng, chứ rẽ vô mấy nhánh rạch phía Tây là cầu yếu phà thưa, xe chở gạo còn lún ngập trục chứ đừng nói chuyện giấy tờ.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_04_tham_kho_so_7"
+    },
+    {
+      "id": "ch6_ep2_03b_cau_cang_vang_khang",
+      "type": "narration",
+      "location": "Cầu cảng số 3 — Đại Chiến Khu Long Vũ",
+      "mood": "somber",
+      "text": "Chiều muộn, khi đoàn sĩ quan tùy tùng đã rút vào văn phòng đối chiếu số liệu bến bãi, tôi một mình bước dọc cầu cảng số 3 nghe sóng vỗ ì oạp vào mạn xà lan chở dầu. Gió từ cửa biển thổi tung vạt áo quân phục mới còn thơm mùi hồ vải.\n\nNgón tay cái vô thức lần vào túi áo ngực chạm phải lớp kim loại lạnh lẽo của chiếc bật lửa cũ và mặt kính nứt của chiếc đồng hồ đeo tay. Tôi tự gõ khẽ hai nhịp lên vai áo trái của mình như quy ước đổi gác năm nào ở Thiên Minh.\n\nGiá mà Lê Minh Khang còn đứng cạnh lúc này, hẳn nó đã bật nắp bật lửa kêu một tiếng tách gọn lỏn rồi bảo tôi đừng bao giờ nhìn chiến trường bằng con số trên giấy. Khoảng trống bên vai trái nhắc tôi phải tự bước xuống từng nhà kho, từng bến phà trước khi ký bất kỳ tờ lệnh nào.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_04_tham_kho_so_7"
+    },
+    {
+      "id": "ch6_ep2_04_tham_kho_so_7",
+      "type": "narration",
+      "location": "Kho trung chuyển số 7 — Đại Chiến Khu Long Vũ",
+      "mood": "calm",
+      "text": "Sáng hôm sau, tôi không ngồi phòng lạnh nghe báo cáo tổng hợp mà xuống thẳng Kho số 7 — nơi trung chuyển hàng hóa hỗn hợp đi mười bốn phân khu hạ lưu. Giữa những chồng hòm đạn cối, pin vô tuyến bọc chống ẩm và cuộn cáp thép, một góc nhà tôn chất cao hơn bốn mươi kiện giấy các-tông bọc ni-lông kỹ lưỡng.\n\nMặt thùng in rõ dòng chữ 'Tài trợ Giáo dục — Sách giáo khoa, vở viết cấp I và cấp II'. Thủ kho lúng túng trình bày rằng số sách này bị kẹt lại bến cảng suốt từ sau đợt bão cuối năm vì cầu phà dân sự dọc rạch dừa hư hỏng chưa sửa kịp.\n\nTrong khi đó, mỗi ngày hàng chục xe tải hai cầu của Long Vũ vẫn chạy đầy tải ra các chốt ven biển rồi quay đầu thùng rỗng trở về căn cứ qua đúng những ngã ba trường học vùng sâu ấy. Một nét bút điều lệnh có thể biến chuyến xe rỗng thành nhịp cầu nối chữ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } }
+            ]
+          },
+          "next": "ch6_ep2_05a_ha_noi_net_chi"
+        },
+        {
+          "condition": { "charAlive": "gia_lang" },
+          "next": "ch6_ep2_05b_gia_lang_duong_hoc"
+        },
+        {
+          "condition": { "charAlive": "son" },
+          "next": "ch6_ep2_05c_son_kiem_xe"
+        }
+      ],
+      "next": "ch6_ep2_05d_ho_so_kho_so_7"
+    },
+    {
+      "id": "ch6_ep2_05a_ha_noi_net_chi",
+      "type": "dialogue",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } }
+        ]
+      },
+      "text": "Thủ trưởng lại xem tờ bản đồ gấp này đi, tôi mới đi cùng đội tiêm chủng lưu động từ vùng rạch dừa về lúc sáu giờ sáng nay đấy. Mấy cái dấu chấm chì tôi đánh trên giấy can hôm nay khớp gần như in với lối đi học mà đơn vị ông từng giữ ở Xích Phong và Thiên Lang năm trước.\n\nTụi nhỏ ngoài bãi bồi bây giờ vẫn phải hong cuốn vở cũ trên bếp củi, ba bốn đứa chụm đầu chép chung một trang giấy nhòe mực. Có lớp học mái lá dựng tạm bên bờ kênh còn phải lấy mảnh tôn rỉ viết thay bảng đen vì phấn trắng nằm hết trong kho này.\n\nXe tải chiến khu chạy hàng ra cửa biển xong đều quay đầu rỗng dọc đê Đông mà Thượng Tướng. Chỉ cần ghép mỗi chuyến bốn kiện sách thả đầu bến phà, nối liền những dấu chì từ Bắc Vực xuống tận Long Vũ, là tuần sau không còn lớp nào thiếu chữ nữa.",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": 1 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_06_choice_tuyen_sach_long_vu"
+    },
+    {
+      "id": "ch6_ep2_05b_gia_lang_duong_hoc",
+      "type": "dialogue",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Bản Sương Mù)",
+      "mood": "warm",
+      "condition": { "charAlive": "gia_lang" },
+      "text": "Chào người chỉ huy có ba sao vàng trên vai. Già theo đoàn đại biểu dân bản vùng cao về bàn giao bản đồ suối lũ cho bộ đội công binh, tiện ghé kho thăm mấy chú lái xe quen từ hồi Bản Sương Mù.\n\nNhìn mấy thùng sách nằm im dưới mái tôn nóng hầm hập, già lại nhớ đám trẻ nhỏ bên kia rạch nước. Mùa gió chướng tới rồi, con nước ròng phơi bãi sình, mà tiếng ê a đọc chữ dưới mái lá vẫn mỏng như khói bếp sớm.\n\nRừng không giấu dấu chân người vội, nhưng con đường đất nào có vết bánh xe bộ đội chở chữ đi qua thì cỏ dại cũng không mọc lấp nổi đâu chú chỉ huy. Hạt giống tốt mà để nằm trong kho kín thì mùa sau đất buồn lắm.",
+      "effects": [
+        { "addRel": { "char": "gia_lang", "delta": 1 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_06_choice_tuyen_sach_long_vu"
+    },
+    {
+      "id": "ch6_ep2_05c_son_kiem_xe",
+      "type": "dialogue",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": { "charAlive": "son" },
+      "text": "Chào Thượng tướng. Tôi vừa kiểm xong đoàn xe chở đạn. Hai mươi xe chiều về chạy thùng rỗng.\n\nGóc kho kia có bốn mươi lăm kiện sách. Nằm bụi hai tháng rồi. Tuyến Tám Thước thiếu cầu phà.\n\nĐường đi học vẫn kẹt bùn. Dân trông từng chuyến xe qua đê. Chỉ cần một lệnh ghép hàng.\n\nLính vận tải đủ sức gánh thêm. Chờ chữ ký của thủ trưởng. Ngắn gọn vậy thôi.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_06_choice_tuyen_sach_long_vu"
+    },
+    {
+      "id": "ch6_ep2_05d_ho_so_kho_so_7",
+      "type": "narration",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "mood": "calm",
+      "text": "Sĩ quan điều phối vận tải trải tập lịch trình xe chạy tuần tới lên nắp thùng gỗ, chỉ rõ từng cung đường xe quân sự quay đầu từ các trận địa ven biển. Hầu hết tuyến đê Đông và lộ đất đỏ phía Tây đều đi sát qua những bến phà nối vào các điểm trường vùng sâu.\n\nTuy nhiên, anh ta thẳng thắn báo cáo rằng việc ghép hàng dân sự lên xe tải quân sự đòi hỏi tổ điều vận phải lập thêm biên bản niêm phong hai đầu, tốn thêm vài giờ quay vòng bến bãi và tiêu hao một phần định mức dầu vốn đang siết chặt để chi viện cho Bắc Vực.\n\nNgoài cửa kho, nắng trưa duyên hải hắt xuống mái tôn nóng rực, rọi sáng những dấu chì cũ tôi từng tự tay vẽ nối từ tấm bản đồ nhỏ Thiên Lang. Quyết định của Thượng Tướng Tư lệnh nằm ngay trước mũi bút.",
+      "next": "ch6_ep2_06_choice_tuyen_sach_long_vu"
+    },
+    {
+      "id": "ch6_ep2_06_choice_tuyen_sach_long_vu",
+      "type": "choice",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "text": "Lịch điều động đội xe vận tải Long Vũ tháng Hai đang chờ chữ ký phê duyệt của bạn ngay trên nắp thùng gỗ trong Kho số 7.",
+      "choices": [
+        {
+          "id": "c17_noi_tuyen_sach_chinh_thuc",
+          "label": "Nối mọi chấm chì vùng xa thành Tuyến Sách Long Vũ chính thức, ghép sách vở và đèn pin lên toàn bộ chiều xe quân sự quay đầu",
+          "effects": [
+            { "setFlag": "tuyen_sach_vung_xa_long_vu" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 7 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_tuyen_sach",
+                "title": "Nối tuyến sách vùng xa Long Vũ",
+                "entry": "Biến các chấm chì trên bản đồ nhỏ thành tuyến xe quân sự quay đầu chở sách giáo khoa và vở viết tới những lớp học hạ lưu."
+              }
+            }
+          ],
+          "next": "ch6_ep2_07a_tuyen_xe_quay_dau"
+        },
+        {
+          "id": "c17_thiet_lap_xa_lan_sach",
+          "label": "Giữ nguyên nhịp xe tải chở đạn, điều xà lan công binh cỡ nhỏ chở sách theo tuyến kênh rạch để bảo toàn dầu cho Bắc Vực",
+          "effects": [
+            { "setFlag": "tuyen_sach_vung_xa_long_vu" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_tuyen_sach",
+                "title": "Tuyến xuồng sách Long Vũ",
+                "entry": "Mở tuyến vận chuyển sách vở bằng xà lan công binh dọc kênh rạch hạ lưu để không làm chậm nhịp xe tải ra trận địa."
+              }
+            }
+          ],
+          "next": "ch6_ep2_07b_xa_lan_duong_thuy"
+        },
+        {
+          "id": "c17_chia_mot_phan_xe_giao_lien",
+          "label": "Chỉ tách mười lăm kiện sách cấp thiết nhất giao cho xe thông tin liên lạc mang theo rải dọc trục lộ chính",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+          ],
+          "next": "ch6_ep2_07c_chuyen_nho_cam_chung"
+        },
+        {
+          "id": "c17_niêm_phong_thuan_quan_su",
+          "label": "Giữ nguyên tắc thuần quân sự, niêm phong toàn bộ kho sách chờ chính quyền dân sự tự thu xếp phương tiện bốc dỡ",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 7 } },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -5 } }
+          ],
+          "next": "ch6_ep2_07d_niem_phong_kho_sach"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_07a_tuyen_xe_quay_dau",
+      "type": "narration",
+      "location": "Bến phà Tám Thước — Vùng sâu Long Vũ",
+      "mood": "warm",
+      "text": "Sáu giờ sáng hai ngày sau, bốn chiếc xe tải dã chiến mang phù hiệu Chiến khu Long Vũ tách khỏi trục lộ chính, rẽ vào con đường đất đỏ lầy lội dẫn xuống bến phà Tám Thước. Thùng xe phủ bạt xanh chở đầy vở ô ly, hộp phấn trắng, bảng đen mới và bốn mươi lăm kiện sách giáo khoa.\n\nDọc theo hai bờ rạch dừa, bà con chèo xuồng ba lá ra tận mép bến phụ lính vận tải khiêng từng thùng hàng lên sân trường mái lá dừa vừa dựng lại sau bão. Khi dây buộc thùng các-tông được cắt phăng, mùi giấy mới thơm lừng át cả mùi bùn sông và dầu máy.\n\nMấy cô giáo trẻ đứng lặng bên bục gỗ chưa khô sơn, còn lũ học trò chân đất thì ríu rít chuyền tay nhau từng cuốn tập trắng tinh chưa có nét mực nào. Những nét bút chì năm xưa ở Thiên Lang nay đã mọc thành một con đường thật sự.",
+      "next": "ch6_ep2_08_bai_xe_long_vu"
+    },
+    {
+      "id": "ch6_ep2_07b_xa_lan_duong_thuy",
+      "type": "narration",
+      "location": "Kênh Xáng Đông — Vùng sâu Long Vũ",
+      "mood": "warm",
+      "text": "Tận dụng hai chiếc xà lan đáy bằng của phân đội công binh vừa hoàn tất chở cọc tre gia cố bờ kè, đoàn tàu nhỏ mang theo bốn mươi lăm kiện sách rời cảng Long Vũ lúc bình minh. Sóng nước đục ngầu phù sa vỗ nhẹ mạn sắt khi con tàu luồn sâu vào mạng lưới kênh rạch chằng chịt.\n\nNhờ đi đường thủy, đoàn xe tải hạng nặng ngoài trục lộ vẫn giữ trọn lịch trình quay vòng đạn dược và dầu máy ra cảng tiền tiêu mà không bị chậm nửa tiếng nào. Trong khi đó, tại bảy bến nước dọc kênh Xáng Đông, tiếng còi tàu rúc ngắn báo hiệu những lớp học vùng sâu đã có sách mới.\n\nBà con ven sông đốt đuốc lá dừa đón xuồng hàng ngay khi trời chập choạng tối, chuyền tay từng bọc sách khô ráo như nâng niu của báu giữa mùa gió chướng.",
+      "next": "ch6_ep2_08_bai_xe_long_vu"
+    },
+    {
+      "id": "ch6_ep2_07c_chuyen_nho_cam_chung",
+      "type": "narration",
+      "location": "Trục lộ Đông — Đại Chiến Khu Long Vũ",
+      "mood": "calm",
+      "text": "Ba chiếc xe U-oát của ban thông tin nhận mười lăm kiện sách cấp tiểu học đặt tạm sau băng ghế sau, tranh thủ thả dọc các trụ sở xã nằm ngay mặt đường lớn. Số sách này giúp vài điểm trường gần lộ kịp khai giảng lại vào đầu tuần sau.\n\nThế nhưng ba mươi kiện sách còn lại dành cho các lớp học sâu trong rạch dừa và bãi bồi cửa sông vẫn phải nằm lại góc Kho số 7 dưới lớp bạt phủ bụi. Đường đất lầy lội sau bão khiến xe giao liên gầm thấp không tài nào lội vào tới nơi.\n\nTrên bản đồ công tác, tiến độ chuyển hàng quân sự đạt chỉ tiêu gọn ghẽ, song mỗi khi nhìn lại ba mươi chấm chì khuất sau cánh đồng năn, tôi biết nửa con đường chữ vẫn đang đứt nhịp.",
+      "next": "ch6_ep2_08_bai_xe_long_vu"
+    },
+    {
+      "id": "ch6_ep2_07d_niem_phong_kho_sach",
+      "type": "narration",
+      "location": "Kho số 7 — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Quyết định giữ nghiêm nguyên tắc thuần quân sự giúp đội xe vận tải Long Vũ lập kỷ lục quay vòng suốt mười ngày đầu tháng Hai. Hàng nghìn tấn đạn pháo, dầu mùa đông và pin radar được xếp thẳng tắp vào các kho hầm ngầm chờ chuyển ra hướng Bắc.\n\nTrên biểu đồ giao ban của chiến khu, mọi cột tiến độ khí tài đều tô màu xanh đạt chuẩn trăm phần trăm, khiến bộ phận tham mưu của Phạm Quang Hùng lập tức gửi điện khen ngợi tính chính quy của vị Tân Thượng Tướng.\n\nDuy chỉ có góc khuất phía Tây Kho số 7 vẫn im lìm sau cánh cửa khóa cài niêm phong. Bốn mươi lăm kiện sách giáo khoa nằm đợi giấy giới thiệu từ ty giáo dục tỉnh, giữa tiếng gió biển thổi lách qua khe tôn như tiếng thở dài.",
+      "next": "ch6_ep2_08_bai_xe_long_vu"
+    },
+    {
+      "id": "ch6_ep2_08_bai_xe_long_vu",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh & Bãi xe Phân đội Vận tải — Long Vũ",
+      "mood": "calm",
+      "text": "Mười ngày sau khi mạng lưới tiếp vận Long Vũ vào guồng chạy ổn định, văn thư chiến khu chuyển lên bàn làm việc của tôi tập công văn buổi sáng cùng hàng chục bảng kiểm kê nhiên liệu. Ngoài sân cảng, tiếng búa gõ lách cách từ xưởng sửa chữa dã chiến vọng lên đều đặn.\n\nGiữa những phong bì công điện đóng dấu mật đỏ chót, một lá thư nhỏ xíu bằng giấy học trò dán bằng hồ gạo nằm khiêm tốn trên góc khay gỗ. Nét chữ tím hơi nghiêng nhưng tròn trịa ghi ngay ngắn dòng địa chỉ người nhận không phải dành cho Tư lệnh.\n\nTôi cầm phong bì lên soi dưới ánh nắng cửa sổ, bất giác mỉm cười khi đọc dòng chữ đầu tiên rồi lặng lẽ gấp gọn bỏ vào túi áo ngực.",
+      "branches": [
+        {
+          "condition": { "flag": "tuyen_sach_vung_xa_long_vu" },
+          "next": "ch6_ep2_09a_la_thu_vung_xa"
+        }
+      ],
+      "next": "ch6_ep2_09b_ben_pha_cho_sach"
+    },
+    {
+      "id": "ch6_ep2_09a_la_thu_vung_xa",
+      "type": "narration",
+      "location": "Bãi sửa xe phân đội vận tải — Long Vũ",
+      "mood": "warm",
+      "text": "Ngoài bìa thư học trò viết nắn nót: 'Kính gửi Chú bộ đội lái xe chở sách áo xanh tuyến Bến Đò — Tám Thước'. Bên trong là lá thư cảm ơn của cô giáo điểm trường cùng ba bức tranh sáp màu do lũ trẻ tự vẽ chiếc xe tải có lá cờ nhỏ chạy dưới mưa.\n\nTôi không đóng dấu lưu văn thư, cũng không đưa lên loa truyền thanh nội bộ để làm bản tin thành tích. Buổi chiều tan ca, tôi tự mình đi bộ từ sảnh Bộ Tư Lệnh xuống tận bãi sửa xe đầy mùi dầu mỡ và đất bùn ở cuối doanh trại.\n\nLá thư cảm ơn đầu tiên từ những lớp học vùng xa này thuộc về người đã ôm vô lăng vượt qua bùn lầy bến phà, không phải của người ngồi ký lệnh trên bàn giấy.",
+      "branches": [
+        {
+          "condition": { "charAlive": "bay" },
+          "next": "ch6_ep2_10a_trao_thu_cho_bay"
+        }
+      ],
+      "next": "ch6_ep2_10b_cabin_vang_bay"
+    },
+    {
+      "id": "ch6_ep2_09b_ben_pha_cho_sach",
+      "type": "narration",
+      "location": "Phòng trực ban vận tải — Long Vũ",
+      "mood": "tense",
+      "text": "Phong bì giấy học trò hóa ra là đơn đề nghị viết tay của ban giám hiệu một trường liên xã vùng rạch dừa, hỏi thăm xem khi nào số sách giáo khoa gửi nhờ cảng quân sự từ sau bão mới có xuồng chuyển vào. Mùa học kỳ hai đã trôi qua quá nửa.\n\nTôi ký lệnh chuyển tiếp công văn sang ban dân vận địa phương để tìm tàu thuê ngoài, nhưng trong lòng vẫn thấy vướng một món nợ chưa trả. Cùng lúc đó, tập sổ kiểm kê nhiên liệu bên cạnh lại bắt đầu hiện ra những con số lệch nhau đáng ngờ.\n\nTôi gọi trưởng ban tài chính và sĩ quan trực hậu cần vào phòng họp kín ngay lập tức để đối chiếu từng phiếu xuất dầu ở Cầu cảng số 4.",
+      "next": "ch6_ep2_11_choice_kiem_tra_cang"
+    },
+    {
+      "id": "ch6_ep2_10a_trao_thu_cho_bay",
+      "type": "dialogue",
+      "location": "Gầm cầu nâng bãi sửa xe — Long Vũ",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "condition": { "charAlive": "bay" },
+      "text": "Ủa trời ơi Thượng Tướng! Chú em xuống chi dưới gầm cầu nhớt nháp này vậy, áo quân phục ba sao dính dầu xe rồi đó đa! Tui mới chui ra từ dưới trục các-đăng tính ăn vội nắm cơm nguội rồi chạy tiếp chuyến đêm ra cửa vịnh.\n\nGì nữa đây, thư của tụi nhỏ ngoài Tám Thước gửi riêng cho tui hả chú em? Đưa tui lau tay vô giẻ sạch cái đã rồi mới dám cầm... Trời đất ơi, tụi nó vẽ cái xe tải của tui có hai cái đèn pha tròn xoe giống hai con mắt con ếch vậy nè!\n\nMà thôi, chú em cầm hộp kẹo gừng trong hộc táp-lô ngậm một viên với tui cho ấm cổ đi. Đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người — có lá thư này dán vô kính chắn gió rồi, chạy đêm mưa tới đâu tui cũng thấy sáng trưng à!",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+        { "addRel": { "char": "bay", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_11_choice_kiem_tra_cang"
+    },
+    {
+      "id": "ch6_ep2_10b_cabin_vang_bay",
+      "type": "narration",
+      "location": "Bãi sửa xe phân đội vận tải — Long Vũ",
+      "mood": "somber",
+      "text": "Chui ra từ gầm chiếc xe tải hai cầu là một cậu tài xế trẻ mặt mũi lấm lem dầu nhớt, trên ngực áo còn khâu lại mảnh phù hiệu tuyến đường trường cũ của bác tài Phan Văn Bảy. Cậu lính trẻ giật mình đứng nghiêm chào khi thấy ba ngôi sao trên vai áo tôi.\n\nTôi đặt phong thư cảm ơn của cô giáo vùng xa vào bàn tay dính đầy muội dầu của cậu, nói khẽ rằng bức thư này thuộc về những người cầm lái giữ mạch đường chứ không phải công văn của Tư lệnh. Cậu rưng rưng mở nắp táp-lô, nơi vẫn đặt một hộp thiếc đựng kẹo gừng cũ kỹ để tưởng nhớ người thầy lái xe đã ngã xuống giữa đập tràn Thiên Lang.\n\nChiếc xe nổ máy rì rì chuẩn bị lên đường ca đêm. Tôi quay trở lại sở chỉ huy với tập sổ kiểm kê dầu diesel vừa được văn thư trình lên.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_11_choice_kiem_tra_cang"
+    },
+    {
+      "id": "ch6_ep2_11_choice_kiem_tra_cang",
+      "type": "choice",
+      "location": "Phòng Kế Toán Hậu Cần — Đại Chiến Khu Long Vũ",
+      "text": "Bảng đối chiếu chiều tối bất ngờ phát hiện 18% lượng dầu mùa đông và ống phát cao tần ghi 'đã xuất lên Bắc Vực' thực chất vẫn nằm trên giấy ký khống tại Cầu cảng số 4 do nhóm nhà thầu thân tín của Cục Tác chiến phụ trách. Bạn xử lý lỗ hổng này thế nào?",
+      "choices": [
+        {
+          "id": "c17_kiem_toan_dem_khuya",
+          "label": "Thành lập tổ kiểm tra độc lập ngay trong đêm, niêm phong sổ gốc Cầu cảng số 4 và gọi phản gián cùng đối chiếu từng bồn dầu",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "thao", "delta": 1 } },
+            { "addRel": { "char": "hung", "delta": -1 } }
+          ],
+          "next": "ch6_ep2_12a_kiem_toan_dem_khuya"
+        },
+        {
+          "id": "c17_tich_thu_dieu_chinh_kho",
+          "label": "Áp dụng kỷ luật thời chiến, lập tức trưng thu toàn bộ số dầu tồn ngoài hợp đồng để đẩy thẳng ra đoàn tàu tiếp vận Bắc Vực",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch6_ep2_12b_niem_phong_cang_dau"
+        },
+        {
+          "id": "c17_xuat_hang_khan_bo_qua_so_sach",
+          "label": "Không dừng dây chuyền bốc xếp, yêu cầu nhà thầu bù đủ dầu trong 24 giờ để giữ nhịp xuất hàng khẩn cấp cho Bắc Vực",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addRel": { "char": "hung", "delta": 1 } }
+          ],
+          "next": "ch6_ep2_12c_uu_tien_xuat_hang_khan"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_12a_kiem_toan_dem_khuya",
+      "type": "narration",
+      "location": "Cầu cảng số 4 — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Hai giờ sáng, đèn pha cao áp tại Cầu cảng số 4 bị tắt bớt một nửa theo lệnh kiểm tra đột xuất. Tổ thanh tra độc lập mang thước đo sâu cắm thẳng vào sáu bồn chứa nhiên liệu mùa đông, đối chiếu từng con số thực tế dưới ánh đèn pin.\n\nKết quả lạnh người hơn cả gió biển: hai bồn chứa lớn nhất bị pha loãng hoặc rút ruột gần một phần tư thể tích, nhưng trên giấy giao nhận chuyển về Cục Tác chiến lại đóng dấu đỏ xuất kho đủ trăm phần trăm.\n\nNhân viên trực bến mặt cắt không còn giọt máu, lấm lét liếc về phía văn phòng điều hành nhà thầu. Ngay rạng sáng, phản ứng dữ dội từ phía hậu phương đã ập xuống bàn làm việc của tôi nhanh hơn cả dự liệu.",
+      "next": "ch6_ep2_13_dispatch_dinh_chi_thao"
+    },
+    {
+      "id": "ch6_ep2_12b_niem_phong_cang_dau",
+      "type": "narration",
+      "location": "Cầu cảng số 4 — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Xe bọc thép cảnh vệ lập tức phong tỏa hai cổng Cầu cảng số 4 trước rạng đông. Toàn bộ van bơm của bến tư nhân được nối thẳng vào hệ thống ống dẫn của đoàn tàu vận tải quân sự để hút khẩn cấp phần dầu còn lại chuyển lên hướng Bắc.\n\nBầu không khí trên bến cảng căng như dây đàn; mấy người quản lý nhà thầu đứng ngoài hàng rào kẽm gai gọi điện liên hồi về thủ đô kêu oan rằng quân đội tự ý phá vỡ hợp đồng hậu cần chiến lược.\n\nĐợt nhiên liệu quý giá vẫn kịp rời cảng trước trưa, nhưng việc xử lý mạnh tay không qua thủ tục tố tụng đã tạo ra một cái cớ hoàn hảo cho những người muốn bẻ gãy cuộc điều tra phản gián.",
+      "next": "ch6_ep2_13_dispatch_dinh_chi_thao"
+    },
+    {
+      "id": "ch6_ep2_12c_uu_tien_xuat_hang_khan",
+      "type": "narration",
+      "location": "Phòng Điều Phối Cảng — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Không để dây chuyền cẩu container dừng lại một phút nào, tôi buộc đại diện nhà thầu ký giấy cam kết bù đủ số dầu thiếu hụt và linh kiện radar vào chuyến tàu rạng sáng hôm sau. Nhịp bốc xếp ngoài bến duy trì thông suốt trăm phần trăm.\n\nNhưng sự nhân nhượng ngắn hạn này không làm dịu đi cơn sóng ngầm đang cuộn lên trong bộ máy tham mưu hậu phương. Chính sự khoan hồng của tôi đã giúp đầu mối nhà thầu có thời gian tẩu tán chứng từ cũ và quay ngược mũi dùi tố cáo về phía sĩ quan thanh tra phản gián.\n\nChưa đầy sáu tiếng đồng hồ sau, một bức công điện đóng dấu hỏa tốc từ Cục Tác chiến đã dội thẳng xuống phòng cơ yếu của Chiến khu Long Vũ.",
+      "next": "ch6_ep2_13_dispatch_dinh_chi_thao"
+    },
+    {
+      "id": "ch6_ep2_13_dispatch_dinh_chi_thao",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Đại Chiến Khu Long Vũ",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN KỶ LUẬT NỘI BỘ — PHÓ THAM MƯU TRƯỞNG PHẠM QUANG HÙNG KÝ DUYỆT]\n\n\"Xét đơn kiến nghị khẩn của Cụm Vận tải Chiến lược và tình hình căng thẳng mùa đông tại Bắc Vực: Trung tá phản gián Lê Phương Thảo đã vượt thẩm quyền, tự ý giữ tàu kiểm tra hồ sơ gây chậm trễ dây chuyền cung ứng nhiên liệu và linh kiện điện tử.\"\n\n\"Đề nghị Tư lệnh Đại Chiến Khu Long Vũ đồng ký quyết định ĐÌNH CHỈ CÔNG TÁC tạm thời đối với Trung tá Lê Phương Thảo, thu hồi thẻ tiếp cận hồ sơ mật để phục vụ hội đồng kiểm điểm nội bộ.\"",
+      "branches": [
+        {
+          "condition": { "charAlive": "thao" },
+          "next": "ch6_ep2_14a_thao_ho_so_gap_goc"
+        }
+      ],
+      "next": "ch6_ep2_14b_ho_so_thao_bo_lai"
+    },
+    {
+      "id": "ch6_ep2_14a_thao_ho_so_gap_goc",
+      "type": "dialogue",
+      "location": "Phòng Lưu Trữ Mật — Đại Chiến Khu Long Vũ",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": { "charAlive": "thao" },
+      "text": "Thủ trưởng đến đúng lúc lắm, tôi vừa niêm phong xong xấp phiếu xuất dầu giả mạo tại Cầu cảng số 4 đây. Nhìn góc tờ hồ sơ mật này đi — tôi đã gấp đôi mép giấy đánh dấu đủ mười bốn chữ ký vòng quanh cùng một công ty bình phong.\n\nGiấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được. Đường dây này không chỉ rút ruột dầu mùa đông ở Long Vũ đâu; hồi nãy tổ giải mã của tôi còn lần ra một mã chuyển tiếp tín hiệu vô tuyến chạy qua trạm trung gian của nhà thầu này hướng thẳng lên phía Bắc.\n\nÔng Phạm Quang Hùng đang bay chuyến trực thăng muộn từ Cục xuống đây để ép Thượng Tướng ký lệnh đình chỉ tôi đấy. Nếu hồ sơ này bị khóa tủ tối nay, ai sẽ giữ mắt sau lưng cho trạm radar Bắc Vực khi tuyết đổ xuống?",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_15_hung_doi_chat"
+    },
+    {
+      "id": "ch6_ep2_14b_ho_so_thao_bo_lai",
+      "type": "narration",
+      "location": "Phòng Lưu Trữ Mật — Đại Chiến Khu Long Vũ",
+      "mood": "somber",
+      "text": "Phòng lưu trữ phản gián vắng lặng dưới ngọn đèn bàn chụp xanh. Trên mặt bàn sắt chỉ còn lại tập hồ sơ dày có góc giấy gấp đôi ngay ngắn theo nếp quen thuộc của Trung tá Lê Phương Thảo năm nào.\n\nTrợ lý ban thanh tra đứng nghiêm báo cáo rằng nhóm nhà thầu đã lợi dụng lúc chiến trường thiếu người để đẩy toàn bộ trách nhiệm chậm tàu lên bộ phận kiểm tra hiện trường. Xấp phiếu xuất dầu giả mạo vẫn còn nằm nguyên đó, chưa kịp trình ra hội đồng.\n\nNgoài hành lang đá, tiếng giày da đều bước và giọng nói mượt mà của Trung tướng Phạm Quang Hùng đã vang lên mỗi lúc một gần cửa phòng.",
+      "next": "ch6_ep2_15_hung_doi_chat"
+    },
+    {
+      "id": "ch6_ep2_15_hung_doi_chat",
+      "type": "dialogue",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng — Phó Tham mưu trưởng",
+      "mood": "tense",
+      "text": "Chúc mừng Thượng Tướng đã vực dậy nhịp cảng Long Vũ chỉ trong hai tuần lễ. Nhưng tôi bay xuống đêm nay không phải để uống trà chúc tụng, mà để giải quyết cái ung nhọt hành chính đang làm nghẽn mạch tiếp vận ra Bắc Vực.\n\nCô Thảo bên phản gián làm việc quá máy móc, tự ý giữ người giữ tàu giữa lúc tiền phương đang đếm từng giọt dầu sưởi. Trên bàn hội đồng người ta chỉ nhìn kết quả cuối, không ai đếm từng vỏ đạn hay từng tờ hóa đơn lẻ đâu Thượng Tướng.\n\nĐôi khi phải biết cắt bỏ một ngón tay để giữ cả bàn tay. Đây là lệnh tạm đình chỉ công tác của cô ta — anh đặt bút ký nháy vào góc phải đi, sáng mai mọi bến cảng sẽ chạy lại trơn tru và uy tín của anh trước Hội đồng Tối cao cũng không bị vướng bụi bặm nội bộ.",
+      "branches": [
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch6_ep2_16a_vinh_nhac_nho"
+        }
+      ],
+      "next": "ch6_ep2_16b_suy_tu_mot_minh"
+    },
+    {
+      "id": "ch6_ep2_16a_vinh_nhac_nho",
+      "type": "dialogue",
+      "location": "Buồng điện thoại mật cạnh Văn phòng Tư lệnh",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh",
+      "mood": "tense",
+      "condition": { "charAlive": "vinh" },
+      "text": "Tôi vừa nghe tin Hùng bay thẳng xuống Long Vũ ép cậu ký giấy đình chỉ Thảo rồi. Nghe tôi nói kỹ nhé: ở đây chỉ có hai thầy trò qua đường dây hữu tuyến này thôi.\n\nHùng không hèn trước quân địch, nhưng cậu ta tin rằng sự thật có thể đem mặc cả lấy tốc độ. Nếu cậu để mất bộ phận phản gián ngay lúc này, cậu sẽ bước vào cơn bão mùa đông với đôi mắt bị bịt kín từ phía sau lưng.\n\nĐừng viết điều mình chưa làm được, và cũng đừng ký lên tờ giấy xóa tên người đang giữ sự thật cho đơn vị. Cậu tự cân nhắc lấy sức nặng của ba ngôi sao trên vai mình đi.",
+      "effects": [
+        { "setFlag": "vinh_canh_bao_noi_bo" },
+        { "addRel": { "char": "vinh", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_17_choice_bao_ve_thao"
+    },
+    {
+      "id": "ch6_ep2_16b_suy_tu_mot_minh",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Tôi xin phép ra ban công uống ngụm trà nguội vài phút trước khi đặt bút. Dưới ánh đèn cao áp bến cảng, những cần cẩu giàn vẫn đứng lừng lững như những cánh tay thép vươn ra mặt biển đen kịt.\n\nTrong túi áo, cuốn sổ bìa xanh thầy Vinh trao ngày xưa bỗng như nặng thêm gấp bội. Một bên là nhịp tiếp vận gấp gáp cho hàng vạn người lính đang chịu rét ở Bắc Vực; bên kia là cái giá phải trả nếu im lặng trước đường dây làm sạch số liệu.\n\nTôi quay trở vào căn phòng sáng đèn, nơi Phạm Quang Hùng vẫn giữ nụ cười điềm đạm bên cạnh bản dự thảo quyết định đình chỉ công tác.",
+      "next": "ch6_ep2_17_choice_bao_ve_thao"
+    },
+    {
+      "id": "ch6_ep2_17_choice_bao_ve_thao",
+      "type": "choice",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "text": "Tờ lệnh đình chỉ công tác của Lê Phương Thảo nằm giữa bàn gỗ lim, ngay cạnh cây bút máy mở sẵn nắp của Phạm Quang Hùng.",
+      "choices": [
+        {
+          "id": "c17_dung_bang_chung_bao_ve_thao",
+          "label": "Đặt thẳng công điện gốc và hồ sơ mật Ch.V lên bàn, bác bỏ lệnh đình chỉ và đưa Thảo vào diện bảo vệ trực tiếp của Tư lệnh",
+          "condition": {
+            "any": [
+              { "flag": "thao_tin_tuong_tuyet_doi" },
+              { "flag": "giu_bang_chung_pham_quang_hung" }
+            ]
+          },
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "thao", "delta": 3 } },
+            { "addRel": { "char": "hung", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_bao_ve_thao",
+                "title": "Dùng chứng cứ gốc bảo vệ Thảo",
+                "entry": "Đưa bằng chứng từ Thiên Lang và Bạch Vũ ra bàn đối chất, chặn đứng âm mưu đình chỉ Lê Phương Thảo của Phạm Quang Hùng."
+              }
+            }
+          ],
+          "next": "ch6_ep2_18a_giu_chung_cu_bao_ve_thao"
+        },
+        {
+          "id": "c17_tieu_hao_uy_tin_che_cho_thao",
+          "label": "Dùng toàn bộ quyền hạn Thượng Tướng phủ quyết lệnh đình chỉ, chấp nhận chịu sức ép chính trị và sự chậm trễ từ nhóm nhà thầu",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addRel": { "char": "thao", "delta": 3 } },
+            { "addRel": { "char": "hung", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_bao_ve_thao",
+                "title": "Dùng uy quyền Tư lệnh che chở Thảo",
+                "entry": "Chấp nhận va chạm trực diện với phe Phạm Quang Hùng để giữ Lê Phương Thảo ở lại vị trí điều tra phản gián."
+              }
+            }
+          ],
+          "next": "ch6_ep2_18b_dung_uy_quyen_che_cho_thao"
+        },
+        {
+          "id": "c17_chuyen_thao_ra_tuyen_truoc",
+          "label": "Thỏa hiệp chiến thuật: rút Thảo khỏi vụ kiểm tra cảng Long Vũ nhưng giữ nguyên cấp hàm, biệt phái cô lên kiểm tra tần số ở Bắc Vực",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "thao", "delta": -1 } },
+            { "addRel": { "char": "hung", "delta": 1 } }
+          ],
+          "next": "ch6_ep2_18c_dieu_thao_len_bac_vuc"
+        },
+        {
+          "id": "c17_ky_dinh_chi_thao",
+          "label": "Đặt bút ký lệnh tạm đình chỉ Lê Phương Thảo để giữ thông suốt nguồn dầu mùa đông và sự ổn định của Bộ Tham mưu",
+          "effects": [
+            { "setFlag": "thao_bi_dinh_chi" },
+            { "setCharState": { "char": "thao", "state": "discharged" } },
+            { "addStat": { "stat": "TiepTe", "delta": 6 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -6 } },
+            { "addRel": { "char": "thao", "delta": -5 } },
+            { "addRel": { "char": "hung", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_dinh_chi_thao",
+                "title": "Đình chỉ công tác Lê Phương Thảo",
+                "entry": "Đồng ký lệnh tạm đình chỉ Trung tá phản gián Lê Phương Thảo theo đề nghị của Phạm Quang Hùng để ưu tiên dòng tiếp vận mùa đông."
+              }
+            }
+          ],
+          "next": "ch6_ep2_18d_ky_lenh_dinh_chi_thao"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_18a_giu_chung_cu_bao_ve_thao",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Tôi không cầm bút của Phạm Quang Hùng mà mở ngăn khóa thép, đặt lên mặt bàn xấp công điện gốc từ Thiên Lang cùng bản đối chiếu dấu chữ ký góc gấp đôi. Ánh mắt vị Phó Tham mưu trưởng thoáng khựng lại nửa nhịp dù khóe môi vẫn cố giữ nét bình thản.\n\nTôi nói rành mạch từng chữ rằng mọi cuộc kiểm tra cảng Long Vũ hiện nay đều nằm trong kế hoạch bảo vệ bí mật tiếp vận do chính Tư lệnh Chiến khu phê chuẩn. Bất kỳ ai tiếp tục cản trở phản gián sẽ phải giải trình trực tiếp trước Hội đồng Quốc phòng.\n\nHùng thu lại tờ giấy đình chỉ không nói thêm lời tranh luận thừa, chỉ khẽ xoay nắp chiếc bút máy rồi cáo từ ra sân bay. Cuộc đối đầu thật sự đã được hẹn lại ở Thủ đô.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch6_ep2_19a_thao_canh_bao_tan_so"
+        }
+      ],
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_18b_dung_uy_quyen_che_cho_thao",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Tôi gạt nhẹ tờ quyết định đình chỉ sang mép bàn, thẳng thắn tuyên bố dùng quyền hạn Tư lệnh Đại Chiến Khu bảo lưu toàn bộ chức trách cho Lê Phương Thảo cho đến khi chiến dịch mùa đông kết thúc.\n\nPhạm Quang Hùng nhíu mày, nhắc khéo rằng làm vậy sẽ khiến các đơn vị cung ứng dân sự e ngại, trì hoãn lịch bốc xếp và gây bất lợi cho phiếu tín nhiệm của tôi trong kỳ họp Hội đồng sắp tới. Tôi đáp gọn rằng thà chậm hai giờ kiểm tra còn hơn để một lô dầu giả làm tắt máy phát ngoài biên giới.\n\nSáng hôm sau, hai nhà thầu lớn lập tức viện cớ bảo trì để hoãn giao một chuyến xà lan phụ tùng, nhưng bộ máy phản gián của Chiến khu vẫn nguyên vẹn.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch6_ep2_19a_thao_canh_bao_tan_so"
+        }
+      ],
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_18c_dieu_thao_len_bac_vuc",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "mood": "tense",
+      "text": "Để tránh bùng nổ xung đột công khai ngay tại cầu cảng khi Bắc Vực đang thiếu dầu từng giờ, tôi gạch ngang dòng chữ đình chỉ, sửa thành lệnh biệt phái khẩn cấp đưa Trung tá Lê Phương Thảo ra tuyến trước kiểm định an toàn sóng vô tuyến.\n\nPhạm Quang Hùng thoáng gật đầu chấp thuận vì gai mắt tại bến cảng đã được nhổ đi, còn Thảo vẫn giữ nguyên quân hàm, quyền truy cập mật mã và toàn bộ hồ sơ gốc mang theo bên mình.\n\nDù ánh mắt nữ sĩ quan phản gián thoáng nét thất vọng vì đường dây nhà thầu ở Long Vũ tạm thời thoát lưới, cô lập tức thu xếp cặp da để theo chuyến bay sớm ra phương Bắc.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch6_ep2_19a_thao_canh_bao_tan_so"
+        }
+      ],
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_18d_ky_lenh_dinh_chi_thao",
+      "type": "narration",
+      "location": "Văn phòng Tư lệnh — Đại Chiến Khu Long Vũ",
+      "mood": "somber",
+      "text": "Mực đen thấm xuống góc phải tờ giấy trắng nghe sột soạt khô khốc trong căn phòng yên ắng đến mức nghe rõ tiếng kim đồng hồ nhích từng nấc. Phạm Quang Hùng nhận lại văn bản đã đủ hai chữ ký, khẽ vỗ nhẹ bìa hồ sơ với lời hứa chắc nịch về nguồn nhiên liệu đầy ắp.\n\nChỉ nửa giờ sau, dây chuyền bơm dầu tại Cầu cảng số 4 hoạt động trở lại hết công suất, xà lan nối đuôi nhau rời bến dưới ánh đèn pha chói lòa. Mọi chỉ số tiếp vận của Long Vũ lại đẹp hoàn hảo.\n\nThế nhưng khi bước ngang qua hành lang tầng hai lúc nửa đêm, tôi thấy ánh đèn trong phòng Lưu Trữ Mật vẫn sáng, nơi một người lính cũ đang lặng lẽ dọn sạch bàn làm việc của mình.",
+      "branches": [
+        {
+          "condition": { "charAlive": "thao" },
+          "next": "ch6_ep2_19b_thao_chia_tay_buong_ho_so"
+        }
+      ],
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_19a_thao_canh_bao_tan_so",
+      "type": "dialogue",
+      "location": "Sân đỗ trực thăng — Đại Chiến Khu Long Vũ",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "thao" },
+          { "charState": { "char": "thao", "state": "alive" } }
+        ]
+      },
+      "text": "Cảm ơn Thủ trưởng đã giữ lại thanh gươm phản gián trước cơn bão này. Tôi vừa đối chiếu xong hai dải tần số lạ bị rò rỉ từ lô linh kiện cảng Long Vũ tuần trước.\n\nBên kia chiến tuyến, Thiết Phong đã nắm được chu kỳ quét phụ của mạng radar liên khu. Đáng lo nhất là Trạm Radar Đỉnh Núi Bắc Vực — nơi thiếu tá Trần Mỹ Linh đang trực điều hành điểm cao cảnh giới trọng yếu nhất của cả hai mặt trận.\n\nTôi đã gửi bản đồ khóa tần số dự phòng lên trực tiếp máy giải mã của chị Linh và mang theo bản sao lưu cùng chuyến bay kiểm tra tuyến Bắc Vực của Thượng Tướng sáng nay. Nếu đêm nay có biến trên đỉnh núi, chúng ta vẫn còn một nước cờ để phản đòn.",
+      "effects": [
+        { "setFlag": "giai_ma_bay_hac_ung" },
+        { "addStat": { "stat": "SiKhi", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_19b_thao_chia_tay_buong_ho_so",
+      "type": "dialogue",
+      "location": "Hành lang Phòng Lưu Trữ Mật — Long Vũ",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá Lê Phương Thảo (đã bàn giao công tác)",
+      "mood": "somber",
+      "condition": { "charAlive": "thao" },
+      "text": "Tôi đã bàn giao đủ chìa khóa tủ sắt và thẻ bảo mật theo đúng quyết định của Thượng Tướng rồi. Không cần nói lời xin lỗi đâu Thủ trưởng — ở vị trí của ông, đổi lấy vài trăm tấn dầu mùa đông bằng một sĩ quan thanh tra nghe cũng hợp lý trên bàn giấy lắm.\n\nTôi chỉ để lại tập hồ sơ gấp đôi góc này trên bàn trực thôi. Bên trong có ghi vệt nghi vấn rò rỉ tần số liên lạc hướng về phía Trạm Radar Đỉnh Núi Bắc Vực, chỗ Trần Mỹ Linh đang giữ chốt.\n\nTừ giờ tôi không còn quyền ký lệnh điều tra nữa. Mong khi gió tuyết Bắc Vực nổi lên đêm nay, dầu đầy kho của ông đủ sức bù lại khoảng trống sau lưng đội hình.",
+      "next": "ch6_ep2_20_chuyen_bay_ra_bac_vuc"
+    },
+    {
+      "id": "ch6_ep2_20_chuyen_bay_ra_bac_vuc",
+      "type": "narration",
+      "location": "Không phận chuyển tiếp Long Vũ — Bắc Vực",
+      "mood": "tense",
+      "text": "Hai ngày sau cuộc đối đầu ở Long Vũ, tôi đáp chuyến bay kiểm tra liên khu ngược ra sở chỉ huy tiền phương vùng Bắc Vực để rà soát tuyến phòng không trước khi đón nhận nhiệm vụ mới tại Thủ đô. Từ cửa sổ máy bay, dải đồng bằng xanh thẫm nhanh chóng lùi lại phía sau, nhường chỗ cho những dãy núi đá vôi phủ sương mù trắng xóa.\n\nKhi máy bay vừa hạ xuống sân đáp dã chiến dưới chân đèo Đá Bạc, một luồng gió lạnh buốt mang theo mưa tuyết quất thẳng vào mặt. Còi báo động cấp một bỗng rú vang khắp các sườn hầm đá, xé tan màn sương dày đặc.\n\nBên trong hầm vô tuyến trung tâm, màn hình radar cảnh giới đồng loạt nhiễu trắng xóa như tuyết rơi dày, báo hiệu Khối Thiết Phong đã bắt đầu đòn tập kích điện tử quy mô lớn.",
+      "next": "ch6_ep2_21_dispatch_bao_dong_radar"
+    },
+    {
+      "id": "ch6_ep2_21_dispatch_bao_dong_radar",
+      "type": "dispatch",
+      "location": "Sở Chỉ Huy Tiền Phương — Vùng Bắc Vực",
+      "mood": "urgent",
+      "text": "[BÁO ĐỘNG ĐỎ — TRẠM RADAR ĐỈNH NÚI BẮC VỰC — ĐỘ KHẨN: TỐI THƯỢNG]\n\n\"Khối Thiết Phong triển khai tổ hợp gây nhiễu công suất lớn khóa toàn bộ dải tần chính dọc thung lũng Bắc Vực. Lợi dụng vùng mù radar tầng thấp và màn tuyết rơi dày, ba mũi đặc nhiệm cơ giới nhẹ cùng trực thăng đổ bộ của địch đang leo vách Bắc đánh úp TRẠM RADAR ĐỈNH NÚI.\"\n\n\"Đơn vị giữ đài hiện có 14 chiến sĩ kỹ thuật và thông tin do Sĩ quan Trần Mỹ Linh chỉ huy. Nếu Đỉnh Núi thất thủ hoặc tắt sóng, toàn bộ lưới phòng không nối từ Bắc Vực về Long Vũ sẽ mù hoàn toàn trong 30 phút đầu trận đánh.\"",
+      "next": "ch6_ep2_22_linh_canh_bao_song_sach"
+    },
+    {
+      "id": "ch6_ep2_22_linh_canh_bao_song_sach",
+      "type": "dialogue",
+      "location": "Kênh Vô Tuyến Dự Phòng — Trạm Radar Đỉnh Núi Bắc Vực",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh — Trạm trưởng Radar",
+      "mood": "urgent",
+      "text": "Thượng Tướng nghe rõ không ạ? Em đang phát trên tinh thể tần số phụ đây, tiếng hơi rè nhưng vẫn giữ được khóa đường truyền về Long Vũ!\n\nĐêm qua màn hình chính tự dưng sạch bong không một bóng nhiễu, nhưng em nhớ lời tự dặn năm xưa: sóng sạch quá mới là sóng có bẫy. Em cho anh em chuyển qua quét cơ học tầm gần từ ba giờ sáng nên mới kịp phát hiện hai tốp đổ bộ đường không của địch đang bám vách đá!\n\nMà tụi em trên đỉnh chỉ có hỏa lực bộ binh nhẹ thôi Thủ trưởng ơi. Bên sườn Tây đã nghe tiếng súng B40 của tổ tiền tiêu nổ rồi, chỉ còn khoảng hai mươi lăm phút trước khi chúng áp sát mái vòm radar!",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_23_choice_dieu_binh_tien_phuong"
+    },
+    {
+      "id": "ch6_ep2_23_choice_dieu_binh_tien_phuong",
+      "type": "choice",
+      "location": "Hầm Tác Chiến Tiền Phương — Thung Lũng Bắc Vực",
+      "text": "Đoàn xe bọc thép cơ động và biên đội trực thăng vũ trang dự bị đang nằm tại bãi tập kết thung lũng dưới chân núi, trong khi pháo tầm xa thiết giáp địch cũng bắt đầu nã đạn thăm dò cửa đèo. Bạn chỉ đạo thế nào trong 15 phút chuẩn bị đầu tiên?",
+      "choices": [
+        {
+          "id": "c17_chuyen_tinh_than_va_y_te",
+          "label": "Ra lệnh các trạm xá và hầm dân sự dưới chân núi sơ tán vào hang đá an toàn, phát hiệu lệnh động viên toàn tuyến giữ vững đội hình",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch6_ep2_24_so_chi_huy_dinh_nui"
+        },
+        {
+          "id": "c17_don_dau_va_xe_co_gioi",
+          "label": "Dồn toàn bộ xe tiếp dầu chiến đấu và thùng đạn dự phòng lên sát chân dốc đèo, sẵn sàng cho đòn xuất kích lực lượng cơ động",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } }
+          ],
+          "next": "ch6_ep2_24_so_chi_huy_dinh_nui"
+        },
+        {
+          "id": "c17_dung_mang_luoi_nghi_binh",
+          "label": "Mở lưới phát sóng giả dọc thung lũng để kéo giãn đội hình trinh sát Thiết Phong, giữ nhịp tiếp vận thông suốt từ Long Vũ lên",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch6_ep2_24_so_chi_huy_dinh_nui"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_24_so_chi_huy_dinh_nui",
+      "type": "narration",
+      "location": "Đài Quan Sát Chân Núi — Bắc Vực",
+      "mood": "urgent",
+      "text": "Tiếng pháo 152 ly từ bên kia đường biên bắt đầu dội xuống cửa ngõ thung lũng Bắc Vực, làm rung chuyển mặt bàn sa bàn bằng thép trong hầm tiền phương. Từng cột tuyết và đất đá bắn tung lên trong ánh chớp đỏ rực phía đèo chính.\n\nTrên bản đồ tác chiến, thế trận chia làm hai mũi nhọn sinh tử: bên trên đỉnh núi cao mù sương là Trạm Radar của Trần Mỹ Linh đang bị đặc nhiệm Thiết Phong siết vòng vây; bên dưới cửa đèo thung lũng là trục đường huyết mạch dẫn thẳng xuống cụm kho đạn và tuyến hậu phương Long Vũ.\n\nLúc này, những người đồng đội đứng cạnh tôi đều đang hướng mắt chờ một phương án mở đường giữa cơn mưa tuyết.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep2_25a_khang_chi_duong_deo_phu"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch6_ep2_25b_dung_xin_cat_duong_tat"
+        }
+      ],
+      "next": "ch6_ep2_25c_trinh_sat_bao_tuyen_duong"
+    },
+    {
+      "id": "ch6_ep2_25a_khang_chi_duong_deo_phu",
+      "type": "dialogue",
+      "location": "Đài Quan Sát Chân Núi — Bắc Vực",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "urgent",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Nghe tui nói nè ông bạn! Phía sườn Đông của đỉnh radar có cái lối mòn đá vôi cũ tụi trinh sát tụi tui mới khảo sát hồi đầu đông đó — tuyết đóng dày nhưng xe thiết giáp bánh lốp nhẹ vẫn bò qua được nếu mở hết ga!\n\nNếu mình đẩy hết lực lượng dự bị lên đường chính thì coi chừng dính bẫy pháo chặn của tụi Thiết Phong dưới chân thung lũng. Còn nếu rút phân đội cơ động vòng qua con đèo phụ này, tụi tui đánh tập hậu thẳng vô lưng đám đặc nhiệm đang vây đài của con bé Linh!\n\nMà con đường này dốc đứng lắm nha: thiếu xăng thiếu xích hay anh em xuống tinh thần nửa chừng là kẹt cứng giữa khe đá luôn đó. Ông liệu tính coi sức quân mình đủ cắn răng băng qua không!",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_26_hac_ung_chan_song"
+    },
+    {
+      "id": "ch6_ep2_25b_dung_xin_cat_duong_tat",
+      "type": "dialogue",
+      "location": "Đài Quan Sát Chân Núi — Bắc Vực",
+      "speaker": "dung",
+      "speakerTitle": "Thiếu tá Hoàng Tiến Dũng",
+      "mood": "urgent",
+      "condition": { "charAlive": "dung" },
+      "text": "Báo cáo Thượng Tướng! Chờ tới sáng là tụi nó rút sạch rồi, mà để quá hai mươi phút nữa là trạm radar trên đỉnh nát bét trong tay đặc nhiệm Thiết Phong mất!\n\nTôi vừa vuốt lại quai mũ sắt cho cả tổ trinh sát cơ động đây rồi. Sườn Đông có cái khe đèo phụ tuy hẹp nhưng khuất hẳn khỏi góc bắn pháo tầm xa của tụi nó. Chỉ cần ông cho lệnh, tôi dẫn đầu hai trung đội xung kích luồn khe đá đánh úp sườn chúng nó ngay!\n\nĐường trơn băng lắm đấy Thượng Tướng, nếu xe cộ tiếp vận đủ khỏe và sĩ khí anh em không gãy giữa dốc thì tụi tôi chắc chắn hất cẳng được tụi nó khỏi hàng rào đài radar!",
+      "effects": [
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_26_hac_ung_chan_song"
+    },
+    {
+      "id": "ch6_ep2_25c_trinh_sat_bao_tuyen_duong",
+      "type": "narration",
+      "location": "Đài Quan Sát Chân Núi — Bắc Vực",
+      "mood": "urgent",
+      "text": "Tiểu đoàn trưởng trinh sát dã chiến trải vội tấm bản đồ đường mòn sườn Đông lên mui xe bọc thép. Ngón tay anh vạch một đường cong gấp khúc luồn qua khe núi đá vôi đầy tuyết đóng băng hướng lên mặt sau đỉnh radar.\n\nCon đèo phụ này khuất tầm pháo tầm xa của Thiết Phong và tránh được việc rút cạn lực lượng phòng thủ thung lũng chính. Tuy nhiên, mặt đường hẹp chỉ vừa một thân xe bánh lốp, lại đang có nguy cơ sạt lở tuyết nặng.\n\nNếu không đủ dự trữ nhiên liệu, xích chống trượt và sĩ khí vững vàng để vượt tốc độ qua khe tử thần ấy, toán cứu viện sẽ đến muộn giờ sinh tử.",
+      "next": "ch6_ep2_26_hac_ung_chan_song"
+    },
+    {
+      "id": "ch6_ep2_26_hac_ung_chan_song",
+      "type": "dialogue",
+      "location": "Tần số Khẩn Cấp — Phòng Chỉ Huy Tiền Phương",
+      "speaker": "hac_ung",
+      "speakerTitle": "Tư lệnh Khối Thiết Phong — Mật danh Hắc Ưng",
+      "mood": "urgent",
+      "text": "Thượng Tướng mới từ cảng biển Long Vũ ra tới Bắc Vực đã kịp nghe tiếng pháo chào mừng chưa? Giọng nói lạnh tanh qua sóng ngắn không lẫn vào đâu được vang thẳng từ loa đài chỉ huy.\n\nTôi không có thói quen đe dọa vô ích. Biệt đội đặc nhiệm của tôi chỉ cần thêm mười phút nữa là đặt xong khối thuốc nổ phá hủy hoàn toàn mái vòm radar trên đỉnh núi của ông. Khi mắt thần Bắc Vực tắt sóng, bầu trời toàn tuyến sẽ mù ba mươi phút — đủ để ba trung đoàn cơ giới của tôi tính xong ván cờ dưới thung lũng.\n\nHoặc ông rút lực lượng dự bị khỏi thung lũng để cứu mười bốn người lính thông tin trên đỉnh, hoặc ông giữ cửa đèo mà nhìn tín hiệu radar tắt ngấm. Phép toán chỉ có ngần ấy biến số thôi, Thượng Tướng.",
+      "next": "ch6_ep2_27_linh_giu_dai_cuoi"
+    },
+    {
+      "id": "ch6_ep2_27_linh_giu_dai_cuoi",
+      "type": "dialogue",
+      "location": "Trạm Radar Đỉnh Núi Bắc Vực (qua vô tuyến)",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "urgent",
+      "text": "Thượng Tướng... đừng nghe lời nó dụ! Sườn Bắc tụi em vừa dùng lựu đạn đánh bật đợt xung phong thứ nhất của đặc nhiệm địch rồi, nhưng phòng máy phát ngoài sân đã bốc cháy!\n\nMàn hình quét vẫn đang truyền trọn tọa độ tốp tên lửa hành trình đầu tiên của Thiết Phong về cho cụm pháo Long Vũ và sở chỉ huy trung tâm. Để khóa đủ ba đợt tên lửa tiếp theo, tụi em phải giữ cần phát sóng bằng tay ngay giữa buồng máy cho tới lúc hết pin dự phòng!\n\nThủ trưởng quyết định nhanh đi ạ... Em nghe tiếng xích xe tăng bên ngoài hàng rào thép gai gần lắm rồi!",
+      "next": "ch6_ep2_28_choice_tram_radar_timed"
+    },
+    {
+      "id": "ch6_ep2_28_choice_tram_radar_timed",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Tiền Phương — Bắc Vực",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c17_giu_du_bi_thung_lung",
+      "text": "Đèn báo động đỏ chớp liên hồi trên mặt đồng hồ đếm ngược 10 giây. Tiếng súng tiểu liên rộ lên sát máy phát vô tuyến trên đỉnh núi, còn phía dưới thung lũng đoàn thiết giáp địch cũng bắt đầu chuyển bánh.",
+      "choices": [
+        {
+          "id": "c17_dieu_co_dong_giai_vay",
+          "label": "Tung ngay biên đội trực thăng vũ trang và xe thiết giáp dự bị lao thẳng lên đỉnh núi phá vây cứu Trạm Radar và tổ của Linh",
+          "effects": [
+            { "setFlag": "bao_ve_tram_radar_bac_vuc" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 7 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -6 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "linh", "delta": 4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_cuu_tram_radar",
+                "title": "Giải vây Trạm Radar Bắc Vực",
+                "entry": "Điều lực lượng cơ động tinh nhuệ vượt bão tuyết lên đỉnh núi, bảo toàn Trạm Radar Bắc Vực và mạng sống của Trần Mỹ Linh."
+              }
+            }
+          ],
+          "next": "ch6_ep2_29a_truc_thang_co_dong_cuu_tram"
+        },
+        {
+          "id": "c17_vuot_deo_phu_tiep_ung",
+          "label": "Giữ chủ lực giữ cửa đèo chính, cắt phân đội xung kích nhẹ băng qua đường đèo phụ sườn Đông đánh tập hậu giải vây Trạm Radar",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } }
+          ],
+          "next": "ch6_ep2_29b_kiem_tra_deo_phu"
+        },
+        {
+          "id": "c17_phan_phao_giai_ma_nhieu",
+          "label": "Dùng bảng tần số dự phòng của Linh và hồ sơ phản gián bẻ ngược chùm nhiễu, gọi pháo Long Vũ bắn chặn chính xác lưng địch",
+          "condition": {
+            "any": [
+              { "flag": "tin_canh_bao_mat_ma_linh" },
+              { "flag": "bao_ve_tram_song_linh_van_long" },
+              { "notFlag": "thao_bi_dinh_chi" }
+            ]
+          },
+          "effects": [
+            { "setFlag": "bao_ve_tram_radar_bac_vuc" },
+            { "setFlag": "giai_ma_bay_hac_ung" },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addRel": { "char": "linh", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_cuu_tram_radar",
+                "title": "Bẻ gãy đòn nhiễu cứu Trạm Radar",
+                "entry": "Phối hợp mã tần số dự phòng và hồ sơ phản gián để phản pháo chính xác, giải vây Trạm Radar Bắc Vực mà không rút cạn quân thung lũng."
+              }
+            }
+          ],
+          "next": "ch6_ep2_29c_phan_phao_giai_ma_nhieu"
+        },
+        {
+          "id": "c17_giu_du_bi_thung_lung",
+          "label": "Khóa chặt toàn bộ lực lượng dự bị giữ thung lũng chính, lệnh cho tổ của Linh cố thủ phát tín hiệu tới khi cháy máy",
+          "effects": [
+            { "setFlag": "linh_hi_sinh_tram_radar" },
+            { "setCharState": { "char": "linh", "state": "dead" } },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -8 } },
+            { "addStat": { "stat": "SiKhi", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep2_linh_hi_sinh",
+                "title": "Tiếng sóng cuối trên đỉnh Bắc Vực",
+                "entry": "Giữ lực lượng dự bị bảo vệ thung lũng chính; Thiếu tá Trần Mỹ Linh và tổ radar đã anh dũng hi sinh khi giữ tín hiệu cảnh giới đến giây cuối cùng."
+              }
+            }
+          ],
+          "next": "ch6_ep2_29d_giu_thung_lung_radar_tat"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_29a_truc_thang_co_dong_cuu_tram",
+      "type": "narration",
+      "location": "Sườn Bắc Đỉnh Núi — Trạm Radar Bắc Vực",
+      "mood": "urgent",
+      "text": "Ngay khi lệnh xuất kích vừa phát ra, hai biên đội trực thăng vũ trang bay sát ngọn thông phủ tuyết, rải hàng loạt đạn pháo 30 ly cày nát đội hình đặc nhiệm Thiết Phong vừa áp sát hàng rào thép gai. Cùng lúc, sáu xe thiết giáp bánh lốp gầm rú leo dốc đứng.\n\nCuộc giao tranh tầm gần diễn ra khốc liệt trong mười hai phút dưới ánh pháo sáng xanh lè. Bị kẹp giữa hỏa lực từ trên không và đòn thọc sườn của bộ binh cơ giới, mũi tập kích của địch buộc phải tháo chạy xuống khe núi đầy băng giá.\n\nTuy mất một phần lực lượng dự phòng và tiêu hao nặng cơ số nhiên liệu, cánh cửa thép của Trạm Radar Đỉnh Núi bật mở đúng lúc làn khói đen từ phòng máy phát cuồn cuộn bốc lên.",
+      "branches": [
+        {
+          "condition": { "charAlive": "linh" },
+          "next": "ch6_ep2_31a_linh_tren_vom_radar"
+        }
+      ],
+      "next": "ch6_ep2_31b_bang_morse_trong_tro_tan"
+    },
+    {
+      "id": "ch6_ep2_29b_kiem_tra_deo_phu",
+      "type": "narration",
+      "location": "Khe Đèo Phụ Sườn Đông — Bắc Vực",
+      "mood": "urgent",
+      "text": "Phân đội xung kích nhẹ lập tức tách khỏi cửa thung lũng, gài số cầu chậm lao thẳng vào con đèo phụ đá vôi mù mịt tuyết bay. Gió rít qua khe hẻm núi như tiếng còi báo động dồn dập bên tai từng người lính lái xe.\n\nCon đường dốc đứng đầy băng đen thử thách đến giới hạn cuối cùng cả dây xích bọc lốp, lượng xăng dầu dự trữ lẫn bản lĩnh tinh thần của cả đoàn cứu viện. Từng mét đường bò lên trong bóng tối phụ thuộc hoàn toàn vào sự chuẩn bị hậu cần và sức chiến đấu của toàn tuyến.\n\nPhía trên đỉnh núi cao, tiếng nổ B40 vẫn dội xuống dồn dập từng hồi không ngớt.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "statMin": { "stat": "TiepTe", "value": 55 } },
+              { "statMin": { "stat": "SiKhi", "value": 55 } }
+            ]
+          },
+          "next": "ch6_ep2_30a_deo_phu_thong_tuyen"
+        }
+      ],
+      "next": "ch6_ep2_30b_deo_phu_sat_lo_muon"
+    },
+    {
+      "id": "ch6_ep2_30a_deo_phu_thong_tuyen",
+      "type": "narration",
+      "location": "Mặt sau Đỉnh Núi — Trạm Radar Bắc Vực",
+      "mood": "warm",
+      "text": "Nhờ dự trữ xăng dầu đầy đủ và tinh thần xung kích không chùn bước, đoàn xe xung kích nhẹ đã bám xích vượt qua đoạn băng trơn nguy hiểm nhất trước dự kiến bốn phút. Khi tiếng động cơ bất ngờ gầm lên ngay sau lưng đỉnh đá, toán đặc nhiệm Thiết Phong hoàn toàn trở tay không kịp.\n\nHai mũi hỏa lực cối cầm tay và súng máy trung liên lập tức quét ngang sườn, cắt đứt đường tiếp ứng của địch ngay dưới chân tháp ăng-ten. Thung lũng chính bên dưới vẫn còn nguyên chủ lực cơ giới chặn đứng đợt tiến quân của đối phương.\n\nKhoảng trời trên đỉnh núi bỗng quang mây trong khoảnh khắc khi vòm quay radar vẫn giữ nguyên nhịp xoay đều đặn.",
+      "effects": [
+        { "setFlag": "bao_ve_tram_radar_bac_vuc" },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+        { "addStat": { "stat": "SiKhi", "delta": 4 } },
+        { "addRel": { "char": "linh", "delta": 4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep2_cuu_tram_radar",
+            "title": "Vượt đèo phụ cứu Trạm Radar",
+            "entry": "Đưa phân đội xung kích vượt khe đèo phụ sườn Đông đánh tập hậu thành công, giữ nguyên vẹn Trạm Radar Bắc Vực và Trần Mỹ Linh."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "linh" },
+          "next": "ch6_ep2_31a_linh_tren_vom_radar"
+        }
+      ],
+      "next": "ch6_ep2_31b_bang_morse_trong_tro_tan"
+    },
+    {
+      "id": "ch6_ep2_30b_deo_phu_sat_lo_muon",
+      "type": "narration",
+      "location": "Khe Đèo Phụ Sườn Đông — Bắc Vực",
+      "mood": "somber",
+      "text": "Khi đoàn xe xung kích còn cách đỉnh radar chưa đầy tám trăm mét, một mảng băng tuyết lớn bị chấn động pháo kích làm sạt lở ập xuống chắn ngang đoạn cua hẹp. Hai xe đi đầu chết máy vì trượt dốc và hụt lực kéo giữa bùn đá đóng băng.\n\nCả phân đội phải nhảy xuống dùng xẻng công binh và xà beng bẩy đá suốt mười lăm phút trong mưa tuyết rát mặt. Khi những người lính đầu tiên thở dốc leo bộ lên tới hàng rào trạm radar, tiếng súng bên trong đã tắt lịm từ lâu.\n\nVòm radar chính đổ gục nghiêng sang một bên, chỉ còn ngọn lửa đỏ rực bốc lên từ buồng phát sóng tay mà Trần Mỹ Linh cố giữ tới phút chót.",
+      "effects": [
+        { "setFlag": "linh_hi_sinh_tram_radar" },
+        { "setCharState": { "char": "linh", "state": "dead" } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": -6 } },
+        { "addStat": { "stat": "SiKhi", "delta": -4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep2_linh_hi_sinh",
+            "title": "Chậm nhịp trên đèo phụ Bắc Vực",
+            "entry": "Toán cứu viện vượt đèo phụ bị sạt lở tuyết chặn lại quá lâu; Thiếu tá Trần Mỹ Linh hi sinh tại Trạm Radar Đỉnh Núi Bắc Vực trước khi quân tiếp ứng tới nơi."
+          }
+        }
+      ],
+      "next": "ch6_ep2_31b_bang_morse_trong_tro_tan"
+    },
+    {
+      "id": "ch6_ep2_29c_phan_phao_giai_ma_nhieu",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Tiền Phương — Bắc Vực",
+      "mood": "tense",
+      "text": "Dựa vào dải tần phụ Trần Mỹ Linh gửi về cùng đường dẫn tín hiệu phản gián đã vạch sẵn, tổ tác chiến điện tử lập tức đảo cực phát xung, biến chính chùm sóng gây nhiễu của Thiết Phong thành đèn dẫn đường ngược lại cho pháo binh tầm xa.\n\nChỉ chín mươi giây sau, ba khẩu đội lựu pháo tự hành từ sườn sau đồng loạt khai hỏa rải đạn bọc quanh sườn Bắc của đỉnh núi, chặt đứt hoàn toàn đường rút lẫn hỏa lực chi viện của đám đặc nhiệm địch. Bị pháo phủ đầu dội trúng điểm tập kết, mũi đột kích Thiết Phong rối loạn và tan rã ngay trước lớp hàng rào cuối cùng.\n\nCả thung lũng chính vẫn giữ nguyên đội hình thiết giáp không sứt mẻ một xe nào, còn ngọn đèn xanh báo kết nối từ đỉnh radar lại nhấp nháy sáng bừng trở lại.",
+      "branches": [
+        {
+          "condition": { "charAlive": "linh" },
+          "next": "ch6_ep2_31a_linh_tren_vom_radar"
+        }
+      ],
+      "next": "ch6_ep2_31b_bang_morse_trong_tro_tan"
+    },
+    {
+      "id": "ch6_ep2_29d_giu_thung_lung_radar_tat",
+      "type": "narration",
+      "location": "Đài Quan Sát Tiền Phương — Bắc Vực",
+      "mood": "somber",
+      "text": "Hai hàm răng tôi nghiến chặt đến ê buốt khi giữ nguyên toàn bộ đội hình thiết giáp dưới cửa đèo chính. Qua ống nhòm đêm, những vệt lửa đỏ của đạn chống tăng rạch ngang đỉnh núi mù sương suốt tám phút dài như vô tận.\n\nTrên loa vô tuyến phòng chỉ huy, giọng Trần Mỹ Linh vẫn đều đặn đọc từng dãy tọa độ mục tiêu bay của địch giữa tiếng kính vỡ và tiếng lựu đạn nổ chát chúa ngay sát micro. Tới phút thứ chín, một tiếng nổ long trời làm rạn cả tầng mây tuyết trên đỉnh núi, rồi đường truyền tắt lịm.\n\nNhờ chín phút cuối cùng ấy, hệ thống phòng không Long Vũ — Bắc Vực kịp bắn hạ sáu tên lửa hành trình lao vào thung lũng, nhưng ánh đèn xanh của Trạm Radar Đỉnh Núi đã vĩnh viễn tắt.",
+      "next": "ch6_ep2_31b_bang_morse_trong_tro_tan"
+    },
+    {
+      "id": "ch6_ep2_31a_linh_tren_vom_radar",
+      "type": "dialogue",
+      "location": "Sân Trạm Radar Đỉnh Núi — Bắc Vực, rạng sáng",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "warm",
+      "condition": { "charAlive": "linh" },
+      "text": "Báo cáo Thượng Tướng... tổ radar mười bốn người còn đủ mười bốn người, chỉ có hai đồng chí bị mảnh đạn sượt vai đã băng bó xong rồi ạ. Mặt áo em ám muội khói đen thui luôn rồi nè!\n\nThủ trưởng nhìn bảng mã Morse khắc đồng của em còn nguyên trên bàn máy nè. Đúng lúc căng nhất, ngón tay em cứ gõ theo nhịp cũ để đỡ run mà bắt được trọn vẹn mật lệnh chuyển quân giả của Hắc Ưng phát ra ngay trước lúc tụi nó rút.\n\nTụi nó tính đánh lừa mình rằng mũi chính sẽ đổ bộ qua vịnh Long Vũ, nhưng nhìn chu kỳ lặp tần số này thì mục tiêu thật trong bảy mươi hai giờ tới là đánh kép cả hai đầu Bắc Vực lẫn cửa biển luôn đấy Thượng Tướng!",
+      "effects": [
+        { "setFlag": "giai_ma_bay_hac_ung" },
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch6_ep2_32a_loc_thay_cap_radar"
+        }
+      ],
+      "next": "ch6_ep2_33_dispatch_trieu_tap_dai_tuong"
+    },
+    {
+      "id": "ch6_ep2_31b_bang_morse_trong_tro_tan",
+      "type": "narration",
+      "location": "Đống đổ nát Trạm Radar Đỉnh Núi — Bắc Vực",
+      "mood": "somber",
+      "text": "Rạng sáng, khi toán phản kích lên tới đỉnh núi, màn tuyết mỏng đã bắt đầu phủ lên những mảng bê tông vỡ nát và khung ăng-ten xoắn cong vì sức nổ. Khói khét mùi dây đồng cháy vẫn âm ỉ bốc lên giữa cái lạnh âm độ.\n\nBên dưới cánh cửa thép phòng máy bị đánh sập, đội tìm kiếm tìm thấy thi thể Thiếu tá Trần Mỹ Linh vẫn nằm gục bên cần giữ xung phát sóng bằng tay. Trong lòng bàn tay cháy sém của cô nắm chặt tấm Bảng Mã Morse Khắc Đồng quen thuộc, còn góc vạt áo thấm máu khô vẫn kẹp mảnh giấy ghi dãy tọa độ cuối cùng vừa gửi về Long Vũ.\n\nTôi rút cuốn sổ bìa xanh ra khỏi túi áo ngực, mở trang giấy trắng tiếp theo và nắn nót viết thẳng tên Trần Mỹ Linh vào hàng trên cùng, đôi tay lạnh cóng run lên theo từng nét mực.",
+      "effects": [
+        { "unlockRelic": "bang_morse_linh" }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep2_32b_khang_lang_nguoi_ben_dai"
+        }
+      ],
+      "next": "ch6_ep2_33_dispatch_trieu_tap_dai_tuong"
+    },
+    {
+      "id": "ch6_ep2_32a_loc_thay_cap_radar",
+      "type": "dialogue",
+      "location": "Chân tháp ăng-ten — Trạm Radar Đỉnh Núi Bắc Vực",
+      "speaker": "loc",
+      "speakerTitle": "Trung úy Bùi Văn Lộc",
+      "mood": "warm",
+      "condition": { "charAlive": "loc" },
+      "text": "Dạ báo cáo Thượng Tướng, phân đội kỹ thuật của tụi em vừa thay xong hai cuộn cáp nguồn dự phòng bị đạn xé đứt ngoài vòm quay rồi đó anh!\n\nHồi đêm nghe tin đỉnh núi bị vây, hai tay em cứ nắm chặt quai dây ba lô như hồi mới về Thiên Minh vậy, chỉ sợ lên chậm một nhịp là mất chị Linh mất đài. May mà giờ dây nhợ truyền tín hiệu lại chạy bon bon hết trơn rồi.\n\nAnh yên tâm chuẩn bị bay về Thủ đô đi nghen Thủ trưởng. Chỗ dây cáp ngoài tháp radar này em cột chặt hết rồi, có bão tuyết lớn cỡ nào cũng không để đứt nữa đâu anh!",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 2 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+      ],
+      "next": "ch6_ep2_33_dispatch_trieu_tap_dai_tuong"
+    },
+    {
+      "id": "ch6_ep2_32b_khang_lang_nguoi_ben_dai",
+      "type": "dialogue",
+      "location": "Sân Trạm Radar Đỉnh Núi — Bắc Vực",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "somber",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Con bé Linh hồi ở Thiên Minh nhỏ xíu mà lì đòn thiệt chứ... Nó giữ lời hứa tới phút cuối cùng không để đứt một nhịp sóng nào trước khi ngã xuống.\n\nTui không trách ông đâu bạn hiền ơi. Đứng ở cái ghế Thượng Tướng giữ cả hai vùng chiến khu, có những cái giá không trả bằng cách này thì cũng phải trả bằng cách khác dưới thung lũng. Chỉ là... cầm cái bảng mã bằng đồng của nó trên tay, tự dưng thấy cái bật lửa trong túi tui nặng như cục đá.\n\nLên Bộ Tổng Tham Mưu làm Đại Tướng rồi, đừng có để tụi làm giấy tờ trên đó quên mất hôm nay trên đỉnh đá này có mười bốn người nằm lại vì cái chữ chiến thắng nghe ông.",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": -1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep2_33_dispatch_trieu_tap_dai_tuong"
+    },
+    {
+      "id": "ch6_ep2_33_dispatch_trieu_tap_dai_tuong",
+      "type": "dispatch",
+      "location": "Sân Đáp Trực Thăng — Bắc Vực",
+      "mood": "urgent",
+      "text": "[MẬT LỆNH TỪ HỘI ĐỒNG QUỐC PHÒNG TỐI CAO — ĐỘ KHẨN: HỎA TỐC]\n\n\"Tình báo chiến lược xác nhận Khối Thiết Phong đang chuẩn bị đòn tổng lực mùa đông trên đồng thời hai mặt trận Bắc Vực và Long Vũ trong vòng 72 giờ tới. Hội Đồng quyết định phong quân hàm ĐẠI TƯỚNG và triệu tập Thượng Tướng Tư lệnh Long Vũ về Thủ đô ngay lập tức để trực tiếp điều hành Bộ Tổng Tham Mưu Tối Cao.\"\n\n\"Toàn bộ hồ sơ phối hợp liên vùng, bằng chứng hậu phương và phương án phản công hai mặt trận sẽ được trình bày trong phiên họp kín lúc 00 giờ đêm nay tại Phòng Tác Chiến Trung Tâm.\"",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep2_trieu_tap_dai_tuong",
+            "title": "Lệnh triệu tập Đại Tướng về Bộ Tổng Tham Mưu",
+            "entry": "Nhận mật lệnh thăng quân hàm Đại Tướng, khẩn cấp bay về Bộ Tổng Tham Mưu Tối Cao trước giờ Thiết Phong tổng tiến công hai mặt trận."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "linh" },
+          "next": "ch6_ep2_34a_linh_giao_bang_tin_hieu"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch6_ep2_34b_thao_giao_ho_so_khoi_to"
+        }
+      ],
+      "next": "ch6_ep2_34c_truoc_them_truc_thang"
+    },
+    {
+      "id": "ch6_ep2_34a_linh_giao_bang_tin_hieu",
+      "type": "dialogue",
+      "location": "Cửa trực thăng vận tải — Sân đáp Bắc Vực",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "calm",
+      "condition": { "charAlive": "linh" },
+      "text": "Thủ trưởng cầm theo cuộn băng ghi âm và bảng giải mã nhiễu sóng này lên Bộ Tổng Tham Mưu nhé. Em đã chép hai bản dự phòng khóa chặt mã gửi đồng thời về cảng Long Vũ rồi.\n\nHắc Ưng chắc chắn sẽ dùng chiến tranh điện tử để cắt đứt liên lạc giữa hai chiến khu trong đêm họp hội đồng. Chỉ cần Thượng Tướng giữ đúng nhịp nhảy tần số ghi ở trang cuối, tuyến Bắc Vực và Long Vũ sẽ không bao giờ mất tiếng của nhau.\n\nLên Đại Tướng rồi bảo trọng nhé Thủ trưởng — trên đỉnh núi này tụi em giữ sáng màn hình radar chờ tin chiến thắng từ phòng sa bàn gửi về!",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_35_choice_cuon_so_truoc_khi_bay"
+    },
+    {
+      "id": "ch6_ep2_34b_thao_giao_ho_so_khoi_to",
+      "type": "dialogue",
+      "location": "Cửa trực thăng vận tải — Sân đáp Bắc Vực",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "thao" },
+          { "charState": { "char": "thao", "state": "alive" } }
+        ]
+      },
+      "text": "Tôi vừa hoàn tất bản đối chiếu cuối cùng giữa vụ rút ruột dầu ở Long Vũ với đầu mối rò rỉ tần số vừa rồi. Tập hồ sơ gấp góc này đã đủ sức khóa mọi đường thoái lui của nhóm lợi ích sau lưng ông Phạm Quang Hùng.\n\nTrên bàn Hội đồng Tối cao đêm nay, người ta sẽ hỏi ông đủ thứ về hiệu suất và kỷ luật. Hãy đặt thẳng xấp chứng từ này xuống giữa mặt kính sa bàn khi cần thiết — chữ ký giả không tự đổi nét được đâu.\n\nChúc Đại Tướng thượng lộ bình an. Tôi ở lại tuyến Bắc Vực khóa nốt mắt xích cuối cùng của đường dây nội gián.",
+      "effects": [
+        { "addRel": { "char": "thao", "delta": 1 } }
+      ],
+      "next": "ch6_ep2_35_choice_cuon_so_truoc_khi_bay"
+    },
+    {
+      "id": "ch6_ep2_34c_truoc_them_truc_thang",
+      "type": "narration",
+      "location": "Cửa trực thăng vận tải — Sân đáp Bắc Vực",
+      "mood": "somber",
+      "text": "Cánh quạt trực thăng quay tít thổi bay lớp tuyết vụn trắng xóa quanh bãi đáp dã chiến. Trong chiếc cặp da khóa số mang theo bên mình không có bóng dáng nữ sĩ quan phản gián hay bản giải mã trực tiếp từ trạm trưởng radar, chỉ có tập hồ sơ để lại và những nét chữ ghi vội trên giấy trắng.\n\nChính sự trống trải ấy lại khiến bước chân tôi thêm phần tỉnh táo trước ngưỡng cửa Bộ Tổng Tham Mưu Tối Cao. Dù thiếu đi những người gác cửa tin cậy nhất, tôi vẫn mang theo nguyên vẹn sự thật từ bến cảng Long Vũ tới đỉnh đá Bắc Vực.\n\nTôi kéo dây khóa áo bông chắn gió, đặt tay lên túi áo ngực nơi cuốn sổ bìa xanh nằm yên lặng rồi bước lên bậc thang máy bay.",
+      "next": "ch6_ep2_35_choice_cuon_so_truoc_khi_bay"
+    },
+    {
+      "id": "ch6_ep2_35_choice_cuon_so_truoc_khi_bay",
+      "type": "choice",
+      "location": "Khoang trực thăng — Trước giờ cất cánh về Thủ đô",
+      "text": "Trước khi cánh cửa khoang trực thăng đóng sập lại, sĩ quan tùy tùng xin chỉ thị cuối cùng của bạn để truyền xuống hai chiến khu Long Vũ và Bắc Vực.",
+      "choices": [
+        {
+          "id": "c17_ghi_day_du_so_bia_xanh",
+          "label": "Ghi nguyên văn tên những người giữ đài, tuyến xe chở sách và số liệu dầu thực tế vào sổ bìa xanh rồi phát bản sao cho hai chiến khu",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } }
+          ],
+          "next": "ch6_ep2_bottleneck"
+        },
+        {
+          "id": "c17_siet_bao_mat_cang_va_dai",
+          "label": "Ban hành lệnh thiết quân luật kỹ thuật cho toàn bộ cầu cảng Long Vũ và mạng radar Bắc Vực trước giờ Thiết Phong nổ súng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } }
+          ],
+          "next": "ch6_ep2_bottleneck"
+        },
+        {
+          "id": "c17_hieu_trieu_hai_chien_khu",
+          "label": "Mở sóng ngắn đọc lời hiệu triệu ngắn gọn nối liền hai chiến khu: giữ vững hậu phương Long Vũ để làm điểm tựa cho Bắc Vực",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch6_ep2_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep2_bottleneck",
+      "type": "narration",
+      "location": "Không phận hướng về Bộ Tổng Tham Mưu Tối Cao — Chạng vạng",
+      "mood": "urgent",
+      "isChapterEnd": true,
+      "text": "Chiếc trực thăng nâng độ cao xuyên qua tầng mây tuyết xám đặc, bỏ lại sau lưng dãy núi Bắc Vực răng cưa và xa tít phương Nam là những con kênh phù sa Long Vũ đang sáng đèn chuẩn bị ca đêm. Trên lòng bàn tay tôi là cuốn sổ bìa xanh đã kín gần hết bề dày, quyện đủ mùi khói bếp, mùi dầu xe vận tải và mùi ozone cháy của máy phát cao tần.\n\nTừ tuyến xe chở sách giáo khoa cho những lớp học vùng sâu, lá thư tay trao lại dưới gầm cầu nâng, cuộc đấu trí giữ sự thật cho phản gián cho tới mười giây nghẹt thở trên đỉnh núi radar — mọi đường nét nhỏ bé dưới mặt đất cuối cùng đều hội tụ thành thế trận chung của đất nước.\n\nPhía trước mũi bay, ánh đèn Thủ đô đã lấp ló hiện ra sau rặng mây chiều. Ngày mai, trong căn phòng sa bàn kính của Bộ Tổng Tham Mưu Tối Cao, bốn ngôi sao Đại Tướng sẽ chính thức đối diện cả Phạm Quang Hùng lẫn đòn đánh tổng lực từ Hắc Ưng.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep2_ket_thuc",
+            "title": "Khép lại Hồi 17 — Lên đường nhận chức Đại Tướng",
+            "entry": "Hoàn thành nhiệm vụ Thượng Tướng tại Đại Chiến Khu Long Vũ và trận giữ Trạm Radar Đỉnh Núi Bắc Vực, đáp chuyến bay khẩn về Bộ Tổng Tham Mưu Tối Cao."
+          }
+        }
+      ]
+    }
+  ]
+}

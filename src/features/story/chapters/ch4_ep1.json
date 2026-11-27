@@ -1,0 +1,947 @@
+{
+  "id": "ch4_ep1",
+  "episodeOrder": 10,
+  "chapterNumber": 4,
+  "title": "Chương IV · Hồi 10: Ngôi Sao Vàng & Huyền Ưng",
+  "ql2ChapterId": "company_officer",
+  "rankRange": "Thiếu Úy → Trung Úy",
+  "nextChapterId": "ch4_ep2",
+  "entryNodeId": "ch4_ep1_01_thieu_uy",
+  "summary": "Nhận ngôi sao vàng Thiếu úy tại thung lũng Vân Long giữa lời dặn của anh Nam, thầy Vinh và những đồng đội cũ, rồi thăng Trung úy về Đại Đội 3 Huyền Ưng — nơi bạn phải thức trắng học thuộc 128 cái tên dưới sự kiểm tra gắt gao của Đại đội trưởng Đỗ Thành Sơn, vá góc cờ rách bên bếp anh nuôi Trần Văn Tám và giữ vững vành đai sông Xích Thủy giữa đêm sương nhiễu sóng.",
+  "nodes": [
+    {
+      "id": "ch4_ep1_01_thieu_uy",
+      "type": "narration",
+      "location": "Hiên nhà trực ban — Trung Đội 1 Vân Long",
+      "mood": "calm",
+      "text": "Sương tháng Ba tan chậm trên những triền đá tai mèo bao quanh thung lũng Vân Long, để lại những vệt nước loang lổ trên mái tôn lán trại vừa vá vội sau trận pháo kích đêm hôm trước.\n\nDưới chân đồi, dòng suối từng cuộn bùn đỏ hôm rút quân giờ đã hạ xuống ngang gối. Những bụi lau dập nát lộ ra ven bờ, còn vướng rác rưởi và vài vỏ đạn đồng xỉn màu nằm lẫn trong lớp sỏi cuội.\n\nTrên chiếc bàn gỗ ghép trước hiên nhà trực ban, tờ quyết định điều động từ trung đoàn vừa được đóng dấu đỏ tươi còn thơm mùi mực mới. Sau chiến dịch phòng ngự vừa qua, tôi chính thức rời hàng ngũ hạ sĩ quan để mang quân hàm Thiếu úy — ngôi sao vàng đầu tiên lấp lánh trên nền cầu vai xanh còn cứng nguyên nếp vải hồ.\n\nNgón tay tôi chạm nhẹ lên cạnh sao kim loại lạnh buốt, chợt nhớ ngày đầu tiên đứng lỡ ba nhịp giữa sân sỏi đỏ Quang Trung. Tôi lật nhẹ cuốn sổ bìa xanh thầy Trần Quốc Vinh trao, vuốt thẳng mép trang ghi tên những người từng đứng gác chung ca ở Thiên Minh và Vân Long.\n\nNgoài sân đất nện, tiếng kẻng tập hợp buổi sáng vừa dứt. Hơi ẩm đất rừng bốc lên ngai ngái hòa cùng mùi dầu lau súng và mùi củi ướt cháy dở từ góc bếp trung đội.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch4_ep1_thieu_uy",
+            "title": "Ngôi sao vàng đầu tiên ở Vân Long",
+            "entry": "Nhận quân hàm Thiếu úy sau trận phòng ngự Vân Long, mở đầu chặng đường sĩ quan cấp úy trước ngày lên đường về Đại Đội 3 Huyền Ưng."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": { "charState": { "char": "nam", "state": "alive" } },
+          "next": "ch4_ep1_02a_nam_chinh_co_ao"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "nam" },
+              { "charState": { "char": "nam", "state": "injured" } }
+            ]
+          },
+          "next": "ch4_ep1_02b_nam_benh_xa"
+        }
+      ],
+      "next": "ch4_ep1_02c_mot_minh_chinh_ao"
+    },
+    {
+      "id": "ch4_ep1_02a_nam_chinh_co_ao",
+      "type": "dialogue",
+      "location": "Hiên nhà trực ban — Trung Đội 1 Vân Long",
+      "condition": { "charAlive": "nam" },
+      "speaker": "nam",
+      "speakerTitle": "Thượng sĩ Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "text": "Đứng yên coi nào, cái dây súng đeo chéo lại xoắn một vòng ngay nách rồi kìa. Cứ đi đứng lơ đãng kiểu ni ra trước hàng quân tụi nhỏ nó cười cho thối mũi, lên Thiếu úy mà cái ve áo bên trái vẫn gập mép thế này thì ra đứng trước trung đội sao đặng.\n\nĐể anh vuốt thẳng lại cầu vai cho cân hai bên đã rồi hãy bước ra nắng. Hồi mới gặp mi ở Thiên Minh, cái quai ba lô cũng lỏng lẻo y hệt rứa, nói mãi mới chịu sửa gọn gàng trước giờ đổi gác.\n\nNghe anh dặn thiệt bụng nè chú em: ngôi sao vàng trên vai làm cổ áo mình nặng thêm một lạng đồng, chứ không phải để mình ngước cằm cao hơn anh em dưới chiến hào đâu nghe chưa. Về đại đội mới cũng phải chịu khó cúi xuống mà nghe tiếng thở của thằng lính tân binh như hồi ở chốt cũ.\n\nQuai ba lô ai xoắn thì nhắc nó sửa, chân ai phồng rộp thì chia cho miếng cao dán. Lính tráng mệt được, chứ không được để lưng đồng đội lạnh. Chừ bước ra sân tập đi, anh em đang đứng đợi kiểm tra đội hình ngoài nắng cả rồi đó.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch4_ep1_03a_loc_gap_thieu_uy"
+        }
+      ],
+      "next": "ch4_ep1_03b_nho_loc_ben_suoi"
+    },
+    {
+      "id": "ch4_ep1_02b_nam_benh_xa",
+      "type": "dialogue",
+      "location": "Bệnh xá dã chiến Vân Long — Lán bạt cạnh suối",
+      "condition": { "charAlive": "nam" },
+      "speaker": "nam",
+      "speakerTitle": "Thượng sĩ Nguyễn Hoàng Nam",
+      "mood": "somber",
+      "text": "Vào đây ngồi xích lại gần mép giường cho anh coi cái cầu vai mới nào, đừng có đứng khựng ngoài cửa bạt mùi thuốc đỏ thế kia. Cái vai trái anh còn bó nẹp cứng ngắc chứ bàn tay phải vẫn đủ sức kéo thẳng cái ve áo xộc xệch cho chú em đấy.\n\nCầm lấy ca nước nóng trên bàn sắt uống một hớp cho ấm giọng đi rồi ngồi nghe anh nói chuyện. Ngoài lán y tá lúc nào cũng nồng mùi cồn với bông băng ẩm nước mưa, anh nằm hai hôm mà nhớ tiếng kẻng tập hợp buổi sáng ngoài sân sỏi muốn chết.\n\nĐừng có nhìn băng gạc của anh mà chùng tay hay áy náy gì hết trơn. Chiến trường ni nó sòng phẳng lắm, mình giữ được mạng cho mấy đứa nhỏ sau lưng qua cơn lũ pháo bữa rồi là anh mãn nguyện lắm rồi.\n\nÍt bữa nữa anh rút về tuyến sau huấn luyện tân binh, dạy tụi nhỏ cách buộc dây súng với đào công sự trước khi ra mặt trận. Nhớ lấy lời anh dặn bữa ni: lên cấp úy rồi càng phải giữ cái tai cho gần mặt đất, đừng bao giờ điếc trước tiếng lính kêu mệt ngoài chốt nghe chú.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch4_ep1_03a_loc_gap_thieu_uy"
+        }
+      ],
+      "next": "ch4_ep1_03b_nho_loc_ben_suoi"
+    },
+    {
+      "id": "ch4_ep1_02c_mot_minh_chinh_ao",
+      "type": "narration",
+      "location": "Gian ngủ sĩ quan — Trung Đội 1 Vân Long",
+      "mood": "somber",
+      "text": "Không còn bóng dáng anh Nam đứng chờ sẵn ngoài bậc thềm để soi lại dây súng, chỉnh lại quai ba lô hay kéo giúp mép cổ áo như hồi tôi mới chân ướt chân ráo đặt chân tới Thiên Minh. Trong gian phòng hẹp dựng bằng cột gỗ tạp còn ám mùi vôi ẩm, tôi đứng lặng trước tấm gương nhỏ nứt chéo một góc treo bên vách nứa.\n\nTôi tự đưa tay vuốt phẳng hai bên ve áo kaki còn thơm mùi vải mới, cài lại nút cúc cổ cho ngay ngắn. Chiếc giường xếp kế bên góc phòng đã cuộn gọn chăn màn sạch sẽ, chỉ còn lại mùi trà đặc đắng ngắt thoang thoảng đâu đây như một thói quen chưa kịp phai theo gió núi.\n\nTôi cúi xuống siết lại hai vòng dây bao xe quanh thắt lưng, kiểm tra chốt khóa súng ngắn giống hệt cách anh vẫn làm cho từng người lính mới trước giờ xuất kích. Mỗi động tác nhỏ đều nhắc về đôi bàn tay chai sạn của người tiểu đội trưởng miền Trung từng che chắn cho cả tổ tam tam qua những đêm sương buốt.\n\nCái nghề này sai một li là mất một nhà — câu nói cũ của anh Nam bất chợt dội lại trong đầu giữa khoảng lặng ban mai. Tôi hít sâu một hơi gió lạnh rồi bước ra bãi tập Vân Long.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch4_ep1_03a_loc_gap_thieu_uy"
+        }
+      ],
+      "next": "ch4_ep1_03b_nho_loc_ben_suoi"
+    },
+    {
+      "id": "ch4_ep1_03a_loc_gap_thieu_uy",
+      "type": "dialogue",
+      "location": "Bãi tập trung đội Vân Long — Cổng doanh trại",
+      "condition": { "charAlive": "loc" },
+      "speaker": "loc",
+      "speakerTitle": "Hạ sĩ Bùi Văn Lộc",
+      "mood": "warm",
+      "text": "Báo cáo Thiếu úy... à dạ, ở riêng góc cổng này cho em gọi anh một tiếng nữa nghe anh. Em mới kiểm tra lại hết dây bao xe với chốt hộp tiếp đạn cho mấy tân binh mới bổ sung sáng nay rồi.\n\nSáng nay có hai thằng nhỏ quê miệt Cà Mau mới nhập ngũ còn lúng túng y hệt em hồi mới đặt chân lên đất Quang Trung. Em ngồi bệt xuống bãi đất đỏ chỉ tụi nó cách gấp mép dây vải cho đỡ cộm vai khi hành quân đường dài.\n\nĐứa nào cột sai là em bắt làm lại ngay tại chỗ, không đứa nào để móc sắt cấn vào xương sườn đâu anh yên tâm. Hồi mới về Thiên Minh tay em run bần bật tới nỗi rớt cả hộp đạn giữa đêm mưa, giờ nghe tiếng còi chuyển trạng thái em vẫn hồi hộp chứ không còn cuống chân nữa rồi.\n\nNghe tin anh điều động qua Đại Đội 3 Huyền Ưng, chắc tụi mình lại có dịp gặp nhau ở tuyến trước ngoài Xích Thủy thôi. Anh đi trước giữ gìn sức khỏe, chỗ dây này em cột chặt rồi, không làm anh mất mặt trước đơn vị mới đâu.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch4_ep1_04a_dung_trinh_sat"
+        }
+      ],
+      "next": "ch4_ep1_04b_nho_dung_mui_nhon"
+    },
+    {
+      "id": "ch4_ep1_03b_nho_loc_ben_suoi",
+      "type": "narration",
+      "location": "Bờ suối Vân Long — Trước giờ bàn giao",
+      "mood": "somber",
+      "text": "Hàng quân bàn giao ngoài bãi tập đã đứng đủ người theo danh sách mới, nhưng khoảng trống ở vị trí số bốn thuộc tổ giữ dây kích nổ vẫn lặng lẽ nhắc về Bùi Văn Lộc — cậu tân binh miền Tây hiền lành từng nắm chặt quai ba lô mỗi khi nghe gọi tên giữa bãi tập Thiên Minh.\n\nTôi bước ra sát mép suối, nơi dòng nước đục vẫn chảy xiết qua chân trụ cầu gãy còn lởm chởm thép xoắn. Tôi đặt xuống tảng đá phẳng một mẩu lương khô và điếu thuốc vấn giấy báo còn thơm mùi lá khô, như cách anh em hay làm cho người chưa kịp qua bờ.\n\nBỗng nhớ buổi chiều nào Lộc còn ngồi thu lu bên rãnh nước tập thắt lại dây bao đạn, hai tai đỏ bừng vì sợ làm chậm giờ điểm danh của cả tiểu đội. Cậu lính hay ngập ngừng ấy cuối cùng đã giữ trọn lời hứa không buông tay khỏi dây kíp cho tới giây cuối cùng.\n\nGió thung lũng thổi qua những bụi cỏ may xào xạc, cuốn theo vài cánh hoa dại trắng muốt rơi xuống mặt nước lạnh rồi trôi xuôi về hạ lưu. Tôi mở cuốn sổ bìa xanh ra, ghi thêm một gạch đầu dòng gọn gàng dưới tên Lộc trước khi quay bước về phía lán trinh sát.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch4_ep1_04a_dung_trinh_sat"
+        }
+      ],
+      "next": "ch4_ep1_04b_nho_dung_mui_nhon"
+    },
+    {
+      "id": "ch4_ep1_04a_dung_trinh_sat",
+      "type": "dialogue",
+      "location": "Rìa bãi tập Vân Long — Lán tổ trinh sát",
+      "condition": { "charAlive": "dung" },
+      "speaker": "dung",
+      "speakerTitle": "Trung sĩ Hoàng Tiến Dũng",
+      "mood": "warm",
+      "text": "Ái chà, ngôi sao vàng sáng choang trên vai rồi kìa, đứng nghiêm cho thằng trinh sát Hải Phòng này chào ông Thiếu úy một cái coi nào! Nói đùa thế thôi chứ nhìn ông đứng trước trung đội sáng nay, anh em mũi nhọn tụi tôi cũng thấy mát ruột lắm.\n\nNãy giờ tôi vừa vuốt lại quai mũ sắt, vừa kiểm hết mấy cái địa bàn vỏ đồng với cuộn dây dù cho tổ chuẩn bị hành quân sang cánh sườn Xích Thủy tuần sau. Lần này đi địa hình rừng rậm ven sông, không còn vách đá tai mèo như Vân Long nữa đâu.\n\nTôi dặn sẵn mấy thằng lính trẻ rồi: chờ tới sáng là tụi nó rút sạch rồi, lúc nào cũng phải đi trước nửa bước chứ không ngồi bó gối đợi công văn đâu. Có điều lần trước mém kẹt lũ, tôi cũng biết tém bớt cái tính nóng đầu lại để nghe nhịp còi của người chỉ huy rồi.\n\nÔng qua bên Đại Đội 3 Huyền Ưng nghe đồn kỷ luật sắt lắm, đừng có biến thành ông quan giấy chỉ biết kẻ bút đỏ trên bản đồ đấy nhé. Hẹn gặp lại ngoài bờ sông, lúc đó nhớ chừa cho tổ tôi điếu thuốc lào!",
+      "next": "ch4_ep1_05_choice_chia_tay_van_long"
+    },
+    {
+      "id": "ch4_ep1_04b_nho_dung_mui_nhon",
+      "type": "narration",
+      "location": "Giá súng tổ trinh sát — Trung Đội 1 Vân Long",
+      "mood": "somber",
+      "text": "Đi ngang qua dãy giá súng của tổ trinh sát mũi nhọn, ánh mắt tôi dừng lại ở chiếc mũ sắt sờn quai treo gọn bên góc cột tre và chiếc địa bàn vỏ đồng trầy xước đặt trên thùng đạn cũ. Đó là kỷ vật của Hoàng Tiến Dũng — chàng lính Hải Phòng thẳng ruột ngựa lúc nào cũng giục anh em tiến lên trước bình minh.\n\nCả tổ trinh sát mới vừa bổ sung người đang lặng lẽ buộc lại dây giày, không ai nói lớn tiếng như hồi Dũng còn đứng cười ha hả bên bếp lửa. Cậu tổ trưởng mới thay vị trí Dũng khẽ tháo chiếc khăn dù buộc cổ trao lại cho văn thư để gửi về gia đình ngoài phố Cảng.\n\nTôi chạm nhẹ vào vành mũ sắt lạnh ngắt, nghe văng vẳng đâu đây câu nói gấp gáp của cậu giữa đêm sương. Dù nóng nảy hay va chạm với Khang, Dũng chưa bao giờ đứng nấp sau lưng đồng đội trong bất kỳ mũi đột kích nào.\n\nTôi rút cuốn sổ bìa xanh từ túi áo ngực, khẽ khép lại hai trang viết đầy tên đồng đội ở Vân Long rồi bước ra sân nơi chiếc xe vận tải đang chuẩn bị nổ máy.",
+      "next": "ch4_ep1_05_choice_chia_tay_van_long"
+    },
+    {
+      "id": "ch4_ep1_05_choice_chia_tay_van_long",
+      "type": "choice",
+      "location": "Bãi tập trung đội Vân Long — Một giờ trước khi rời đơn vị",
+      "mood": "calm",
+      "text": "Mặt trời lên quá ngọn tràm, hắt ánh sáng vàng nhạt xuống hàng quân đang thu dọn ba lô bên rìa con đường đất đỏ. Chỉ còn một tiếng nữa chiếc xe tải mui bạt sẽ đưa bạn rời thung lũng Vân Long để lên trạm trung chuyển trung đoàn.\n\nTrong khoảng thời gian ít ỏi cuối cùng với đơn vị cũ, bạn quyết định dành trọn giờ chia tay này cho việc gì?",
+      "choices": [
+        {
+          "id": "c_soat_so_ban_giao",
+          "label": "Ngồi cùng các tiểu đội trưởng đối chiếu lại từng dòng sổ vũ khí và cơ số đạn bàn giao cho trung đội kế nhiệm",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_06a_ban_giao_sach"
+        },
+        {
+          "id": "c_di_vong_chien_hao",
+          "label": "Đi dọc tuyến hào cũ kiểm tra lần cuối vết phồng rộp bàn chân, tất khô và băng cá nhân của từng chiến sĩ",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_06b_tham_chien_hao"
+        },
+        {
+          "id": "c_viet_thu_hau_phuong",
+          "label": "Giúp tổ văn thư chép nốt phong bì thư tay gửi về gia đình các đồng đội vừa xuất quân và bị thương sau trận lũ",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_06c_viet_thu_ve_nha"
+        },
+        {
+          "id": "c_gap_gia_lang_duong_nui",
+          "label": "Cắt thêm bao muối và pin đèn khô ra bìa rừng trao tận tay Già Kiên trước khi rời thung lũng",
+          "condition": { "charAlive": "gia_lang" },
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addRel": { "char": "gia_lang", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": -1 } }
+          ],
+          "next": "ch4_ep1_06d_gia_lang_suong_mu"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_06a_ban_giao_sach",
+      "type": "narration",
+      "location": "Lán quân khí dã chiến — Trung Đội 1 Vân Long",
+      "mood": "calm",
+      "text": "Dưới mái lán tôn còn hằn vết mảnh đạn, tôi cùng ba tiểu đội trưởng mở từng hòm gỗ kiểm lại chốt khóa súng, đếm từng băng đạn dự phòng và gạch rõ số lô đạn ẩm vừa xin đổi lại từ kho trung đoàn. Không một con số nào bị ghi ước lượng hay làm tròn cho xong việc.\n\nViên trung úy mới nhận bàn giao trung đội nhìn cột số liệu khớp từng viên đạn, khẽ gật đầu nể phục. Cậu ta bảo chưa từng thấy ai rời đơn vị đi nhận sao vàng mà còn ngồi tỉ mẩn lau từng hộp kíp nổ đến phút chót như vậy.\n\nCả hai chúng tôi cùng ký tên rõ ràng vào góc trang sổ quân khí dưới ánh đèn pin rọi thẳng vào số seri từng khẩu súng máy. Tờ giấy bàn giao phẳng phiu không một vết tẩy xóa được kẹp ngay ngắn vào cặp hồ sơ trung đội.\n\nKhi đóng dấu hoàn tất lên trang biên bản cuối cùng, tôi cảm thấy lòng nhẹ hẳn đi vì đã không để lại bất kỳ món nợ giấy tờ nào đè lên vai người đến sau.",
+      "next": "ch4_ep1_07_vinh_hoi_ve_so_xanh"
+    },
+    {
+      "id": "ch4_ep1_06b_tham_chien_hao",
+      "type": "narration",
+      "location": "Tuyến hào phía tây Vân Long",
+      "mood": "warm",
+      "text": "Tôi men theo đoạn giao thông hào còn bùn sệt, dừng lại ở từng hốc trú ẩn dã chiến để dặn dò mấy chiến sĩ trẻ phơi lại tất ướt và bôi thuốc chống nước ăn chân trước khi mùa mưa tới sớm. Mấy cậu lính mới thoạt đầu còn đứng nghiêm lúng túng trước ngôi sao vàng trên vai áo tôi, lát sau đã ríu rít kể chuyện nhà.\n\nCó cậu đưa ra đôi giày vải rách gót, tôi rút cuộn băng dính vải trong ba lô ra quấn tạm cho cậu đi đỡ chờ đợt phát quân trang mới. Những chuyện nhỏ nhặt ấy chẳng bao giờ lọt vào báo cáo chiến công, nhưng lại giữ cho cả hàng quân đứng thẳng lưng.\n\nĐi hết ba ụ súng sườn tây, tôi chia thêm gói thuốc cảm dự phòng cho tổ gác đêm hay bị sương thấm ngực. Mấy gương mặt lấm bùn cười híp mắt, hứa sẽ giữ sạch đoạn hào này như lúc tôi còn ở lại.\n\nLúc tôi quay ra đường cái, tiếng chào đồng thanh vang lên từ dưới lòng hào ấm áp hơn mọi bài diễn văn chia tay.",
+      "next": "ch4_ep1_07_vinh_hoi_ve_so_xanh"
+    },
+    {
+      "id": "ch4_ep1_06c_viet_thu_ve_nha",
+      "type": "narration",
+      "location": "Góc bàn thông tin — Trung Đội 1 Vân Long",
+      "mood": "warm",
+      "text": "Bên chiếc bàn ghép cạnh hòm đạn, tôi ngồi xuống cùng cậu liên lạc ghi nốt địa chỉ từng xã, từng huyện lên chồng phong bì giấy pơ-luya mỏng tang mà anh em viết vội suốt tuần qua. Có những lá thư nét chữ nguệch ngoạc vì viết dưới ánh đèn pin che áo mưa, chỉ vỏn vẹn vài dòng báo bình an về cho mẹ già.\n\nTôi cẩn thận bọc thêm một lớp túi ni-lông chống ẩm bên ngoài bó thư rồi gửi kèm chuyến xe quân bưu sắp chạy xuống tỉnh lộ. Nếu đường rừng có kẹt phà hay mưa lũ, mực chữ cũng không bị nhòe mất tên người nhận.\n\nVới hai phong bì của anh em vừa chuyển thương về bệnh xá tuyến sau, tôi tự tay nắn nót viết thêm vài dòng báo rõ địa chỉ trạm quân y để gia đình đỡ hoảng hốt khi mở thư. Cậu văn thư nhìn theo tay tôi viết, lặng lẽ gật đầu không nói gì.\n\nNhìn bó thư nằm gọn trong túi bưu tá, tôi chợt hiểu chiếc cầu vai sĩ quan không chỉ nối với mặt trận phía trước mà còn giữ sợi dây bình yên cho hàng chục mái nhà phía sau.",
+      "next": "ch4_ep1_07_vinh_hoi_ve_so_xanh"
+    },
+    {
+      "id": "ch4_ep1_06d_gia_lang_suong_mu",
+      "type": "dialogue",
+      "location": "Lối mòn bìa rừng đá vôi — Gần Bản Sương Mù",
+      "condition": { "charAlive": "gia_lang" },
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Bản Sương Mù)",
+      "mood": "warm",
+      "text": "Chú chỉ huy mới đeo sao vàng lên vai rồi à, mắt già tuy mờ nhưng vẫn nhận ra tiếng bước chân chú đi qua bãi đá không vấp một hòn sỏi nào. Con đường mòn ven suối đá nay dân bản đã phát quang lại lối đi lấy nước sạch, không còn mùi khói pháo khét lẹt như tháng trước nữa.\n\nSáng sớm nghe tiếng chim báo nắng trên đỉnh núi, già chống gậy trúc xuống đầu dốc đón chú một chặp kẻo mai mốt chuyển đi xa quá không kịp gặp mặt. Người già trên bản nhắc mãi cái đêm bộ đội cắt quân xuống dìu từng đứa trẻ tránh pháo.\n\nGià cầm bao muối với mấy cặp pin khô này cho bọn trẻ trong bản, cảm ơn cái bụng thơm thảo của bộ đội lúc nào cũng nhớ tới bếp lửa người dân. Già không có gì quý, gửi chú nắm rễ cây rừng phơi khô bỏ túi áo để nấu nước uống những đêm sương lạnh ngoài sông lớn.\n\nRừng không giấu dấu chân người vội đâu chú à. Lên chức lớn rồi thì bước chậm lại một nhịp mà nhìn ngọn cỏ dưới chân mình nghe.",
+      "next": "ch4_ep1_07_vinh_hoi_ve_so_xanh"
+    },
+    {
+      "id": "ch4_ep1_07_vinh_hoi_ve_so_xanh",
+      "type": "dialogue",
+      "location": "Phòng kiểm tra bàn giao — Trạm trung chuyển trung đoàn",
+      "speaker": "vinh",
+      "speakerTitle": "Thiếu tá Trần Quốc Vinh",
+      "mood": "calm",
+      "text": "Cậu ngồi xuống ghế một lát trước khi xe vận tải nổ máy ngoài cổng trạm. Tôi vừa rà xong chồng hồ sơ bàn giao từ Vân Long gửi lên — mép giấy thẳng hay còn vết gạch xóa, người ngoài nhìn tưởng chuyện hành chính lặt vặt, chứ người trong nghề chỉ cần liếc qua là biết thái độ của chỉ huy lúc thiếu ngủ và thiếu đạn.\n\nTôi gõ nhẹ đuôi bút lên mặt bàn gỗ thế này để cậu nhớ lại một câu cũ ở Quang Trung: đừng viết điều mình chưa làm được. Chức vụ càng cao thì chữ ký của cậu càng nhẹ trên mặt giấy mà lại càng nặng trên vai người lính nhận lệnh ngoài thực địa.\n\nChúc mừng cậu nhận ngôi sao vàng đầu tiên trên cầu vai. Ngày xưa ở Quang Trung cậu từng chậm ba nhịp giữa sân sỏi đỏ, giờ đã đi qua hai mùa mưa giữ chốt rồi.\n\nNhưng tôi hỏi thật cậu một câu thôi: lên cấp úy rồi, khi trong tay có cả trăm con người thay vì một tổ tam tam gác đêm, cậu còn chịu mở cuốn sổ bìa xanh ra nghe tiếng bước chân người đi sau lưng mình, hay bắt đầu thấy mấy nét bút chì trên bản đồ dễ nhìn hơn khuôn mặt lấm bùn của lính?",
+      "next": "ch4_ep1_08_quang_ban_do_xac_suat"
+    },
+    {
+      "id": "ch4_ep1_08_quang_ban_do_xac_suat",
+      "type": "dialogue",
+      "location": "Hiên trạm trung chuyển trung đoàn",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Chào cậu, nhìn bộ quân phục mới thẳng nếp thế kia chắc vừa xong cuộc nói chuyện với thầy Vinh trong phòng tham mưu hả? Tôi vừa nhận quyết định điều động về ban tác chiến cụm tiền phương, tiện đường quá cảnh qua đây giao số liệu trinh sát không ảnh mới cho đoàn xe.\n\nTôi vừa xoay nắp bút máy ba vòng nhẩm lại biểu đồ tổn thất của mặt trận sông Xích Thủy suốt hai tháng gần đây. Trên bản đồ tác chiến mới, tuyến cơ động của Đại Đội 3 Huyền Ưng nằm đúng vào nút thắt tiếp vận hay bị pháo tầm xa của Khối Thiết Phong bắn tỉa nhất.\n\nNói thật nhé, Đại Đội 3 Huyền Ưng mà cậu sắp về không dễ thở như Vân Long đâu. Tỷ lệ thay quân bổ sung ở mặt trận sông Xích Thủy quý trước cao hơn mức trung bình mười bốn phần trăm, tính bằng xác suất đi thì chỉ cần một tổ chốt lơi tay năm phút là cả sườn đại đội bị khóa họng ngay.\n\nCảm tính không giữ nổi chốt đâu. Lên sĩ quan rồi thì giữ cái đầu lạnh mà tính phương án tối ưu đi, đừng để mấy chuyện tình cảm vặt vãnh làm nặng bước hành quân.",
+      "next": "ch4_ep1_09_khang_bat_lua_tach"
+    },
+    {
+      "id": "ch4_ep1_09_khang_bat_lua_tach",
+      "type": "dialogue",
+      "location": "Gốc cây xà cừ cổng trạm trung chuyển",
+      "speaker": "khang",
+      "speakerTitle": "Thiếu úy Lê Minh Khang",
+      "mood": "warm",
+      "text": "Nghe ông Quang mới nói chuyện xác suất với ông ngoài hiên hả? Kệ ổng đi, lúc nào cũng ôm khư khư bảng số liệu như sợ rớt mất con số nào vậy đó. Tui vừa mới ở đơn vị bạn chạy tạt qua đây kịp lúc thấy ông chuẩn bị leo thùng xe đây nè.\n\nThấy cái bật lửa kim loại cũ của tui kêu tách một tiếng chưa — thói quen khó bỏ đó mà, bấm nghe cho đỡ buồn tay chứ có châm thuốc gì đâu. Đưa vai đây tui vỗ hai cái lấy hên coi, còn nghe nhau là còn đội hình, mai mốt ra Xích Thủy tụi mình còn chạm mặt dài dài.\n\nTui nghe đồn ông sắp về dưới trướng ông Sơn ở Huyền Ưng hả? Nghe nói ông đó mặt lạnh như tiền mà thương lính dữ lắm, ông ráng giữ cái nết chịu khó lắng nghe như hồi tụi mình chia gói mì tôm dưới mưa nghe.\n\nÀ nhớ kỹ lời tui dặn đó nha: coi chừng cái bản đồ nó lừa mắt mình đó nha, đừng có nói chuyện kiểu trên giấy với tui khi gặp lại ngoài Xích Thủy đó!",
+      "next": "ch4_ep1_10_chuyen_xe_bay"
+    },
+    {
+      "id": "ch4_ep1_10_chuyen_xe_bay",
+      "type": "dialogue",
+      "location": "Cabin xe tải vận tải — Đường rừng hướng Xích Thủy",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Leo lên cabin ngồi chung với tui cho đỡ xóc bụi chú em Thiếu úy ơi, thùng sau tui chất toàn hòm đạn với bao gạo ẩm, ngồi đó tới trưa là thành tượng đất sét liền đó! Trong hộc táp-lô tui còn giấu mấy viên kẹo gừng cay xé lưỡi nè, ngậm một viên cho tỉnh ngủ qua mấy khúc cua tay áo.\n\nCon đường đất đỏ dẫn xuống vùng sông Xích Thủy mùa này trơn như đổ mỡ, bánh xe bò qua mấy đoạn cầu gỗ tạm cứ kêu cót két nghe ghê cả răng. Tui chạy tuyến này suốt từ hồi đầu chiến dịch, ổ gà ổ voi nào cũng thuộc mặt như thuộc lòng bàn tay.\n\nChớp mắt cái mà chú em đã mang sao vàng ngồi ngang ghế phụ với tui rồi, nhớ hồi ở Quang Trung còn lụi cụi phụ tui khiêng thùng thuốc vượt dốc mưa muốn sụm lưng. Đời lính nó vậy đó, đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người.\n\nTuyến vào sông Xích Thủy dạo này địch hay thả trinh sát không người lái rình dọc suối cạn lắm. Tới ngã ba rừng dầu tui tắt đèn pha bò số một vô bãi, chú em ngồi chắc tay vịn nghe.",
+      "next": "ch4_ep1_11_trung_uy_huyen_ung"
+    },
+    {
+      "id": "ch4_ep1_11_trung_uy_huyen_ung",
+      "type": "narration",
+      "location": "Doanh trại dã chiến Đại Đội 3 Huyền Ưng — Sáu tháng sau",
+      "mood": "calm",
+      "text": "Sáu tháng huấn luyện cơ động và những trận đánh kiềm chế cấp trung đội dọc triền sông cạn trôi qua nhanh trong mùi bùn ẩm và tiếng pháo cầm canh từ bên kia bờ Xích Thủy. Đến đầu mùa gió chuyển, quyết định thăng quân hàm Trung úy chính thức đặt lên cầu vai tôi đúng ngày nhận lệnh điều động giữ chức cán bộ trung đội mũi nhọn kiêm phó trực chiến tại Đại Đội 3 Huyền Ưng.\n\nNhững đêm nằm trên võng bạt nghe muỗi rừng vo ve và tiếng ho khẽ của mấy tân binh dưới tán cây, tôi thấm thía giá trị từng đôi tất khô và từng viên thuốc cảm hơn bất cứ khẩu hiệu nào. Từng ngày một, tôi học cách đọc tình trạng mệt mỏi của đơn vị chỉ qua nhịp giày hành quân buổi sớm.\n\nKhác hẳn vẻ chộn rộn ở Vân Long hay không khí giảng đường gạch cũ Quang Trung, doanh trại dã chiến của Huyền Ưng ẩn mình lặng phắc dưới tán rừng dầu rậm rạp chằng chịt lưới ngụy trang màu rêu sẫm. Đến cả mái bếp cũng giấu khéo sau vách đất để tránh mắt trinh sát trên không.\n\nKhông một bóng lính tụ tập tán gẫu ngoài hiên. Từng tiểu đội lau súng, khơi rãnh thoát nước và phơi áo mưa theo một nhịp đều đặn như cỗ máy đã lên dây cót. Trước cửa lán chỉ huy lợp lá cọ, một sĩ quan dáng gầy, nước da sạm nắng trung du đang ngồi trên ghế đẩu lật cuốn sổ dày bằng ngón tay cái.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch4_ep1_trung_uy",
+            "title": "Thăng Trung úy về Đại Đội 3 Huyền Ưng",
+            "entry": "Nhận quân hàm Trung úy sau sáu tháng cơ động tuyến sông, chính thức trình diện Đại Đội 3 Huyền Ưng dưới quyền Đại đội trưởng Đỗ Thành Sơn."
+          }
+        }
+      ],
+      "next": "ch4_ep1_12_son_giao_so"
+    },
+    {
+      "id": "ch4_ep1_12_son_giao_so",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "tense",
+      "text": "Trung úy tới rồi à. Bỏ ba lô xuống đi. Cầm lấy sổ quân số này.\n\nMột trăm hai mươi tám người. Đêm nay đọc kỹ đi. Sáng mai tôi kiểm tra. Thuộc tên chưa?\n\nĐừng nhìn tôi. Đọc xong rồi hẵng trả lời. Ngắn thôi.",
+      "next": "ch4_ep1_13_choice_phan_ung_son"
+    },
+    {
+      "id": "ch4_ep1_13_choice_phan_ung_son",
+      "type": "choice",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng",
+      "mood": "tense",
+      "text": "Đại đội trưởng Đỗ Thành Sơn vẫn giữ ngón tay cái kẹp giữa trang sổ, đôi mắt không buồn ngước lên nhìn tờ quyết định điều động mới tinh bạn vừa đặt trên bàn gỗ. Trong cặp tài liệu mang theo từ tiểu đoàn còn nguyên xấp sơ đồ diễn tập sáng mai đòi hỏi phải phân công hỏa lực gấp.\n\nBạn đứng nghiêm trước bàn chỉ huy và trả lời người đại đội trưởng ít lời ấy ra sao?",
+      "choices": [
+        {
+          "id": "c_nhan_so_khong_ly_do",
+          "label": "Báo cáo ngắn gọn nhận đủ sổ quân số và chỉ xin xác nhận giờ báo động đêm nay của đại đội",
+          "effects": [
+            { "addRel": { "char": "son", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_14a_son_gat_dau"
+        },
+        {
+          "id": "c_hoi_uu_tien_so_do",
+          "label": "Hỏi thẳng Đại đội trưởng xem sáng mai ưu tiên kiểm tra sơ đồ tác chiến hay danh sách nhân sự trước",
+          "effects": [
+            { "addRel": { "char": "son", "delta": -1 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_14b_son_nhac_ky_luat"
+        },
+        {
+          "id": "c_hoi_linh_vang_mat",
+          "label": "Xin phép hỏi xem trong 128 người có ai đang nằm trạm xá hay đi tiền trạm ngoài bờ sông chưa về",
+          "effects": [
+            { "addRel": { "char": "son", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_14a_son_gat_dau"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_14a_son_gat_dau",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "calm",
+      "text": "Được. Giờ trực báo động vẫn giữ nguyên. Kíp gác ngoài bờ sông đổi hai tiếng.\n\nBa người đi trạm xá sáng nay. Hai người nằm chốt tiền tiêu. Tên họ đều gạch đỏ trong sổ.\n\nAi ốm sốt báo thẳng lên tôi. Lính của tôi, tôi chịu. Về lán cất đồ đi. Năm giờ rưỡi tập hợp.",
+      "next": "ch4_ep1_15_linh_go_morse"
+    },
+    {
+      "id": "ch4_ep1_14b_son_nhac_ky_luat",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "tense",
+      "text": "Cậu hỏi thừa rồi. Sơ đồ giấy vẽ lại được. Người không nhớ mặt thì mất chốt.\n\nLàm cả hai trước năm giờ. Không xong đừng ra sân. Đi đi.",
+      "next": "ch4_ep1_15_linh_go_morse"
+    },
+    {
+      "id": "ch4_ep1_15_linh_go_morse",
+      "type": "dialogue",
+      "location": "Hầm vô tuyến tiếp sức — Cạnh lán chỉ huy Huyền Ưng",
+      "speaker": "linh",
+      "speakerTitle": "Trung sĩ Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Ủa, anh mới nhận lệnh về Huyền Ưng luôn hả? Nghe tiếng bước chân quen quá mà em nhìn ra cửa hầm mới chắc đúng anh. Em được điều tăng cường từ trạm thông tin trung đoàn xuống trực ca tiếp sức vô tuyến cho đại đội tuần này.\n\nChỗ này sát khúc quanh sông Xích Thủy nên ban đêm hay bị dội sóng lạ lắm anh à. Từ chiều tới giờ đài canh không thấy nhiễu trắng mạnh như bên Vân Long, nhưng nền âm lại phẳng lì một cách kỳ cục.\n\nAnh nhìn mấy đầu ngón tay em gõ trên bàn gỗ đây nè — em đang thử dò lại nhịp đồng hồ phát sóng xem có độ trễ giả nào xen vào tần số dự phòng không. Chỉ cần lệch nửa nhịp thôi là tụi em nghe ra ngay mùi đài gài của đối phương.\n\nAnh coi chừng nhé, sóng sạch quá mới là sóng có bẫy. Tối nay em cài sẵn bảng mã khắc đồng dự phòng trên bàn, có động tĩnh gì ngoài bờ lau là em báo lên trực ban ngay.",
+      "next": "ch4_ep1_16_dem_so_quan_so"
+    },
+    {
+      "id": "ch4_ep1_16_dem_so_quan_so",
+      "type": "narration",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — 23 giờ 15 phút",
+      "mood": "calm",
+      "text": "Mười một giờ khuya, tiếng côn trùng rả rích quanh những vách liếp nứa lạnh hơi sương rừng, thỉnh thoảng lại có tiếng bước chân người đổi gác đi ngang hiên khe khẽ. Trên chiếc bàn gỗ đóng bằng ván hòm đạn cũ, ngọn đèn bão che chụp sắt chỉ hắt xuống một vòng sáng vàng vọt vừa đủ soi rõ trang giấy kẻ ô của cuốn sổ quân số.\n\nMột trăm hai mươi tám cái tên, kèm quê quán, nhóm máu, số hiệu súng bộ binh và những ghi chú mảnh mai bằng bút chì ở lề trang: ai bị thấp khớp mỗi đợt gió mùa, ai có con nhỏ mới sinh ở quê nhà, ai hay quên khóa chốt hộp tiếp đạn khi lội suối ban đêm. Bên cạnh đó là xấp sơ đồ diễn tập đòi hoàn thiện trước sáu giờ sáng.\n\nCậu chiến sĩ thủ kho ngồi kiểm lại phiếu gạo ở góc bàn thấy tôi nhăn trán bèn ghé qua chỉ nhỏ mẹo nhớ của dân giữ kho. Cậu bảo đừng bao giờ học vẹt theo bảng chữ cái khô khốc, vì ngoài trận địa không ai đứng xếp hàng theo vần A, B, C cho mình gọi.\n\nThay vào đó, cứ gom tên theo từng khẩu đội súng máy, cặp nằm võng chung lán, cỡ giày vải hay thói quen đeo băng đạn để mắt tự dựng lên khuôn mặt từng người trên tuyến bắn.",
+      "next": "ch4_ep1_17_choice_128_ten"
+    },
+    {
+      "id": "ch4_ep1_17_choice_128_ten",
+      "type": "choice",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — Nửa đêm",
+      "mood": "calm",
+      "text": "Bấc đèn dầu bắt đầu cháy cạn, hắt bóng chiếc ca sắt và cuốn sổ dày lên vách nứa lạnh ngắt. Sáng mai Đại đội trưởng Đỗ Thành Sơn sẽ đứng trước hàng quân gọi kiểm tra bất kỳ tên một chiến sĩ nào trước giờ xuất kích.\n\nBạn sẽ dùng khoảng thời gian còn lại của đêm nay như thế nào?",
+      "choices": [
+        {
+          "id": "c_hoc_meo_thu_kho",
+          "label": "Áp dụng mẹo của cậu thủ kho, thức trắng đêm gom đủ 128 cái tên theo khẩu đội, giọng quê và ghi chú vào sổ bìa xanh",
+          "effects": [
+            { "setFlag": "thuoc_ten_dai_doi_huyen_ung" },
+            { "addRel": { "char": "son", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep1_thuoc_ten",
+                "title": "Mẹo thủ kho và 128 cái tên Huyền Ưng",
+                "entry": "Thức trắng đêm học thuộc toàn bộ 128 chiến sĩ Đại Đội 3 Huyền Ưng theo từng khẩu đội, vùng miền và vết ghi chú bút chì bên lề sổ."
+              }
+            }
+          ],
+          "next": "ch4_ep1_18a_dem_thuoc_long"
+        },
+        {
+          "id": "c_di_vong_ham_ngu",
+          "label": "Cầm đèn pin bọc giấy đỏ và bản ghi của thủ kho đi kiểm tra từng lán ngủ, đối chiếu tận mặt từng chiến sĩ đang trực và nghỉ",
+          "effects": [
+            { "setFlag": "thuoc_ten_dai_doi_huyen_ung" },
+            { "addRel": { "char": "son", "delta": 1 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 7 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep1_thuoc_ten",
+                "title": "Đêm soi đèn nhớ mặt từng lính Huyền Ưng",
+                "entry": "Đi khắp các lán ngủ và vọng gác giữa đêm để ghép 128 cái tên trên giấy vào từng khuôn mặt thật của Đại Đội 3 Huyền Ưng."
+              }
+            }
+          ],
+          "next": "ch4_ep1_18b_di_vong_ham_ngu"
+        },
+        {
+          "id": "c_nho_nhom_truong",
+          "label": "Hoàn thành sơ đồ tác chiến trước, rồi chỉ học thuộc tên 30 cán bộ tiểu đội và tổ trưởng hỏa lực, phần còn lại ghi bảng tra bỏ túi",
+          "effects": [
+            { "addRel": { "char": "son", "delta": -1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch4_ep1_18c_chi_nho_nhom_truong"
+        },
+        {
+          "id": "c_giao_van_thu_ngu_du",
+          "label": "Nhờ văn thư chép bảng tra nhanh theo vần chữ cái, tranh thủ chợp mắt năm tiếng giữ sức cho buổi diễn tập sáng mai",
+          "effects": [
+            { "addRel": { "char": "son", "delta": -2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } }
+          ],
+          "next": "ch4_ep1_18d_ngu_giu_suc"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_18a_dem_thuoc_long",
+      "type": "narration",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — 03 giờ 40 phút",
+      "mood": "calm",
+      "text": "Hai giờ sáng, cậu thủ kho pha thêm ấm trà đặc đặt cạnh đĩa lạc rang nguội ngắt rồi về ngủ trước, để lại mình tôi với bốn trang giấy chi chít sơ đồ nhân sự tự vẽ lại vào cuốn sổ bìa xanh. Tôi gạch đầu dòng từng khẩu đội cối 60, tổ đại liên, rồi nối liền tên những cặp lính đồng hương hay đi gác chung.\n\nCậu Tý quê Thanh Hóa hay bị cảm khi lội suối sớm, anh Hòa người Thái Bình mới có con trai đầu lòng tháng trước, cậu Phước miền Tây chuyên giữ kìm cắt dây thép gai. Dần dần, những dòng mực khô khan trên sổ không còn là dãy số quân nhân vô hồn nữa.\n\nMắt cay xè vì khói đèn dầu, tôi đứng dậy vươn vai hít một hơi sương lạnh ngoài hiên rồi quay lại lật úp trang sổ, tự kiểm tra ngược từ tiểu đội cuối lên đầu. Chỗ nào vấp, tôi lại đánh dấu bút chì ngay cạnh số hiệu súng.\n\nĐến gần bốn giờ rưỡi sáng, khi tiếng gà rừng gáy ran từ triền đồi sau bếp, tôi gấp cuốn sổ quân số lại và đọc nhẩm trọn một lượt không vấp một cái tên nào, trước khi vội vã phác nốt phương án hỏa lực lên sơ đồ.",
+      "next": "ch4_ep1_19_san_tap_0530"
+    },
+    {
+      "id": "ch4_ep1_18b_di_vong_ham_ngu",
+      "type": "narration",
+      "location": "Dãy lán ngủ Đại đội — 02 giờ 15 phút",
+      "mood": "warm",
+      "text": "Tôi trùm mảnh giấy kính đỏ lên mặt đèn pin cho ánh sáng dịu xuống, đi từng bước nhẹ dọc bốn lán ngủ lợp lá cọ và hai vọng gác ven suối. Ở mỗi võng bạt, tôi đối chiếu bảng tên ghi trên ba lô với danh sách gom theo tổ của cậu thủ kho.\n\nCó những cậu chiến sĩ trẻ ngủ say tới mức vẫn ôm chặt chiếc bi-đông bọc vải dù bên sườn, mặt còn lấm vết bùn khô chưa kịp rửa sạch từ buổi đào công sự chiều. Tôi kéo lại mép màn cho hai cậu nằm sát vách gió lùa.\n\nGặp hai chiến sĩ đang đứng gác ca khuya run cầm cập dưới sương núi, tôi dừng lại hỏi nhỏ tên tuổi, quê quán rồi chia cho mỗi đứa một ngụm trà nóng mang theo trong bi-đông. Cả hai thoáng ngạc nhiên khi thấy viên Trung úy mới về chưa đầy một buổi đã nhớ đúng tên anh trai mình đang đóng ở trung đội khác.\n\nVề tới bàn trực ban lúc gần bốn giờ, hai mí mắt tôi nặng trĩu và bảng phân công hậu cần làm hơi vội, nhưng trong đầu đã hiện rõ mồn một từng dáng đứng, từng giọng nói của cả đại đội.",
+      "next": "ch4_ep1_19_san_tap_0530"
+    },
+    {
+      "id": "ch4_ep1_18c_chi_nho_nhom_truong",
+      "type": "narration",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — 01 giờ 50 phút",
+      "mood": "calm",
+      "text": "Tôi trải rộng xấp sơ đồ tác chiến ra chiếm trọn mặt bàn, dùng thước nhựa và bút chì hai màu chia tuyến chi viện hỏa lực và đường tiếp tế đạn dự phòng cho bài diễn tập sáng mai. Chỉ mất hơn hai tiếng, toàn bộ bảng phân công chiến thuật đã hoàn chỉnh gọn gàng không một vết tẩy xóa.\n\nThời gian còn lại, tôi lướt qua danh sách chỉ huy tiểu đội, thuộc vanh vách ba mươi cái tên nắm chốt đầu mũi và các xạ thủ súng máy chủ lực. Số còn lại gần một trăm chiến sĩ, tôi chép rút gọn theo vần vào một mảnh giấy bìa cứng kẹp trong túi áo ngực.\n\nCậu thủ kho đứng nhìn xấp giấy tóm tắt chỉ khẽ thở dài rồi lẳng lặng thu dọn chén trà về lán ngủ. Tôi biết cách làm này mang nặng tính đối phó giấy tờ, nhưng rõ ràng không thể dồn hết sức lực vào danh sách dài dằng dặc mà bỏ lơ bản vẽ diễn tập.\n\nHai giờ sáng tôi đặt lưng xuống sạp tre ngủ được hơn ba tiếng, tin rằng nắm chắc bộ khung chỉ huy là đủ điều hành mượt mà trên bãi tập.",
+      "next": "ch4_ep1_19_san_tap_0530"
+    },
+    {
+      "id": "ch4_ep1_18d_ngu_giu_suc",
+      "type": "narration",
+      "location": "Gian ngủ cán bộ trung đội — 00 giờ 30 phút",
+      "mood": "calm",
+      "text": "Cậu văn thư vui vẻ nhận cuốn sổ quân số sang bàn bên cạnh, hì hục kẻ bảng tra cứu theo vần chữ cái từ A tới X để sáng mai kẹp vào bìa trình ký. Tôi cũng tranh thủ hoàn thành phần khung sơ đồ chiến thuật cơ bản trước khi thổi tắt đèn dầu.\n\nĐặt lưng xuống tấm ván kê cao khỏi hơi ẩm mặt đất, tôi tự nhủ người chỉ huy mà kiệt sức vì thiếu ngủ thì ra thao trường dễ sai sót những lệnh lớn hơn nhiều. Năm tiếng ngủ sâu giúp đầu óc tôi nhẹ tênh khi tiếng còi báo thức rít lên lúc mờ sáng.\n\nNgoài hiên, vài tiểu đội trưởng nhìn thấy ánh đèn lán chỉ huy tắt sớm hơn thường lệ cũng khẽ trao đổi ánh mắt dè dặt với nhau trước lúc xuống bếp lấy nước rửa mặt.\n\nMặc vội bộ quân phục còn hơi sương, tôi nhét tờ bảng tra chữ nhỏ xíu vào túi áo ngực trái, thầm nghĩ chỉ cần liếc nhanh là đối phó êm thấm với bài kiểm tra đầu ngày.",
+      "next": "ch4_ep1_19_san_tap_0530"
+    },
+    {
+      "id": "ch4_ep1_19_san_tap_0530",
+      "type": "narration",
+      "location": "Sân tập hợp Đại Đội 3 Huyền Ưng — 05 giờ 30 phút",
+      "mood": "tense",
+      "text": "Đúng năm giờ ba mươi phút sáng, sương muối còn đọng trắng trên tán lá cọ, cả một trăm hai mươi tám con người của Đại Đội 3 Huyền Ưng đã đứng thành ba hàng ngang thẳng tắp dưới lưới ngụy trang. Không một tiếng ho khẽ, không một dây súng nào đeo lệch vai.\n\nĐại đội trưởng Đỗ Thành Sơn bước dọc hàng quân với cuốn sổ quân số mở sẵn trên tay trái. Ông không hề nhìn vào bản sơ đồ chiến thuật tôi mang theo, mà bất ngờ dừng lại trước tiểu đội hỏa lực ở cuối hàng, hất cằm ra hiệu cho tôi bước lên gọi tên điểm danh ba chiến sĩ bất kỳ.",
+      "branches": [
+        {
+          "condition": { "flag": "thuoc_ten_dai_doi_huyen_ung" },
+          "next": "ch4_ep1_20a_son_kiem_tra_thuoc"
+        }
+      ],
+      "next": "ch4_ep1_20b_son_kiem_tra_thieu"
+    },
+    {
+      "id": "ch4_ep1_20a_son_kiem_tra_thuoc",
+      "type": "dialogue",
+      "location": "Sân tập hợp Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "warm",
+      "text": "Đọc đúng cả tiểu đội hỏa lực. Nhớ cả quê thằng Tý súng cối à? Cả tên con trai thằng Hòa luôn?\n\nĐược đấy. Lính biết mặt người gọi tên mình. Giờ ra bãi tập. Ngắn thôi.",
+      "next": "ch4_ep1_21_mua_kho_va_bep_lua"
+    },
+    {
+      "id": "ch4_ep1_20b_son_kiem_tra_thieu",
+      "type": "dialogue",
+      "location": "Sân tập hợp Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "tense",
+      "text": "Chưa thuộc. Tôi hỏi một người, cậu liếc sổ. Ngoài trận tối om, cậu lấy đâu đèn?\n\nGọi nhầm tên, lính không theo đâu. Tối nay tự học lại. Thuộc hết mới nhận kíp trực chính. Giải tán.",
+      "next": "ch4_ep1_21_mua_kho_va_bep_lua"
+    },
+    {
+      "id": "ch4_ep1_21_mua_kho_va_bep_lua",
+      "type": "narration",
+      "location": "Khu bếp anh nuôi Hoàng Cầm — Cuối bãi đóng quân Huyền Ưng",
+      "mood": "warm",
+      "text": "Nhiều tuần trôi qua trên tuyến cơ động Huyền Ưng với những buổi vác hòm đạn cối lội sình ngập bắp vế, diễn tập ghép cầu phao ban đêm và những tối tôi ngồi lì cạnh đèn bão bù đắp từng trang sổ nhân sự còn thiếu. Dần dần, tôi quen cả tiếng bước chân rậm rịch của từng tiểu đội lúc giao ca.\n\nChiều nay trời đổ mưa dông bất chợt rồi tạnh nhanh, hơi đất ẩm quyện với làn khói bếp Hoàng Cầm tản là là dưới tán cây si cổ thụ. Hệ thống ống khói đào ngầm dẫn tản qua nhiều bụi cây ẩm khiến từ trên cao nhìn xuống chẳng thấy một sợi khói trắng nào bay lên khỏi tán rừng.\n\nĐi kiểm tra xong mấy hầm đạn đầu chốt, tôi tạt qua lán hậu cần xem nồi nước gừng cho tổ tuần tra đêm. Ngay bên hông bếp đất còn hắt ánh than hồng ấm áp, mùi cơm cháy sém đáy nồi thơm lừng phả ra dịu hẳn cái bụng đói.\n\nNgồi trên chiếc hòm gỗ lật úp gần cửa bếp là Binh nhất Trần Văn Tám — người anh nuôi gốc Quảng Nam miệng lúc nào cũng thoang thoảng mùi khói bếp, tay nâng niu lá cờ đỏ thẫm của đại đội bị mảnh kẽm gai xé tướp một góc.",
+      "next": "ch4_ep1_22_tam_va_co"
+    },
+    {
+      "id": "ch4_ep1_22_tam_va_co",
+      "type": "dialogue",
+      "location": "Khu bếp anh nuôi — Đại Đội 3 Huyền Ưng",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "warm",
+      "text": "Ơ chú em Trung úy mới đi chốt về đó hả, ngồi xuống cái hòm ni làm miếng nước gừng cho ấm bụng cái đã rồi đi đâu thì đi. Tui thấy góc cờ đơn vị rách te tua hồi vượt sông tháng trước mà mấy thằng văn thư cứ lo chép báo cáo quên phứt đi, nên tranh thủ lúc nồi canh chưa sôi tui lôi hộp kim chỉ trong túi áo ngực ra vá tạm lại chút đỉnh.\n\nCái hộp thiếc nhỏ xíu ni theo tui từ hồi mới nhập ngũ tới chừ đó chú, trong đó lúc nào cũng đủ ba cuộn chỉ dù, mấy cây kim khâu bao bố với vài cái khuy áo dự phòng. Mấy bữa lội sình xong áo quần đứa mô toạc vai là cứ chạy xuống bếp nhờ tui vá giùm.\n\nChú đừng cười đường mũi chỉ thô kệch của anh nuôi nghe, tay tui quen cầm cái vá múc canh với chẻ củi ướt chứ đâu khéo như mấy cô thợ may ngoài phố đâu chớ. Cứ mỗi lần mấy đứa nhỏ đi tuần đêm về có chén canh nóng húp sùm sụp, sáng mai thấy lá cờ bay phẳng phiu trên cột là tui vui bụng rồi.\n\nChú coi nè, tui khâu nút khóa đôi ở mép vải ni chắc lắm, mai mốt gió sông thổi mạnh cỡ nào cũng không rách thêm được nữa đâu. Uống đi chú, nguội mất ngon.",
+      "next": "ch4_ep1_23_bay_ghe_bep"
+    },
+    {
+      "id": "ch4_ep1_23_bay_ghe_bep",
+      "type": "dialogue",
+      "location": "Sân bếp Hoàng Cầm — Bãi đỗ xe tải hậu cần",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Nước gừng còn phần cho tài xế không ông anh nuôi Quảng Nam ơi! Tui mới chạy xe bò qua hai cái hố bom ngập bùn ngoài dốc tràm, giao đủ mười bao gạo với bốn thùng pin đèn khô cho kho đại đội rồi đây nè.\n\nMưa rừng gì mà trút xuống một cơn là mặt đường nhão nhoẹt như cháo, vô số cài cầu chậm mà hai bánh sau vẫn quay tít thò lò làm tui phải quấn xích sắt vô lốp mới lết tới đây được đó. Ông Tám bữa nay nhớ cho tui xin gáo nước rửa bớt bùn bám kính lái nghen.\n\nChú em Trung úy dạo này trông rắn rỏi lên nhiều rồi nghen, gặp lại ở cái bếp thơm mùi cơm cháy này còn vui hơn gặp ngoài trạm trung chuyển nữa. Ông Tám ổng khéo tay lắm chú em à, tháng trước mui bạt xe tui rách một đường dài muốn tạt mưa ướt hết thùng thuốc, cũng nhờ hộp kim chỉ trong túi áo ổng khâu giùm mà hàng về tới bến khô rang.\n\nMấy bữa nữa tuyến sông Xích Thủy có động tĩnh lớn chắc tụi tui còn chạy xe thâu đêm nhiều nữa. Ông Tám nhớ để dành cho tui nắm cơm cháy gắt giòn để nhai dọc đường đỡ buồn ngủ nghe!",
+      "next": "ch4_ep1_24_choice_hau_can_va_co"
+    },
+    {
+      "id": "ch4_ep1_24_choice_hau_can_va_co",
+      "type": "choice",
+      "location": "Bếp Hoàng Cầm — Đại Đội 3 Huyền Ưng",
+      "mood": "warm",
+      "text": "Ánh than hồng hắt lên gương mặt lấm tro của anh nuôi Tám và nụ cười xởi lởi của bác tài Bảy, tạo thành một khoảng lặng hiếm hoi giữa khu rừng đóng quân đầy ắp lệnh báo động. Trước khi quay lại bàn trực ban chuẩn bị giao ca tối, bạn sẽ làm gì bên góc bếp này?",
+      "choices": [
+        {
+          "id": "c_phu_tam_giu_co",
+          "label": "Ngồi xuống hòm gỗ giữ căng mép vải cờ để Tám khâu nốt góc rách, rồi kiểm tra lại đống củi khô dự trữ cho bếp mùa mưa",
+          "effects": [
+            { "addRel": { "char": "tam", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_25a_phu_tam_giu_co"
+        },
+        {
+          "id": "c_kiem_ke_xe_bay",
+          "label": "Cùng bác tài Bảy kiểm lại biên bản giao nhận pin đèn khô và cắt cử hai chiến sĩ trực ban ra bốc dỡ gọn trước khi trời tối",
+          "effects": [
+            { "addRel": { "char": "bay", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_25b_kiem_ke_xe_bay"
+        },
+        {
+          "id": "c_hoi_tham_bua_com",
+          "label": "Hỏi nhỏ Tám và Bảy xem mấy tuần nay có chiến sĩ nào hay bỏ bữa cơm chiều, đau bụng hoặc giấu bệnh vì ngại báo quân y không",
+          "effects": [
+            { "addRel": { "char": "tam", "delta": 1 } },
+            { "addRel": { "char": "bay", "delta": 1 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_25c_hoi_tham_bua_com"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_25a_phu_tam_giu_co",
+      "type": "narration",
+      "location": "Khu bếp anh nuôi — Đại Đội 3 Huyền Ưng",
+      "mood": "warm",
+      "text": "Tôi kéo chiếc ghế đẩu ngồi đối diện Tám, hai tay giữ chặt phần vải đỏ còn lành để từng mũi kim thô nhưng đều tăm tắp luồn qua lớp chỉ khóa đôi. Dưới ánh lửa than bập bùng, vết rách lởm chởm do mảnh đạn dần khép lại thành một đường chỉ thẳng thớm chắc chắn.\n\nVá xong góc cờ, tôi đi cùng Tám kiểm tra lại giàn củi khô xếp sát vách đất để tránh khói bốc cao ban ngày. Thấy mấy thanh củi đầu giàn hơi ngấm ẩm nước mưa, tôi nhắc cậu phụ bếp che thêm tấm bạt hỏng từ kho xe sang.\n\nBác tài Bảy đứng vỗ đùi cười khà khà, bảo chưa thấy ông sĩ quan trẻ nào ngồi giữ góc cờ cho anh nuôi khâu mà cẩn thận như giữ bản đồ chiến dịch.",
+      "next": "ch4_ep1_26_choice_so_truyen_thong"
+    },
+    {
+      "id": "ch4_ep1_25b_kiem_ke_xe_bay",
+      "type": "narration",
+      "location": "Bãi đỗ xe tải hậu cần Huyền Ưng",
+      "mood": "calm",
+      "text": "Tôi cầm đèn pin theo chân bác tài Bảy ra mép đường mòn dưới tán lưới ngụy trang, đối chiếu từng thùng pin đèn khô, hộp thuốc sát trùng và bao gạo mới nhập kho. Hai chiến sĩ tổ trực ban được tôi gọi ra phụ bốc vác nhanh gọn chỉ trong mười lăm phút trước khi bóng tối sập xuống.\n\nPhát hiện hai bao gạo góc thùng xe có dấu rách nhỏ do cọ vào thành sắt, tôi bảo ngay nhà bếp tách riêng ra nấu trước trong tối nay để khỏi mốc cả lô dự trữ. Bảy móc hộp kẹo gừng dúi vào túi áo tôi hai viên rồi vỗ nhẹ vai cười tít mắt.\n\nNhờ khóa sổ kho sớm, đoàn xe kịp quay đầu rời bìa rừng an toàn trước giờ thiết lập tĩnh lặng vô tuyến.",
+      "next": "ch4_ep1_26_choice_so_truyen_thong"
+    },
+    {
+      "id": "ch4_ep1_25c_hoi_tham_bua_com",
+      "type": "narration",
+      "location": "Bên hông bếp Hoàng Cầm",
+      "mood": "warm",
+      "text": "Nghe tôi hỏi, anh nuôi Tám hạ giọng chỉ về phía nồi cháo trắng nấu riêng trên bếp phụ: hai cậu tân binh tổ cối mới ở miền xuôi lên chưa quen nước suối nên đau bụng âm ỉ từ hôm qua, sợ bị cắt phiên tuần tra nên giấu không dám lên trạm xá.\n\nCòn bác tài Bảy thì kể dọc đường vào hay thấy mấy bà con đi rẫy ở rìa rừng thiếu muối i-ốt nặng, mỗi chuyến ghé ngang bác đều lén san bớt phần tiêu chuẩn riêng gửi lại đầu dốc. Những thông tin ấy không bao giờ nằm trên bảng điểm danh buổi sáng.\n\nTôi ghi vội hai cái tên tân binh vào góc sổ bìa xanh để lát nữa ghé qua nhắc đi uống thuốc tiêu hóa, lòng thầm cảm ơn tai mắt của những người giữ bếp và giữ đường.",
+      "next": "ch4_ep1_26_choice_so_truyen_thong"
+    },
+    {
+      "id": "ch4_ep1_26_choice_so_truyen_thong",
+      "type": "choice",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — Tối cùng ngày",
+      "mood": "warm",
+      "text": "Tối đó, cuốn Sổ Truyền Thống bìa nhung của Đại Đội 3 Huyền Ưng mở sẵn dưới ánh đèn bão chờ ghi nhận nhật ký đơn vị cuối tháng. Tám vừa bưng bình trà gạo rang sang đặt ở góc cửa, đứng lặng lẽ lau đôi bàn tay dính tro lên vạt áo đầy mùi khói bếp rồi định quay gót trở về lán nấu cơm mai.\n\nTheo lệ cũ từ trước tới nay, trang danh sách ký lưu niệm trong Sổ Truyền Thống chỉ dành cho cán bộ chỉ huy và các tổ chiến đấu trực tiếp lập chiến công ngoài trận địa.",
+      "choices": [
+        {
+          "id": "c_moi_tam_ky_so",
+          "label": "Gọi Binh nhất Trần Văn Tám quay lại, mời anh cầm bút ký tên vào Sổ Truyền Thống ngay dưới mục giữ gìn cờ đại đội",
+          "effects": [
+            { "setFlag": "ghi_ten_anh_nuoi_tam_vao_so" },
+            { "addRel": { "char": "tam", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep1_so_truyen_thong",
+                "title": "Chữ ký anh nuôi Tám trong Sổ Truyền Thống",
+                "entry": "Mời anh nuôi Trần Văn Tám ký tên vào Sổ Truyền Thống Đại Đội 3 Huyền Ưng sau khi tự tay vá lành góc cờ đơn vị."
+              }
+            }
+          ],
+          "next": "ch4_ep1_27a_tam_ky_so"
+        },
+        {
+          "id": "c_ghi_ten_tam_so_xanh",
+          "label": "Giữ nguyên quy định ký Sổ Truyền Thống, nhưng chép tên Tám vào cuốn sổ bìa xanh riêng và cắt người lợp lại mái bếp đang dột",
+          "effects": [
+            { "addRel": { "char": "tam", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_27b_ghi_so_xanh"
+        },
+        {
+          "id": "c_giu_nguyen_le_cu",
+          "label": "Cảm ơn bình trà của Tám và giữ chặt lệ cũ của sổ danh dự, hứa sẽ đề xuất tăng khẩu phần thịt cho tổ bếp đợt tới",
+          "effects": [
+            { "addRel": { "char": "tam", "delta": -1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch4_ep1_27c_giu_le_cu"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_27a_tam_ky_so",
+      "type": "dialogue",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "warm",
+      "text": "Ấy chết, sao chú em lại kêu tui ký vào cuốn sổ bìa nhung trang trọng rứa... Tay tui đen nhẻm nhọ nồi lại chai sần cầm bút nó run lắm, trước giờ chỉ quen ký nhận bao gạo với thùng muối dưới kho thôi à!\n\nThôi được rồi, chú đã nói giữ góc cờ cũng là giữ hồn đơn vị thì tui lấy cái giẻ sạch lau kỹ đầu ngón tay đã kẻo lem mực ra trang giấy đẹp của đại đội. Chữ tui học tới lớp ba trường làng nên viết hơi to ngang một chút chú đừng cười nghe.\n\nLúc hạ ngòi bút xuống dòng giấy trắng, tự nhiên sống mũi tui cũng cay cay sao đó chú à. Bao nhiêu năm theo bộ đội nấu cơm rừng, đây là lần đầu tiên tên thằng anh nuôi được đứng chung trang giấy với mấy anh em cầm súng ngoài mũi nhọn.\n\nXong rồi đó: 'Trần Văn Tám — Bếp Huyền Ưng'. Tui đi ngủ đây, mai nấu nồi cháo thịt bằm thật ngon cho anh em ra sân tập!",
+      "next": "ch4_ep1_28a_son_khen_chu_ky"
+    },
+    {
+      "id": "ch4_ep1_27b_ghi_so_xanh",
+      "type": "dialogue",
+      "location": "Cửa lán trực ban Đại Đội 3 Huyền Ưng",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "warm",
+      "text": "Hơ hơ, chú em giữ đúng phép tắc trên giấy tờ rứa cũng phải rồi, tụi tui đứng sau cái bếp đất quen bóng tối chứ đâu dám chen tên vô sổ công trạng của anh em cầm súng ngoài mũi nhọn.\n\nNghe chú nói sáng mai cho hai thằng công binh qua phụ lợp lại mấy tấm lá cọ bị tốc trên mái bếp là tui mừng hết lớn rồi đó! Mùa mưa sông Xích Thủy sắp tới gần, bếp mà dột nước xuống tro nguội là cả đại đội nhai cơm sống hết trơn.\n\nCòn chuyện giữ góc cờ, chú đừng bận tâm chi hết trơn. Cờ lành là để anh em nhìn lên cho vững dạ, chứ anh nuôi đâu có cần bảng vàng ghi tên làm chi cho rườm rà.\n\nCòn tên tui chú ghi vô cuốn sổ nhỏ bỏ túi của chú là quý hóa lắm rồi. Chú thức trực đêm nhớ rót trà uống cho tỉnh táo nghe.",
+      "next": "ch4_ep1_28b_son_nhac_kim_chi"
+    },
+    {
+      "id": "ch4_ep1_27c_giu_le_cu",
+      "type": "narration",
+      "location": "Cửa lán trực ban Đại Đội 3 Huyền Ưng",
+      "mood": "calm",
+      "text": "Nghe lời cảm ơn chuẩn mực của tôi, Tám khựng lại nửa giây ở ngưỡng cửa, thoáng nhìn trang giấy nhung đang mở rộng dưới ánh đèn rồi khẽ gật đầu cười hiền hậu. Anh nói một câu ngắn gọn rằng phép tắc đơn vị vốn phải rõ ràng như vậy, rồi xoa hai bàn tay vào vạt áo.\n\nTrên tay Tám lúc đó vẫn còn quấn dở sợi chỉ đỏ thừa giắt bên túi áo ngực, vết kim chích nhỏ xíu nơi đầu ngón cái chưa kịp khô máu. Nhưng anh lặng lẽ nhét bàn tay ấy vào túi quần vải thô như chẳng có chuyện gì.\n\nBóng lưng gầy ám mùi khói bếp lặng lẽ khuất dần sau hàng cây si, hòa vào tiếng ếch nhái râm ran bên rãnh thoát nước. Trên bàn trực ban, dòng chữ viết tay của tôi về thành tích huấn luyện tháng vẫn ngay ngắn và sạch sẽ không một vết mực thừa.\n\nTôi đóng nắp bút máy lại, bỗng thấy căn lán chỉ huy đêm nay có phần lạnh lẽo và tĩnh mịch hơn hẳn lúc ban chiều.",
+      "next": "ch4_ep1_28b_son_nhac_kim_chi"
+    },
+    {
+      "id": "ch4_ep1_28a_son_khen_chu_ky",
+      "type": "dialogue",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — Khuya",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "warm",
+      "text": "Nét chữ anh Tám xấu thật. Nhưng ký đúng trang rồi. Cờ bay được nhờ sợi chỉ đó.\n\nBếp lạnh thì súng cũng nguội. Cậu nhớ được điều ấy là tốt. Ra kiểm tra gác đêm đi.",
+      "next": "ch4_ep1_29_dispatch_vanh_dai"
+    },
+    {
+      "id": "ch4_ep1_28b_son_nhac_kim_chi",
+      "type": "dialogue",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — Khuya",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "tense",
+      "text": "Sổ viết đúng lệ lắm. Chữ sạch. Mực đều. Nhưng cờ lành nhờ kim chỉ ai?\n\nĐừng quên người đứng sau bếp. Ra kiểm tra gác đêm đi.",
+      "next": "ch4_ep1_29_dispatch_vanh_dai"
+    },
+    {
+      "id": "ch4_ep1_29_dispatch_vanh_dai",
+      "type": "dispatch",
+      "location": "Chốt tiền tiêu vành đai sông Xích Thủy — 02 giờ 40 phút",
+      "mood": "urgent",
+      "text": "Sương dày đặc trùm kín bãi lau ven sông Xích Thủy, tầm nhìn rút xuống chưa đầy mười bước chân thì máy điện báo dã chiến trong hầm trực bỗng ré lên dồn dập.\n\n[CÔNG ĐIỆN KHẨN — ĐÀI CẢNH GIỚI BỜ BẮC XÍCH THỦY]\n\"Phát hiện hai xuồng cao su tắt máy trôi theo dòng nước đục áp sát khúc quanh ki-lô-mét số 4, hướng thẳng vào hành lang tiếp giáp cầu phao dự bị của Đại Đội 3 Huyền Ưng. Đồng thời xuất hiện tín hiệu giả mạo mật khẩu cấp tiểu đoàn yêu cầu rút tổ cảnh giới bãi lau về tuyến sau!\"\n\nNgoài rìa công sự đất, tiếng nước khua nhẹ lẫn trong gió lạnh. Khoảng cách giữa mép xuồng địch và hàng rào bẫy vướng chỉ còn tính bằng chục giây.",
+      "next": "ch4_ep1_30_linh_bao_nhieu"
+    },
+    {
+      "id": "ch4_ep1_30_linh_bao_nhieu",
+      "type": "dialogue",
+      "location": "Hầm vô tuyến tiền tiêu — Vành đai Xích Thủy",
+      "speaker": "linh",
+      "speakerTitle": "Trung sĩ Trần Mỹ Linh",
+      "mood": "urgent",
+      "text": "Anh ơi đừng tin bức điện hủy lệnh vừa nhảy trên kênh chính! Em vừa kiểm tra nhịp phát sóng — sai lệch thời gian chuẩn hai phần trăm giây, đúng kiểu gài bẫy giả tần số của bọn Khối Thiết Phong!\n\nTay em giữ chặt công tắc chuyển tần trên bảng mã khắc đồng đây rồi, chỉ chờ anh gật đầu là em cắt ngay kênh cũ để khóa đường nghe trộm của đài địch. Ngoài kia tiếng nước vỗ mạn xuồng đã dội ngược vào micro gài cọc bãi lau rồi đó anh.\n\nSóng sạch quá mới là sóng có bẫy. Tụi nó cố tình làm mình tưởng lệnh trên cho rút chốt để hai chiếc xuồng trinh sát lọt thẳng vào chân đường tiếp vận bên dưới cầu phao!\n\nMười giây nữa là tụi nó vòng qua mỏm đá khuất tầm nhìn rồi anh quyết nhanh lên!",
+      "next": "ch4_ep1_31_son_giao_quyen_chot"
+    },
+    {
+      "id": "ch4_ep1_31_son_giao_quyen_chot",
+      "type": "dialogue",
+      "location": "Hầm chỉ huy tiền tiêu — Vành đai Xích Thủy",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "urgent",
+      "text": "Sương dày lắm rồi. Hai xuồng địch áp bãi lau. Cậu nghe đài Linh vừa báo chưa?\n\nKíp trực đêm nay của cậu. Không kịp chờ lệnh tiểu đoàn đâu. Chọn một phương án.\n\nLính của tôi, tôi chịu. Xử lý đi.",
+      "next": "ch4_ep1_32_choice_khan_cap"
+    },
+    {
+      "id": "ch4_ep1_32_choice_khan_cap",
+      "type": "choice",
+      "location": "Hầm chỉ huy tiền tiêu — Vành đai Xích Thủy",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c_giu_im_lang_chan_ben",
+      "text": "Đồng hồ đếm ngược trên bảng trực chiến nhảy từng giây đỏ rực. Bên ngoài lớp sương mù, hai chiếc xuồng cao su của thám báo Thiết Phong đang lướt sát bãi lau về phía mỏm đá khuất.\n\nBạn chỉ có 10 giây để phát lệnh xử lý cho cả tuyến phòng thủ vành đai Xích Thủy!",
+      "choices": [
+        {
+          "id": "c_phuc_kich_im_lang",
+          "label": "Quay tay quay điện thoại dây dã chiến, lệnh các chốt giữ im tiếng súng chờ xuồng vào đúng tầm lưới đánh úp tại bãi lau",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch4_ep1_33a_phuc_kich_im_lang"
+        },
+        {
+          "id": "c_ban_phao_sang_ap_dao",
+          "label": "Bắn ngay hai phát pháo sáng và lệnh đại liên quét mặt sông phủ đầu, ép hai chiếc xuồng phải quay đầu bỏ chạy",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -1 } }
+          ],
+          "next": "ch4_ep1_33b_phao_sang_xich_thuy"
+        },
+        {
+          "id": "c_giu_im_lang_chan_ben",
+          "label": "Giữ nguyên vị trí phòng thủ chặt quanh khu vực cầu phao và kho đạn, không phân tán quân xuống bãi lau trong sương mù",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } }
+          ],
+          "next": "ch4_ep1_33c_giu_tuyen_cau"
+        },
+        {
+          "id": "c_doi_tan_so_du_phong_linh",
+          "label": "Tin tuyệt đối vào Linh, lập tức chuyển toàn bộ mạng liên lạc sang bảng mã khắc đồng dự phòng và tung pháo hiệu giả đánh lạc hướng địch",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addRel": { "char": "linh", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_33d_be_gay_nhieu_song"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_33a_phuc_kich_im_lang",
+      "type": "narration",
+      "location": "Bãi lau khúc quanh Xích Thủy",
+      "mood": "tense",
+      "text": "Không một ánh đèn pin nào bật lên. Qua đường dây hữu tuyến kéo ngầm dưới bùn, mệnh lệnh của tôi truyền thẳng xuống hai tổ chốt sát mép nước để giữ tuyệt đối tĩnh lặng cho tới khi mũi xuồng chạm cọc tre ngầm.\n\nTrong màn sương dày như bông, anh em dưới hố cá nhân nín thở đến nỗi nghe rõ cả tiếng nước chảy róc rách qua từng thân lau già. Một chiếc dây vướng căng ngang mép bùn khẽ rung lên bần bật.\n\nChỉ hai phút sau, tiếng gỗ va lạch cạch dưới đáy sông vang lên đúng chỗ dự tính. Hai tổ chốt đồng loạt bật chốt lựu đạn choáng và nổ súng chặn khóa đường rút ngang mỏm đá.\n\nNhóm thám báo Thiết Phong hoảng loạn quăng bỏ lại một túi đựng bản đồ chống nước cùng cuộn dây đo độ sâu lòng sông rồi liều mạng bơi ngược vào màn sương.",
+      "branches": [
+        {
+          "condition": { "flag": "thuoc_ten_dai_doi_huyen_ung" },
+          "next": "ch4_ep1_34a_goi_dung_ten_trong_dem"
+        }
+      ],
+      "next": "ch4_ep1_34b_lung_tung_trong_suong"
+    },
+    {
+      "id": "ch4_ep1_33b_phao_sang_xich_thuy",
+      "type": "narration",
+      "location": "Bờ nam sông Xích Thủy",
+      "mood": "urgent",
+      "text": "Tiếng súng bắn pháo sáng xé toạc bầu trời đêm, treo lơ lửng hai quả cầu lửa trắng gắt chiếu rọi sáng rực cả mặt sông cuồn cuộn sương mù. Ngay lập tức, hai khẩu đại liên trên ụ đất gầm lên rền rĩ, vạch những đường đạn lửa cắt ngang mặt nước trước mũi hai chiếc xuồng cao su.\n\nBóng những tên thám báo mặc áo lặn đen thui hiện rõ mồn một trên nền nước bạc được nửa giây rồi vội vã chúi đầu xuống mạn xuồng né đạn. Cả mặt sông rung lên dưới từng loạt bắn quét chéo.\n\nBị lộ sáng bất ngờ, tốp thám báo Thiết Phong không dám liều lĩnh áp bờ mà vội vã nổ máy đuôi tôm rú ga chạy bạt về bờ bắc, bỏ lại một chiếc xuồng xì hơi trôi dạt vào bãi đá.\n\nTuy đẩy lui địch gọn lẹ, nhưng tiếng súng nổ sớm đã phơi bày vị trí hỏa lực của ụ đại liên và tiêu tốn gần hai thùng đạn dự phòng trong chớp mắt.",
+      "branches": [
+        {
+          "condition": { "flag": "thuoc_ten_dai_doi_huyen_ung" },
+          "next": "ch4_ep1_34a_goi_dung_ten_trong_dem"
+        }
+      ],
+      "next": "ch4_ep1_34b_lung_tung_trong_suong"
+    },
+    {
+      "id": "ch4_ep1_33c_giu_tuyen_cau",
+      "type": "narration",
+      "location": "Khu vực cầu phao dự bị Xích Thủy",
+      "mood": "tense",
+      "text": "Tôi chọn phương án thu quân chắc chắn quanh các trụ neo cầu phao và hầm đạn trung tâm, không mạo hiểm xua quân xuống bãi lau mù sương dễ rơi vào bẫy phục kích nghi binh từ bờ bên kia.\n\nCác tổ công binh lập tức gài chốt khóa phụ cho dầm cầu phao và kéo dây bẫy tăng cường dọc con dốc đất dẫn từ bến nước lên kho hậu cần. Ai nấy đều ngồi thấp dưới thành công sự, giữ súng sẵn sàng ở tư thế bắn gần.\n\nMười phút trôi qua căng như dây đàn. Khi không thấy chốt cảnh giới mắc lừa điện giả rút quân, hai chiếc xuồng địch rà sát mép lau hồi lâu rồi buộc phải lẳng lặng quay mũi ngược dòng vì mất yếu tố bất ngờ.\n\nCầu phao và kho đạn giữ nguyên vẹn tuyệt đối, dù vài chiến sĩ trẻ dưới công sự vẫn tiếc hùi hụi vì chưa tóm được tên thám báo nào làm tù binh.",
+      "branches": [
+        {
+          "condition": { "flag": "thuoc_ten_dai_doi_huyen_ung" },
+          "next": "ch4_ep1_34a_goi_dung_ten_trong_dem"
+        }
+      ],
+      "next": "ch4_ep1_34b_lung_tung_trong_suong"
+    },
+    {
+      "id": "ch4_ep1_33d_be_gay_nhieu_song",
+      "type": "narration",
+      "location": "Hầm vô tuyến và bến nghi binh Xích Thủy",
+      "mood": "tense",
+      "text": "Linh gõ nhanh tổ hợp chuyển tần lên bảng mã khắc đồng, cắt đứt hoàn toàn kênh liên lạc bị gài nhiễu trong chưa đầy ba giây. Cùng lúc đó, tôi ra lệnh tung một quả pháo hiệu màu xanh giả lệnh tập kích về phía khúc quanh hạ lưu cách cầu phao hơn một cây số.\n\nTrên màn hình tần số mới, tiếng rè đục biến mất hẳn, nhường chỗ cho tín hiệu báo vị trí rõ mồn một từ ba trạm canh ven sông xác nhận toàn tuyến không hề rút quân như bức điện giả.\n\nTưởng lưới chỉ huy đã sập bẫy và bến chính đang sơ hở, hai chiếc xuồng Thiết Phong tăng tốc lao thẳng vào bãi đá cạn phía dưới trước khi va trúng hàng cọc ngầm dựng sẵn từ chiều.\n\nCả toán thám báo hoảng hồn quăng đồ đạc rút chạy trong tiếng cười khẽ đầy tự hào của cô lính thông tin trẻ tuổi.",
+      "branches": [
+        {
+          "condition": { "flag": "thuoc_ten_dai_doi_huyen_ung" },
+          "next": "ch4_ep1_34a_goi_dung_ten_trong_dem"
+        }
+      ],
+      "next": "ch4_ep1_34b_lung_tung_trong_suong"
+    },
+    {
+      "id": "ch4_ep1_34a_goi_dung_ten_trong_dem",
+      "type": "narration",
+      "location": "Tuyến hào vành đai Xích Thủy — Lúc chuyển trạng thái",
+      "mood": "calm",
+      "text": "Trong màn sương đặc quánh không nhìn rõ mặt người cách hai sải tay, điều giữ cho cả đội hình Huyền Ưng không bắn nhầm nhau lại chính là đêm thức trắng lật từng trang sổ quân số hôm nào. Tôi áp miệng sát ống nói dây dã chiến, gọi rành rọt từng tên: cậu Tý cối 60 khóa góc sườn phải, anh Hòa tiểu đội hai giữ chốt cầu phao, cậu Phước kiểm tra lại dây vướng.\n\nNghe vị Trung úy mới về gọi trúng phóc tên từng người giữa đêm đen như thể đã ăn chung một mâm nhiều năm, nỗi chộn rộn ban đầu của anh em dưới hào biến mất tức thì. Mệnh lệnh chạy xuống đâu, chốt giữ siết chặt ngay tới đó không một giây chần chừ.\n\nĐại đội trưởng Đỗ Thành Sơn đứng lặng sau lưng tôi suốt buổi, chỉ khẽ gõ ngón tay cái lên bìa cuốn sổ kẹp nách khi thấy tuyến phòng thủ khép kín không một khe hở.",
+      "branches": [
+        {
+          "condition": { "flag": "ghi_ten_anh_nuoi_tam_vao_so" },
+          "next": "ch4_ep1_35a_tam_duoi_cot_co"
+        }
+      ],
+      "next": "ch4_ep1_35b_tam_ben_bep_lua"
+    },
+    {
+      "id": "ch4_ep1_34b_lung_tung_trong_suong",
+      "type": "narration",
+      "location": "Tuyến hào vành đai Xích Thủy — Lúc chuyển trạng thái",
+      "mood": "tense",
+      "text": "Trong màn sương dày đặc không thấy rõ mặt người, việc tôi chỉ nhớ số hiệu tiểu đội thay vì tên từng chiến sĩ bắt đầu bộc lộ cái giá của nó. Khi gọi đổi góc bắn khẩn cấp cho tổ súng máy sườn phải, hai khẩu đội hiểu nhầm lệnh nhau mất gần nửa phút lúng túng giữa màn đêm.\n\nPhải nhờ Đại đội trưởng Đỗ Thành Sơn trực tiếp giật lấy ống nói, quát ngắn đúng hai cái tên riêng của xạ thủ thì đường dây hỏa lực mới kịp ổn định trở lại trước khi địch rút qua bên kia sông.\n\nSương tan dần để lại vị đắng ngắt trong cổ họng tôi. Ngoài trận địa không có ánh đèn dầu nào cho phép người chỉ huy giở bảng tra cứu chữ nhỏ bỏ túi.",
+      "branches": [
+        {
+          "condition": { "flag": "ghi_ten_anh_nuoi_tam_vao_so" },
+          "next": "ch4_ep1_35a_tam_duoi_cot_co"
+        }
+      ],
+      "next": "ch4_ep1_35b_tam_ben_bep_lua"
+    },
+    {
+      "id": "ch4_ep1_35a_tam_duoi_cot_co",
+      "type": "dialogue",
+      "location": "Sân cột cờ Đại Đội 3 Huyền Ưng — Bình minh",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "warm",
+      "text": "Chào buổi sáng chú em Trung úy! Hồi khuya nghe tiếng nổ rền ngoài bãi lau làm tui cứ thấp thỏm không yên, bèn dậy sớm nhóm luôn hai nồi cháo thịt bằm nóng hổi đợi anh em đổi gác về húp cho lại sức.\n\nChú ngước lên cột cờ trước hiên mà coi kìa: gió sáng sông Xích Thủy thổi phần phật mạnh rứa mà cái góc cờ tui khâu khóa đôi hôm bữa vẫn phẳng phiu cứng cáp lắm nghen! Tối qua anh em trong bếp truyền tai nhau chuyện chú mời tui ký tên vô Sổ Truyền Thống làm cả tổ hậu cần sướng rơn không ngủ nổi luôn đó.\n\nĂn lẹ chén cháo nóng đi chú, lát nữa Đại đội trưởng họp giao ban sáng ngoài kia rồi!",
+      "next": "ch4_ep1_36_son_danh_gia_chot"
+    },
+    {
+      "id": "ch4_ep1_35b_tam_ben_bep_lua",
+      "type": "dialogue",
+      "location": "Góc bếp Hoàng Cầm — Bình minh",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "calm",
+      "text": "Mời chú em Trung úy làm chén cháo trắng muối vừng cho ấm bụng sau ca trực đêm vất vả ngoài bờ sông. Hồi khuya nghe động ngoài bãi lau, anh em trong bếp tụi tui cũng dập bớt lửa than để tránh ánh sáng hắt lên ngọn cây rồi mới dám nấu tiếp.\n\nSáng nay lá cờ mới vá góc cũng vừa kéo lên cột ngoài sân tập kia rồi chú. Gió sông sáng nay lạnh buốt chứ không rách được đường chỉ kép của anh nuôi đâu mà lo.\n\nChú ăn nhanh kẻo nguội rồi ra nhận công văn mới dưới bàn trực ban đi, thấy mặt ông Đại đội trưởng ngoài kia nghiêm lắm đó nghe.",
+      "next": "ch4_ep1_36_son_danh_gia_chot"
+    },
+    {
+      "id": "ch4_ep1_36_son_danh_gia_chot",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng — Sáng sớm",
+      "speaker": "son",
+      "speakerTitle": "Đại đội trưởng Đỗ Thành Sơn",
+      "mood": "calm",
+      "text": "Địch rút rồi. Cầu phao còn nguyên. Đạn tiêu hao ghi rõ vào sổ.\n\nĐêm qua cậu xử lý gọn. Trung đội giữ được nhịp tốt. Nhưng đừng chủ quan.\n\nTrên tiểu đoàn vừa điện xuống. Sắp có lệnh điều sang Xích Phong. Chuẩn bị đi. Ngắn thôi.",
+      "next": "ch4_ep1_37_khang_hen_xich_thuy"
+    },
+    {
+      "id": "ch4_ep1_37_khang_hen_xich_thuy",
+      "type": "dialogue",
+      "location": "Đầu đường dây hữu tuyến dã chiến — Trạm liên lạc Huyền Ưng",
+      "speaker": "khang",
+      "speakerTitle": "Thiếu úy Lê Minh Khang",
+      "mood": "tense",
+      "text": "Alo, ông nghe tui nói rõ không? Tui Khang đây, mới chạy công tác qua chốt cầu Xích Thủy tiện ghé máy vô tuyến của đơn vị bạn nhắn qua cho ông hai câu trước khi đổi ca.\n\nĐêm qua nghe tin cánh Huyền Ưng của ông vừa đánh bật hai xuồng thám báo Thiết Phong hả? Giữ được cái cầu phao là hay lắm rồi đó nha, chứ bên cánh tụi tui sáng nay xe cơ giới bắt đầu dồn xuống ngã ba Xích Phong đông nghẹt hết đường rồi.\n\nBên bờ nam lại có cả đám trẻ con với dân buôn bán đi qua đi lại gần ngã ba cầu yếu, tụi tui phải căng dây phân luồng từ mờ sáng tới giờ mỏi nhừ cả tay. Mấy ông tham mưu trên tiểu đoàn cứ giục mở thông trục lộ cho xe pháo qua nhanh bất chấp giờ dân đi chợ.\n\nÀ, nghe nói ban chỉ huy mặt trận mới cử một cô sĩ quan phản gián tên Thảo từ trên bộ về rà soát toàn bộ đường dây liên lạc sông Xích Thủy đó. Ông chuẩn bị giấy tờ sổ sách cho kỹ đi, hẹn gặp nhau ngay bên cầu lớn nghe!",
+      "next": "ch4_ep1_38_choice_cuoi_hoi_10"
+    },
+    {
+      "id": "ch4_ep1_38_choice_cuoi_hoi_10",
+      "type": "choice",
+      "location": "Bàn trực ban Đại Đội 3 Huyền Ưng — Trước giờ giao ban tiểu đoàn",
+      "mood": "calm",
+      "text": "Đầu dây bên kia ngắt máy, chỉ còn tiếng bật lửa kim loại khẽ vang lên một tiếng 'tách' quen thuộc trước khi Khang cúp ống nghe. Ngoài sân tập, lá cờ đỏ có góc vá chỉ thô của anh nuôi Tám đang phần phật bay dưới nắng sớm.\n\nTrước khi gập cuốn sổ bìa xanh của thầy Vinh để chuẩn bị cho bước ngoặt chuyển sang tuyến Tiểu Đoàn Xích Phong, bạn quyết định ưu tiên việc gì cho ngày đầu sau đêm báo động?",
+      "choices": [
+        {
+          "id": "c_ghi_ten_huyen_ung_va_tam",
+          "label": "Chép lại những bài học xương máu về 128 cái tên và góc cờ vá của Tám vào sổ bìa xanh, cho anh em trực đêm nghỉ bù đủ giấc",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+          ],
+          "next": "ch4_ep1_bottleneck"
+        },
+        {
+          "id": "c_siet_ky_luat_tan_so",
+          "label": "Ghi chép chính xác khung giờ nhiễu sóng của Thiết Phong cùng Linh, siết chặt quy tắc đổi mật khẩu vô tuyến toàn đại đội",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "linh", "delta": 1 } }
+          ],
+          "next": "ch4_ep1_bottleneck"
+        },
+        {
+          "id": "c_kiem_kho_cung_bay_tam",
+          "label": "Cùng bác tài Bảy và Tám rà soát lại cơ số lương khô, thuốc men và pin dự phòng sẵn sàng cho lệnh cơ động sang Xích Phong",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addRel": { "char": "tam", "delta": 1 } },
+            { "addRel": { "char": "bay", "delta": 1 } }
+          ],
+          "next": "ch4_ep1_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep1_bottleneck",
+      "type": "narration",
+      "location": "Sân cột cờ Đại Đội 3 Huyền Ưng — Nắng sớm mùa khô",
+      "mood": "warm",
+      "isChapterEnd": true,
+      "text": "Ánh nắng sớm xuyên qua lớp lưới ngụy trang màu rêu sẫm, rọi sáng hai ngôi sao vàng Trung úy trên cầu vai áo kaki còn vương mùi khói bếp Hoàng Cầm và hơi sương lạnh của dòng Xích Thủy.\n\nTừ buổi sáng đứng chỉnh lại ve áo ở Vân Long cho tới đêm trắng ghép từng khuôn mặt vào một trăm hai mươi tám cái tên ở Huyền Ưng, khoảng cách giữa người lính cầm súng và người sĩ quan giữ đội hình đã không còn đo bằng lý thuyết trên giảng đường nữa.\n\nNgoài sân tập, lá cờ đỏ thẫm với góc chỉ khóa đôi chắc chắn của Binh nhất Trần Văn Tám bay phần phật trên ngọn tre. Từng mũi chỉ thô ấy nhắc tôi nhớ rằng sức bền của một đại đội nằm cả ở những đôi bàn tay lặng lẽ phía sau bếp lửa.\n\nTôi cẩn thận cất cuốn sổ bìa xanh của thầy Trần Quốc Vinh vào túi áo ngực trái, nghe rõ tiếng bước chân rầm rập của các tiểu đội chuẩn bị chuyển trạng thái. Phía trước là ngã ba quân sự Tiểu Đoàn Xích Phong, là cây cầu phao bắc qua sông Xích Thủy và những cuộc thẩm tra không khoan nhượng sắp ập tới trong hồi kế tiếp.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch4_ep1_bottleneck",
+            "title": "Hội tụ Hồi 10: Vững nhịp tại Đại Đội 3 Huyền Ưng",
+            "entry": "Hoàn thành bước chuyển từ Thiếu úy lên Trung úy tại Đại Đội 3 Huyền Ưng cùng Đại đội trưởng Sơn, anh nuôi Tám và đẩy lùi đợt thăm dò đêm trên vành đai sông Xích Thủy."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -143,7 +143,7 @@ export const HubNavigation: React.FC<HubNavigationProps> = ({
       id: "story" as TabType,
       title: "Cốt Truyện",
       fullName: "Chiến Dịch Cốt Truyện",
-      subtitle: "Phân nhánh 8 chương · 6 kết cục",
+      subtitle: "8 chương · 24 hồi · phân nhánh",
       icon: BookOpen,
     },
     {

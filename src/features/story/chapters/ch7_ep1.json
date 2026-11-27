@@ -1,0 +1,1573 @@
+{
+  "id": "ch7_ep1",
+  "episodeOrder": 19,
+  "chapterNumber": 7,
+  "title": "Chương VII · Hồi 19: Liên Chiến Khu & Ghế Kế Nhiệm",
+  "ql2ChapterId": "four_star",
+  "rankRange": "Thống Soái → Đại Thống Soái",
+  "nextChapterId": "ch7_ep2",
+  "entryNodeId": "ch7_ep1_01_tu_tinh_ho_tinh",
+  "summary": "Bước vào tầng chỉ huy Tứ Tinh Thủ Hộ với quân hàm Thống Soái (Hộ Tinh Chiến Tuyến) nắm quyền điều phối Liên Đại Chiến Khu Bắc Vực & Long Vũ giữa đòn đánh tiêu hao đa tầng của Khối Thiết Phong; giải quyết án đình chỉ Lê Phương Thảo trước Hội Đồng, gạch bỏ cuộc họp giấy để giữ thông suốt huyết mạch Khe Mây, và bước vào quyết định trao quyền ghế kế nhiệm khi nhận quân hàm Đại Thống Soái (Hộ Tinh Liên Kết).",
+  "nodes": [
+    {
+      "id": "ch7_ep1_01_tu_tinh_ho_tinh",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Liên Đại Chiến Khu Bắc Vực & Long Vũ — Rạng sáng",
+      "mood": "calm",
+      "text": "Ánh đèn trắng lạnh của phòng bản đồ trung tâm hắt lên dải phù hiệu mới trên cầu vai áo: bốn ngôi sao bạc lồng trong vòng nguyệt quế thép của quân hàm Thống Soái Hộ Tinh Chiến Tuyến. Ngoài khung kính hai lớp, sương sớm từ dãy Bắc Vực tràn xuống hòa lẫn hơi ẩm sông nước từ hạ lưu Long Vũ gửi về qua trục đường sắt quân sự.\n\nTrên mặt bàn sa bàn rộng sáu mét, tôi đặt cuốn sổ bìa xanh sờn gáy cạnh tấm bản đồ nhỏ Thiên Lang gấp tư và những mảnh ghi chú mang theo từ thuở còn gác vọng Thiên Minh. Mùi mực in mới của bộ hồ sơ Liên Chiến Khu quyện cùng mùi giấy cũ nhắc tôi rằng mọi nét vẽ trên kính đều đang đè lên nhịp thở thật dưới hai đầu đất nước.\n\nTừ hôm nay, tôi không còn đứng riêng ở một dải đèo tuyết hay một cụm cảng phù sa nữa. Trọng trách Tứ Tinh buộc tôi phải giữ cho hai chiến khu khổng lồ vừa đi qua mùa đông đẫm máu không đứt lìa khỏi nhau trước đợt vây ép mới của Khối Thiết Phong.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch7_ep1_tu_tinh",
+            "title": "Thống Soái — Hộ Tinh Chiến Tuyến",
+            "entry": "Nhận quân hàm Thống Soái và quyền Tổng điều phối Liên Đại Chiến Khu Bắc Vực & Long Vũ giữa giai đoạn chuyển tiếp chiến lược."
+          }
+        }
+      ],
+      "next": "ch7_ep1_02_dispatch_lien_chien_khu"
+    },
+    {
+      "id": "ch7_ep1_02_dispatch_lien_chien_khu",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "tense",
+      "text": "[CHỈ THỊ CHIẾN LƯỢC TỐI CAO — PHÂN KỲ TỨ TINH THỦ HỘ]\n\n\"Thành lập Bộ Tư Lệnh Liên Đại Chiến Khu Bắc Vực & Long Vũ, giao Thống Soái Hộ Tinh Chiến Tuyến trực tiếp thống nhất đường tiếp vận, phòng không tầm trung và tác chiến điện tử liên vùng trước kỳ họp Hội Đồng Thống Soái Tối Cao.\"\n\n\"Cảnh báo tình báo: Cụm Thiết Phong của Hắc Ưng đang chuyển sang chiến thuật tiêu hao đa tầng — phóng UAV phá hoại nút giao vận tải Khe Mây, gây nhiễu giả đội hình trên bờ biển và khoét sâu điểm nghẽn hành chính giữa hai chiến khu.\"",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": { "flag": "vo_tran_tuyen_bac_vuc" },
+          "next": "ch7_ep1_03a_hau_qua_bac_vuc"
+        },
+        {
+          "condition": { "flag": "pha_huy_kho_tiep_van_hac_ung" },
+          "next": "ch7_ep1_03b_du_am_kho_hac_ung"
+        },
+        {
+          "condition": { "flag": "dam_phan_ngung_ban_hac_ung" },
+          "next": "ch7_ep1_03c_du_am_ngung_ban"
+        }
+      ],
+      "next": "ch7_ep1_03d_the_tran_giang_co"
+    },
+    {
+      "id": "ch7_ep1_03a_hau_qua_bac_vuc",
+      "type": "narration",
+      "location": "Bảng Sa Bàn Kính — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Trên nửa phía Bắc của sa bàn, ba dải đường đỏ sẫm vẫn cắt chéo qua các mỏm đá vôi sau trận vỡ tuyến mùa đông vừa qua. Các trung đoàn công binh đang phải dựng công sự dã chiến giữa bùn tuyết tan, trong khi dự trữ đạn pháo và dầu sưởi tại các hầm tiền phương tụt xuống dưới mức báo động.\n\nMỗi ngày chậm trễ một đoàn xe từ cảng Long Vũ ngược đèo là thêm hàng chục khẩu đội ở Bắc Vực phải bắn cầm chừng bằng cơ số dự phòng cuối cùng. Sự đứt gãy ở tuyến trên đang hút cạn sức bền của cả hậu phương phía dưới.\n\nNhiều đại đội giữ mỏm đá phải cắt bớt ca máy phát điện ban đêm để dành dầu cho xe kéo pháo. Ánh đèn trên bản đồ điện tử nhấp nháy yếu ớt từng nhịp như mạch đập của một người bệnh nặng.\n\nTôi dùng bút chì đỏ khoanh tròn nút giao Khe Mây — cổ chai duy nhất nối xà lan sông với đường sắt leo núi — nơi mọi sai lầm điều hành hôm nay sẽ trả giá bằng cả mặt trận.",
+      "effects": [
+        { "addStat": { "stat": "TiepTe", "delta": -2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "vinh_canh_bao_noi_bo" }
+            ]
+          },
+          "next": "ch7_ep1_04a_vinh_canh_bao"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_ep1_04b_vinh_hoi_tu_tinh"
+        }
+      ],
+      "next": "ch7_ep1_04c_mot_minh_ben_so_bia_xanh"
+    },
+    {
+      "id": "ch7_ep1_03b_du_am_kho_hac_ung",
+      "type": "narration",
+      "location": "Bảng Sa Bàn Kính — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "tense",
+      "text": "Đòn đánh sập kho tiếp vận tiền phương của Hắc Ưng ở cuối Chương VI đã buộc lực lượng cơ giới Thiết Phong phải lùi lại gần bốn mươi ki-lô-mét để tái lập nguồn đạn. Nhờ khoảng lặng quý giá ấy, tuyến phòng thủ Bắc Vực giữ được nguyên vẹn các điểm cao chiến lược.\n\nTuy vậy, Hắc Ưng không chịu ngồi yên để hai chiến khu của ta hoàn tất ghép nối hậu cần. Các tổ trinh sát vô tuyến ghi nhận hàng loạt tốp UAV tự sát tầm xa bắt đầu đổi hướng, rời bỏ trận địa pháo để săn lùng những đoàn tàu và xà lan chạy qua hành lang Khe Mây.\n\nMỗi chuyến hàng vượt qua đoạn hẻm núi lúc này đều phải chạy đua cùng vòng quay của các cụm radar cảnh giới tầm thấp. Chỉ cần một đầu bến chậm bốc dỡ nửa giờ là cả đội hình trở thành bia tập bắn.\n\nThế chủ động hiện có giống như ngọn gió thuận ngắn ngủi trước cơn giông lớn: nếu ta tự trói tay bằng thủ tục bàn giấy, ưu thế giành được bằng xương máu sẽ tan biến trong một đêm.",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "vinh_canh_bao_noi_bo" }
+            ]
+          },
+          "next": "ch7_ep1_04a_vinh_canh_bao"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_ep1_04b_vinh_hoi_tu_tinh"
+        }
+      ],
+      "next": "ch7_ep1_04c_mot_minh_ben_so_bia_xanh"
+    },
+    {
+      "id": "ch7_ep1_03c_du_am_ngung_ban",
+      "type": "narration",
+      "location": "Bảng Sa Bàn Kính — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "tense",
+      "text": "Kênh ngừng bắn chiến thuật ngắn hạn ký cùng Hắc Ưng trong mùa đông đã cứu được hàng nghìn hộ dân vùng đệm khỏi cảnh kẹt giữa hai làn đạn pháo. Nhưng ngay khi dân thường rút hết về phía sau, mặt trận lập tức lạnh buốt trở lại bởi những lời xì xào từ hành lang Bộ Tham Mưu.\n\nMột nhóm sĩ quan hậu cần theo đường lối cứng rắn rỉ tai nhau rằng chiếc ghế Thống Soái mới dựng lên quá mềm mỏng với đối phương, trong khi phía Thiết Phong lại tận dụng đúng bốn mươi tám giờ tạm lắng để tái bố trí các trận địa tên lửa bờ và trạm gây nhiễu.\n\nTrong ngăn kéo bàn làm việc, tập biên bản sơ tán dân vẫn còn kẹp lá thư cảm ơn viết vội bằng bút chì của giáo viên vùng ven. Cứu được người dân không phải là yếu mềm, nhưng giữ được mặt trận sau đó mới là phép thử thật sự.\n\nTôi khép tập điện văn đàm phán cũ vào ngăn kéo thép. Đã qua lúc giải thích thiện chí bằng lời; hôm nay hai chiến khu phải đứng vững bằng năng lực phối hợp thực chất trước mặt cả kẻ địch lẫn người nhà.",
+      "effects": [
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "vinh_canh_bao_noi_bo" }
+            ]
+          },
+          "next": "ch7_ep1_04a_vinh_canh_bao"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_ep1_04b_vinh_hoi_tu_tinh"
+        }
+      ],
+      "next": "ch7_ep1_04c_mot_minh_ben_so_bia_xanh"
+    },
+    {
+      "id": "ch7_ep1_03d_the_tran_giang_co",
+      "type": "narration",
+      "location": "Bảng Sa Bàn Kính — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "calm",
+      "text": "Hai đầu mặt trận bước vào tuần giằng co nặng nề sau những ngày đông ác liệt. Bắc Vực vẫn đứng vững trên sống núi đá vôi nhưng quân số và khí tài đều đã chạm ngưỡng mỏi mệt, còn Long Vũ phía dưới đang quay hết công suất cần cẩu cảng biển để bù đắp nguồn dự trữ.\n\nGiữa hai khối lực lượng đồ sộ ấy là hàng trăm trang biểu mẫu điều phối chồng chéo: tàu thủy xin lệnh một cửa, xe lửa xin lệnh một bộ phận khác, còn trạm trung chuyển ở giữa lại chờ chữ ký xác nhận của hai ban tham mưu khác nhau.\n\nTiếng máy in điện tín rào rào suốt đêm nhưng phần lớn lại là những công văn đôn đốc thủ tục từ tuyến sau gửi lên. Thực địa cần dầu và đạn trong vài giờ tới, còn giấy tờ lại hẹn sang tuần.\n\nCầm cây bút chì trên tay, tôi hiểu rõ kẻ thù nguy hiểm nhất trong buổi sáng đầu tiên này không chỉ bay trên màn hình radar mà còn nằm ngay trong những kẽ hở hành chính chia cắt hai chiến khu.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "vinh" },
+              { "flag": "vinh_canh_bao_noi_bo" }
+            ]
+          },
+          "next": "ch7_ep1_04a_vinh_canh_bao"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_ep1_04b_vinh_hoi_tu_tinh"
+        }
+      ],
+      "next": "ch7_ep1_04c_mot_minh_ben_so_bia_xanh"
+    },
+    {
+      "id": "ch7_ep1_04a_vinh_canh_bao",
+      "type": "dialogue",
+      "location": "Phòng Trà Nhỏ sau Sảnh Chỉ Huy",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh — Viện Học thuyết",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "vinh" },
+          { "flag": "vinh_canh_bao_noi_bo" }
+        ]
+      },
+      "text": "Cửa phòng trà vừa khép, tôi không nói chuyện quân hàm Tứ Tinh vội đâu. Tôi chỉ nhắc lại điều từng cảnh báo cậu hồi cuối mùa đông: nhóm lợi ích xoay quanh Phạm Quang Hùng không dừng ở vài phiếu giao dầu đâu.\n\nHọ đang dùng chính sự phân tách giữa Bắc Vực và Long Vũ để cài người giữ khóa kho trung chuyển, ép cậu phải ký thông qua các gói thầu khẩn cấp trước phiên họp Hội Đồng. Chậm ba nhịp là mất nửa đội hình rồi đấy, nhưng ký bừa một tờ giấy trắng là mất cả lòng tin của hàng vạn người lính.\n\nCậu cứ nhìn lại mép những tập hồ sơ đặt trên bàn giao ban sáng nay mà xem. Từng trang được đóng gáy rất đẹp, nhưng phần phụ lục đối chiếu thực nhận ở ga tiền phương luôn bị kẹp xuống cuối cùng.\n\nLên tới ghế Thống Soái rồi, cậu thử tự hỏi xem: bốn ngôi sao trên vai là để cậu đứng cao hơn anh em, hay để cậu đủ sức che chắn cho người làm thật đứng vững trước đám hồ sơ giả?",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } },
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "flag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch7_ep1_05a_ha_bat_dong"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_05b_ha_ban_do_lien_vung"
+        }
+      ],
+      "next": "ch7_ep1_05c_bao_cao_y_te_tuyen_sach"
+    },
+    {
+      "id": "ch7_ep1_04b_vinh_hoi_tu_tinh",
+      "type": "dialogue",
+      "location": "Phòng Trà Nhỏ sau Sảnh Chỉ Huy",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh — Viện Học thuyết",
+      "mood": "calm",
+      "condition": { "charAlive": "vinh" },
+      "text": "Chúc mừng cậu bước vào hàng ngũ Tứ Tinh Thủ Hộ, dù nhìn quầng mắt của cậu thì đêm qua chắc lại thức trắng đối chiếu sổ trực tiếp vận rồi. Tôi gõ nhẹ đuôi bút lên mép bàn gỗ hỏi cậu một câu cũ thôi.\n\nHồi ở Quang Trung, tôi trao cuốn sổ bìa xanh cho một học viên chỉ cần nhớ tên mười hai người trong tiểu đội. Nay cậu cầm trong tay hai chiến khu với hàng chục vạn quân, cậu định giữ nguyên thói quen tự kiểm tra từng con số đến bao giờ?\n\nChậm ba nhịp là mất nửa đội hình rồi đấy, nhưng người đứng đầu một Liên Chiến Khu không thể tự mình chạy đi đóng từng con dấu nhỏ dưới bến phà. Việc của cậu là chọn đúng người để tin và gạt phăng những bức tường giấy đang chắn ngang đường họ.\n\nĐừng viết điều mình chưa làm được, nhưng cũng đừng ôm hết việc của lớp sĩ quan trẻ về bàn mình. Người thầy chỉ mong trò mình biết dựng được một đội ngũ kế nhiệm biết nói thật khi mình không có mặt ở đó.",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "flag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch7_ep1_05a_ha_bat_dong"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_05b_ha_ban_do_lien_vung"
+        }
+      ],
+      "next": "ch7_ep1_05c_bao_cao_y_te_tuyen_sach"
+    },
+    {
+      "id": "ch7_ep1_04c_mot_minh_ben_so_bia_xanh",
+      "type": "narration",
+      "location": "Hành lang Kính — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Không có bóng dáng quen thuộc của thầy Trần Quốc Vinh bên ấm trà nóng, căn phòng phụ sau sảnh chỉ huy bỗng rộng và lạnh hơn hẳn. Tôi tự tay rót một chén nước lọc nguội, mở cuốn sổ bìa xanh ra xem lại những dòng chữ viết tay từ hồi còn đứng gác dưới chân núi đá.\n\nCàng lên bậc chỉ huy cao hơn, khoảng cách giữa mặt giấy sạch sẽ trên bàn Hội Đồng và tiếng thở dốc ngoài chiến hào càng dễ bị kéo giãn thành hai thế giới xa lạ. Những cảnh báo về nhóm lợi ích hậu phương từ cuối mùa đông vẫn còn nguyên sức nặng trên từng trang hồ sơ chưa niêm phong.\n\nTôi khẽ vuốt phẳng góc trang giấy, cài lại cúc cổ áo có bốn ngôi sao bạc rồi quay trở vào phòng giao ban, nơi xấp báo cáo quân y đầu ngày đang chờ người ký duyệt.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "flag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch7_ep1_05a_ha_bat_dong"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_05b_ha_ban_do_lien_vung"
+        }
+      ],
+      "next": "ch7_ep1_05c_bao_cao_y_te_tuyen_sach"
+    },
+    {
+      "id": "ch7_ep1_05a_ha_bat_dong",
+      "type": "dialogue",
+      "location": "Bàn Giao Ban Hậu Cần Y Tế — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "flag": "ha_bat_dong_bac_vuc" }
+        ]
+      },
+      "text": "Tôi không tới đây để chúc mừng chức Thống Soái của Thủ trưởng. Tôi đặt thẳng bảng kiểm kê trạm xá tuyến Bắc Vực xuống bàn để ông nhìn cho rõ hậu quả từ quyết định cắt điện mùa đông vừa rồi.\n\nHai trạm phẫu thuật dã chiến vẫn đang chạy bằng máy phát chắp vá, dây sưởi phòng hồi sức đứt ba đoạn phải nối tạm bằng dây đồng trần. Cây bút chì 2B kẹp trên vành mũ tôi hôm nay không dùng để tô bản đồ đẹp nữa đâu, mà để gạch tên những hạng mục thuốc men bị giữ lại ở kho trung chuyển Khe Mây.\n\nNếu Liên Chiến Khu của ông tiếp tục coi trạm xá dân quân là phần thừa có thể hy sinh cho pháo binh, tôi xin phép chỉ giữ liên lạc công vụ thuần túy và gửi thẳng báo cáo độc lập lên ban thanh tra y tế.",
+      "effects": [
+        { "addStat": { "stat": "NhanTamDan", "delta": -2 } }
+      ],
+      "next": "ch7_ep1_06_choice_dinh_huong_ngay_dau"
+    },
+    {
+      "id": "ch7_ep1_05b_ha_ban_do_lien_vung",
+      "type": "dialogue",
+      "location": "Bàn Giao Ban Hậu Cần Y Tế — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } },
+          { "notFlag": "ha_bat_dong_bac_vuc" }
+        ]
+      },
+      "text": "Thống Soái xem nè, tôi rút cây bút chì 2B trên túi áo blouse ra nối luôn hai nét chì từ vùng cao Bắc Vực xuống tận các bến xuồng Long Vũ. Nhờ Thủ trưởng giữ nguồn điện trạm xá suốt mùa rét mà cả tuyến quân y giữ được tỷ lệ sống vượt dự kiến.\n\nĐặc biệt ở phía hạ lưu, những chuyến xe chở sách vở cho lớp học vùng xa mà Thủ trưởng cho phép ghép chuyến hồi tháng trước giờ kiêm luôn việc chở tủ thuốc sơ cấp cứu về tận xóm rìa đê. Dân họ nhớ mặt từng cậu lái xe một.\n\nNhưng từ đêm qua, toàn bộ tàu thuốc lên miền Bắc bị kẹt ở Khe Mây vì ban điều phối đòi đủ bốn con dấu mới cho bốc dỡ. Thống Soái mà không gỡ nút thắt hành chính này ngay sáng nay thì tuần tới các trạm xá đèo cao sẽ cạn kháng sinh đấy.",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": 1 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "next": "ch7_ep1_06_choice_dinh_huong_ngay_dau"
+    },
+    {
+      "id": "ch7_ep1_05c_bao_cao_y_te_tuyen_sach",
+      "type": "narration",
+      "location": "Bàn Giao Ban Hậu Cần Y Tế — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "calm",
+      "text": "Bản báo cáo tổng hợp từ Cục Quân y Liên Chiến Khu đặt ngay cạnh bức điện ngắn từ vùng hạ lưu Long Vũ. Ở những cụm dân cư ven sông, tuyến hậu cần ghép chuyến chở sách vở và dụng cụ y tế vẫn đang giữ nhịp cầu nối quý giá giữa quân đội với bà con vùng ngập.\n\nTuy vậy, dòng chữ đỏ ở trang cuối lại chỉ ra một thực trạng đáng lo ngại: hàng trăm thùng huyết tương, máy phát dự phòng và linh kiện sửa cầu phao đang nằm phơi sương tại bãi tập kết trung chuyển Khe Mây vì tranh cãi thẩm quyền giữa hai ban tiếp vận cũ.\n\nNếu không có một mệnh lệnh dứt khoát ngay trong ngày đầu tiếp quản Liên Chiến Khu, cả hai mặt trận sẽ tự làm nghẽn mạch máu của chính mình trước khi đối phương kịp nổ phát súng mới.",
+      "next": "ch7_ep1_06_choice_dinh_huong_ngay_dau"
+    },
+    {
+      "id": "ch7_ep1_06_choice_dinh_huong_ngay_dau",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Liên Chiến Khu — Buổi sáng ngày đầu",
+      "text": "Bốn đầu việc cấp bách đang đặt ngay trước mặt Thống Soái Hộ Tinh Chiến Tuyến trong giờ giao ban đầu tiên của Liên Chiến Khu. Bạn chọn ưu tiên mũi nhọn nào trước khi bước vào cuộc họp tham mưu trưa?",
+      "choices": [
+        {
+          "id": "c19_uu_tien_cap_thuoc_va_dien_tram_xa",
+          "label": "Ký lệnh khẩn mở kho dự trữ chiến lược, ưu tiên đưa máy phát và thuốc men qua nút Khe Mây lên các trạm xá tuyến đầu",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            { "addRel": { "char": "ha", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_07_hung_muon_khep_ho_so"
+        },
+        {
+          "id": "c19_phong_toa_so_lieu_chenh_lech",
+          "label": "Ban hành lệnh phong tỏa tạm thời toàn bộ sổ nhập xuất kho giữa Bắc Vực và Long Vũ để kiểm đếm lại từng tấn dầu",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "hung", "delta": -2 } }
+          ],
+          "next": "ch7_ep1_07_hung_muon_khep_ho_so"
+        },
+        {
+          "id": "c19_truc_tiep_thi_sat_bai_trung_chuyen",
+          "label": "Bỏ qua nghi thức đón tiếp, đi xe thiết giáp thẳng xuống trạm chuyển tải nghe sĩ quan thực địa báo cáo tại chỗ",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } }
+          ],
+          "next": "ch7_ep1_07_hung_muon_khep_ho_so"
+        },
+        {
+          "id": "c19_tung_bien_doi_san_uav_bien_gioi",
+          "label": "Điều động lực lượng phòng không tầm thấp lập hành lang quét sạch UAV trinh sát Thiết Phong quanh trục Khe Mây",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -1 } }
+          ],
+          "next": "ch7_ep1_07_hung_muon_khep_ho_so"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_07_hung_muon_khep_ho_so",
+      "type": "dialogue",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Trưa",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng — Phó Tham mưu trưởng",
+      "mood": "tense",
+      "text": "Chào mừng tân Thống Soái. Anh vừa từ cuộc họp trù bị Hội Đồng Thống Soái Tối Cao trở về đây để thống nhất vài điểm chốt hạ cùng cậu trước khi văn thư trình lên cấp trên.\n\nTrên bàn hội đồng người ta chỉ nhìn kết quả cuối, không ai đếm từng vỏ đạn hay từng lít dầu hao hụt dọc đường sắt đâu. Hiện tại Thiết Phong sắp tổng công kích vào khe hở giữa hai chiến khu, nên mọi cuộc điều tra hậu phương từ Chương VI cần được khép lại ngay để ổn định nhà thầu vận tải.\n\nCậu cứ nhìn xem: hai tuần qua các đội bốc xếp cảng biển đã phải chạy ba ca liên tục dưới mưa rét rồi. Nếu thêm thanh tra ngồi soi từng hóa đơn phụ tùng nữa thì xe nào dám chạy lên đèo?\n\nĐôi khi phải biết cắt bỏ một ngón tay để giữ cả bàn tay, cậu hiểu ý anh chứ? Đừng để vụ lùm xùm của bộ phận phản gián làm chậm ký duyệt ngân sách tháng này.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "rival" } }
+            ]
+          },
+          "next": "ch7_ep1_08a_quang_phe_hung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_08b_quang_chi_lo_hong_dau"
+        }
+      ],
+      "next": "ch7_ep1_08c_bang_ke_chenh_lech"
+    },
+    {
+      "id": "ch7_ep1_08a_quang_phe_hung",
+      "type": "dialogue",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Trưa",
+      "speaker": "quang",
+      "speakerTitle": "Đại tá Tham mưu Vũ Minh Quang",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "quang" },
+          { "charState": { "char": "quang", "state": "rival" } }
+        ]
+      },
+      "text": "Tôi xoay nắp bút máy ba vòng rồi xin phép trình bày thẳng theo số liệu mô phỏng của Ban Tổng hợp, thưa Thống Soái. Cảm tính không giữ nổi chốt đâu, đặc biệt khi toàn bộ Liên Chiến Khu đang vận hành sát ngưỡng công suất.\n\nNếu ta tiếp tục đình trệ dòng cung ứng để rà soát ngược lại các phiếu xuất kho cũ từ Long Vũ, xác suất thiếu hụt nhiên liệu ở Bắc Vực trong bốn mươi tám giờ tới sẽ vọt lên mức bốn mươi hai phần trăm. Tính bằng xác suất đi, cái giá của sự chậm trễ lớn hơn nhiều so với vài phần trăm sai số hành chính.\n\nTôi đề nghị Thống Soái chấp thuận phương án tạm gác mọi hồ sơ thanh tra nội bộ cho tới khi qua khỏi đợt phản công mùa xuân.",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": -1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              {
+                "any": [
+                  { "flag": "thao_bi_dinh_chi" },
+                  { "charState": { "char": "thao", "state": "discharged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_09a_thao_ngoai_hanh_lang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_09b_thao_xin_quyen_hoi_dong"
+        }
+      ],
+      "next": "ch7_ep1_09c_ho_so_phan_gian_khoa_kin"
+    },
+    {
+      "id": "ch7_ep1_08b_quang_chi_lo_hong_dau",
+      "type": "dialogue",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Trưa",
+      "speaker": "quang",
+      "speakerTitle": "Đại tá Tham mưu Vũ Minh Quang",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "quang" },
+          { "charState": { "char": "quang", "state": "alive" } }
+        ]
+      },
+      "text": "Khoan đã, trước khi bàn chuyện gác hồ sơ, tôi xoay nắp bút máy ba vòng rồi đặt bảng đối chiếu này lên bàn để cậu tự xem. Tôi làm việc theo số liệu, mà số liệu lần này không chịu nói dối thay cho ai hết.\n\nTính bằng xác suất đi: hao hụt vận chuyển đường thủy và đường sắt bình quân chỉ tối đa ba phần trăm. Vậy nhưng suốt hai tuần nay, lượng dầu diesel báo xuất từ cảng Long Vũ so với lượng thực nhận tại ga Bắc Vực chênh nhau tới mười bốn phần trăm — tương đương ba đoàn tàu chở nhiên liệu bốc hơi giữa đường.\n\nCảm tính không giữ nổi chốt đâu, nhưng một hệ thống bị rút ruột mười bốn phần trăm ngay trong mạch tiếp vận thì sớm muộn cũng tự sập trước khi Thiết Phong kịp bắn tới.",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": 1 } },
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              {
+                "any": [
+                  { "flag": "thao_bi_dinh_chi" },
+                  { "charState": { "char": "thao", "state": "discharged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_09a_thao_ngoai_hanh_lang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_09b_thao_xin_quyen_hoi_dong"
+        }
+      ],
+      "next": "ch7_ep1_09c_ho_so_phan_gian_khoa_kin"
+    },
+    {
+      "id": "ch7_ep1_08c_bang_ke_chenh_lech",
+      "type": "narration",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Trưa",
+      "mood": "tense",
+      "text": "Trong khi Phạm Quang Hùng vẫn giữ nụ cười điềm đạm quen thuộc, ánh mắt tôi dừng lại ở trang phụ lục thứ tư trong xấp bảng kê nhiên liệu vừa được bộ phận kiểm toán đặt xuống mép bàn. Con số tổng kết nhìn rất đẹp, nhưng cột đối chiếu giữa lượng dầu rời cảng Long Vũ và lượng dầu cập ga Bắc Vực lại lộ ra một khoảng chênh mười bốn phần trăm không có biên bản hao hụt.\n\nBa đoàn tàu nhiên liệu không thể tự dưng bốc hơi giữa trời đông nếu không có chữ ký thông đồng ở cả đầu bốc xếp lẫn trạm trung chuyển Khe Mây. Đó chính là lý do phe ông Hùng muốn khóa chặt cửa phòng Hội Đồng trước mặt bộ phận phản gián.\n\nTôi khép xấp tài liệu lại, bước ra phía hành lang nơi bóng dáng một sĩ quan quen thuộc đang lặng lẽ đứng đợi bên cạnh cửa thép.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              {
+                "any": [
+                  { "flag": "thao_bi_dinh_chi" },
+                  { "charState": { "char": "thao", "state": "discharged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_09a_thao_ngoai_hanh_lang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              { "charState": { "char": "thao", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_09b_thao_xin_quyen_hoi_dong"
+        }
+      ],
+      "next": "ch7_ep1_09c_ho_so_phan_gian_khoa_kin"
+    },
+    {
+      "id": "ch7_ep1_09a_thao_ngoai_hanh_lang",
+      "type": "dialogue",
+      "location": "Hành lang ngoài Phòng Họp Tham Mưu",
+      "speaker": "thao",
+      "speakerTitle": "Lê Phương Thảo (Đang bị đình chỉ công tác)",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "thao" },
+          {
+            "any": [
+              { "flag": "thao_bi_dinh_chi" },
+              { "charState": { "char": "thao", "state": "discharged" } }
+            ]
+          }
+        ]
+      },
+      "text": "Thống Soái không cần nhìn cầu vai trống của tôi đâu. Từ hôm ông ký giấy tạm đình chỉ ở cảng Long Vũ, tôi giao lại thẻ ra vào phòng mật rồi, chỉ giữ đúng một thứ không ai thu hồi được: bản sao các cuống phiếu có dấu mực ướt.\n\nTôi gấp đôi góc tờ hồ sơ mật đặt lên bệ cửa sổ trước mặt đồng chí. Giấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được — trong số ba đoàn tàu dầu mất tích tuần qua, có hai lệnh điều chuyển mang cùng một nét ký tắt từ văn phòng Phó Tham mưu trưởng.\n\nNếu đồng chí còn giữ được quyền Tứ Tinh cho sự thật, hãy phục chức cho tôi ngay hôm nay để tôi mang xấp chứng từ này đứng thẳng trước Hội Đồng Thống Soái Tối Cao.",
+      "next": "ch7_ep1_10_choice_xu_ly_thao"
+    },
+    {
+      "id": "ch7_ep1_09b_thao_xin_quyen_hoi_dong",
+      "type": "dialogue",
+      "location": "Phòng Lưu Trữ Hồ Sơ Mật — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "thao" },
+          { "charState": { "char": "thao", "state": "alive" } }
+        ]
+      },
+      "text": "Nhờ Thống Soái giữ lưng cho hồi ở Long Vũ mà mạng lưới phản gián của tôi mới kịp khóa được mắt xích cuối cùng tại ga trung chuyển Khe Mây đêm qua. Nhưng sáng nay, thư ký của ông Phạm Quang Hùng đã gửi văn bản chặn tên tôi khỏi danh sách báo cáo trước Hội Đồng Tối Cao.\n\nTôi gấp đôi góc tờ hồ sơ mật đặt xuống mặt bàn thép. Giấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được — mọi cuống phiếu xuất khống ba đoàn tàu dầu vừa qua đều dẫn thẳng về nhóm cố vấn hậu cần thân cận nhất của ông Hùng.\n\nTôi cần một lệnh ủy quyền trực tiếp mang dấu Thống Soái để bước vào phòng họp Hội Đồng sắp tới, bất chấp việc nhóm lợi ích sẽ phản đòn ngay tại mặt trận tiếp vận.",
+      "next": "ch7_ep1_10_choice_xu_ly_thao"
+    },
+    {
+      "id": "ch7_ep1_09c_ho_so_phan_gian_khoa_kin",
+      "type": "narration",
+      "location": "Phòng Lưu Trữ Hồ Sơ Mật — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Trên bàn thép lạnh của phòng lưu trữ mật, chiếc cặp hồ sơ phản gián ghi tên Lê Phương Thảo nằm yên lặng dưới dải niêm phong hai lớp. Thiếu vắng người sĩ quan sắc sảo từng lần theo từng nét chữ ký giả, cả bộ máy thanh tra giờ chỉ còn những báo cáo sơ bộ rời rạc.\n\nTuy vậy, những mảnh chứng từ cô kịp để lại vẫn chỉ rõ một lỗ hổng lớn ngay tại trạm trung chuyển Khe Mây, nơi những toa dầu vừa được ký duyệt gấp rút biến mất khỏi sổ nhận của mặt trận Bắc Vực.\n\nPhạm Quang Hùng đang đứng ngoài hành lang chờ quyết định của tôi: hoặc tiếp tục chôn chặt vụ việc để đổi lấy sự êm ấm giả tạo trước giờ Hội Đồng, hoặc mở khóa cuộc điều tra ngay bằng thực lực của chính mình.",
+      "next": "ch7_ep1_10_choice_xu_ly_thao"
+    },
+    {
+      "id": "ch7_ep1_10_choice_xu_ly_thao",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Liên Chiến Khu — Buổi trưa",
+      "text": "Chiếc bút ký lệnh nằm ngay bên tập hồ sơ mật gấp góc và văn bản đề nghị khép án từ Phạm Quang Hùng. Quyết định của bạn lúc này sẽ định đoạt số phận đường dây phản gián trước phiên họp Hội Đồng Tối Cao.",
+      "choices": [
+        {
+          "id": "c19_phuc_chuc_thao_trinh_hoi_dong",
+          "label": "Ký lệnh phục chức và bảo vệ toàn quyền cho Lê Phương Thảo, đưa thẳng hồ sơ chứng từ vào chương trình nghị sự Hội Đồng Tối Cao",
+          "condition": { "charAlive": "thao" },
+          "effects": [
+            { "setCharState": { "char": "thao", "state": "alive" } },
+            { "setFlag": "phuc_chuc_thao_hoi_dong" },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "thao", "delta": 5 } },
+            { "addRel": { "char": "hung", "delta": -5 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_ep1_phuc_chuc_thao",
+                "title": "Phục chức Lê Phương Thảo trước Hội Đồng",
+                "entry": "Khôi phục đầy đủ quyền hạn phản gián cho Lê Phương Thảo và đưa tập chứng từ gian lận tiếp vận lên Hội Đồng Thống Soái Tối Cao."
+              }
+            }
+          ],
+          "next": "ch7_ep1_11a_phuc_chuc_thao"
+        },
+        {
+          "id": "c19_giao_thao_kiem_toan_ngam_khe_may",
+          "label": "Khôi phục công tác âm thầm cho Thảo xuống thẳng ga Khe Mây thu thập thêm tang vật, chưa vội đối đầu công khai với phe Hùng tại Hội Đồng",
+          "condition": { "charAlive": "thao" },
+          "effects": [
+            { "setCharState": { "char": "thao", "state": "alive" } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addRel": { "char": "thao", "delta": 1 } },
+            { "addRel": { "char": "hung", "delta": -1 } }
+          ],
+          "next": "ch7_ep1_11b_thao_kiem_toan_ngam"
+        },
+        {
+          "id": "c19_gac_ho_so_giu_on_dinh_nha_thau",
+          "label": "Chấp thuận đề nghị của Phạm Quang Hùng: đóng băng hồ sơ phản gián qua mùa chiến dịch để bảo đảm các nhà thầu tiếp vận không đình trệ nguồn dầu",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            { "addRel": { "char": "hung", "delta": 4 } },
+            { "addRel": { "char": "thao", "delta": -4 } }
+          ],
+          "next": "ch7_ep1_11c_uu_tien_dong_dau_hung"
+        },
+        {
+          "id": "c19_lap_to_thanh_tra_si_quan_thuc_dia",
+          "label": "Tự lập tổ thanh tra liên khu gồm các sĩ quan chiến trường kiểm tra chéo thẳng sổ kho cảng và ga tàu, không phụ thuộc phe phái tham mưu",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addRel": { "char": "hung", "delta": -3 } }
+          ],
+          "next": "ch7_ep1_11d_to_thanh_tra_thuc_dia"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_11a_phuc_chuc_thao",
+      "type": "dialogue",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Đầu giờ chiều",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "calm",
+      "condition": { "charAlive": "thao" },
+      "text": "Rõ, thưa Thống Soái. Tôi nhận lại thẻ công vụ và lệnh triệu tập chính thức lên Hội Đồng Tối Cao trước mặt toàn bộ ban tham mưu. Tôi vừa gấp đôi góc tờ quyết định phục chức kẹp ngay trang đầu tập hồ sơ mật rồi.\n\nNhìn nét mặt tái đi nửa nhịp của các đầu mối nhà thầu khi nghe thông báo phục chức là tôi biết mình đã chạm đúng huyệt. Chiều nay có thể một vài chuyến xe dân sự sẽ viện cớ trục trặc kỹ thuật để gây sức ép ngược lại lên nguồn tiếp tế.\n\nTôi đã cho kích hoạt đội kiểm toán độc lập bám sát các kho cảng Long Vũ lẫn ga đầu mối Bắc Vực để khóa mọi đường tẩu tán sổ sách trước giờ khai mạc Hội Đồng.\n\nTừ giờ phút này, không còn chữ ký giả nào lọt qua được cửa Khe Mây nữa. Hẹn gặp Thống Soái tại phiên đối chất Hội Đồng sắp tới.",
+      "next": "ch7_ep1_12_dispatch_khe_may"
+    },
+    {
+      "id": "ch7_ep1_11b_thao_kiem_toan_ngam",
+      "type": "dialogue",
+      "location": "Hành lang bên Phòng Lưu Trữ Mật",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": { "charAlive": "thao" },
+      "text": "Tôi hiểu toan tính giữ ổn định đường tiếp vận trước giờ giao tranh của Thống Soái, dù cách đi đường vòng này đồng nghĩa tôi chưa thể đặt chứng từ lên bàn Hội Đồng ngay.\n\nTôi sẽ nhận quyết định khôi phục vị trí để xuống thẳng bãi trung chuyển Khe Mây ngay chiều nay, đối chiếu trực tiếp từng toa dầu ngoài thực địa thay vì ngồi đợi ở thủ đô. Tôi gấp đôi góc tờ hồ sơ mật cất lại vào túi áo trong rồi.\n\nNhưng xin Thủ trưởng nhớ giúp một điều: kẻ đục khoét ở hậu phương không chịu đứng yên chờ ta dọn xong mặt trận mới lộ mặt đâu. Nếu không đưa vụ việc ra ánh sáng sớm, chính chúng ta sẽ phải trả giá bằng một cuộc phản kích từ sau lưng.",
+      "next": "ch7_ep1_12_dispatch_khe_may"
+    },
+    {
+      "id": "ch7_ep1_11c_uu_tien_dong_dau_hung",
+      "type": "narration",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Đầu giờ chiều",
+      "mood": "somber",
+      "text": "Khi tôi đặt bút ký lệnh tạm hoãn thanh tra hồ sơ tiếp vận, Phạm Quang Hùng khẽ gật đầu hài lòng rồi ra hiệu cho trợ lý chuyển ngay danh sách điều xe tăng cường về các nhà thầu duyên hải. Trong vòng nửa giờ, các đầu mối vận tải dân sự đồng loạt báo cáo sẵn sàng khởi hành.\n\nThế nhưng bầu không khí quanh bàn họp bỗng chùng xuống nặng nề. Những sĩ quan trẻ từng mất đồng đội vì thiếu đạn ở mùa chiến dịch trước nhìn thẳng xuống mặt kính sa bàn, không ai nói thêm lời nào.\n\nTừ ô cửa kính nhìn xuống sân cơ quan, bóng một vài cán bộ thanh tra lặng lẽ xếp lại cặp tài liệu niêm phong và rời khỏi hành lang trung tâm không một tiếng chào.\n\nDòng dầu có thể sẽ chảy nhanh hơn trong hôm nay, nhưng cái giá phải trả cho sự im lặng ấy đang lặng lẽ tích tụ thành món nợ trước phiên tòa kỷ luật sắp tới.",
+      "next": "ch7_ep1_12_dispatch_khe_may"
+    },
+    {
+      "id": "ch7_ep1_11d_to_thanh_tra_thuc_dia",
+      "type": "narration",
+      "location": "Phòng Họp Tham Mưu Cấp Cao — Đầu giờ chiều",
+      "mood": "tense",
+      "text": "Tôi gạt sang một bên cả tờ đề nghị khép án lẫn các tranh cãi hành lang, ký thành lập Tổ Kiểm Tra Thực Địa Liên Khu gồm những đại đội trưởng vừa từ trận địa Bắc Vực và Long Vũ về tăng cường. Không ai hiểu số thùng dầu và số hòm đạn thật hơn chính những người trực tiếp mở hòm dưới làn pháo.\n\nPhạm Quang Hùng thoáng nhíu mày khi thấy quyền giám sát trượt khỏi tay bộ phận tham mưu hậu phương, nhưng không thể phản bác trước lý do kiểm đếm tác chiến khẩn cấp.\n\nChỉ trong mười lăm phút, ba sĩ quan thực địa đã mang theo cân định lượng và sổ trực gốc lên xe thiết giáp chạy thẳng về phía nút giao đường sắt Khe Mây.\n\nChưa đầy hai mươi phút sau khi tổ kiểm tra lên xe rời Sở Chỉ Huy, hồi còi báo động chiến thuật bất ngờ rền vang từ màn hình tác chiến điện tử.",
+      "next": "ch7_ep1_12_dispatch_khe_may"
+    },
+    {
+      "id": "ch7_ep1_12_dispatch_khe_may",
+      "type": "dispatch",
+      "location": "Trung Tâm Tác Chiến Điện Tử — 13 giờ 15 phút",
+      "mood": "urgent",
+      "text": "[BÁO ĐỘNG ĐỎ TÁC CHIẾN LIÊN KHU — ĐỘ KHẨN: TỐI ĐA]\n\n\"Nút giao đường sắt và bến phà Khe Mây — điểm nối huyết mạch giữa Long Vũ và Bắc Vực — vừa bị các phân đội biệt kích kết hợp UAV cảm tử Thiết Phong tập kích đồng loạt. Hai sà lan chở nhiên liệu đang bốc cháy sát cầu phao.\"\n\n\"Cùng lúc, trạm radar duyên hải báo cáo phát hiện tín hiệu một lữ đoàn thiết giáp địch đang áp sát cửa sông Long Vũ. Hai chiến khu đồng thời xin chỉ thị phân bổ lực lượng phòng không và xe vận tải.\"",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": -2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "linh" },
+              { "notFlag": "linh_hi_sinh_tram_radar" }
+            ]
+          },
+          "next": "ch7_ep1_13a_linh_bat_nhip_nhieu_song"
+        }
+      ],
+      "next": "ch7_ep1_13b_giai_ma_bang_dong_cu"
+    },
+    {
+      "id": "ch7_ep1_13a_linh_bat_nhip_nhieu_song",
+      "type": "dialogue",
+      "location": "Phòng Giải Mã Vô Tuyến — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "urgent",
+      "condition": {
+        "all": [
+          { "charAlive": "linh" },
+          { "notFlag": "linh_hi_sinh_tram_radar" }
+        ]
+      },
+      "text": "Thống Soái nhìn kỹ phổ sóng ở màn hình bên trái nè! Ngón tay em vừa gõ lại nhịp Morse thử trễ ba mili-giây theo đúng bảng mã cũ thì phát hiện toàn bộ vệt tín hiệu thiết giáp ở cửa biển Long Vũ đều lặp chu kỳ hoàn hảo không một tạp âm gió biển.\n\nSóng sạch quá mới là sóng có bẫy đó anh! Hắc Ưng đang phóng xung giả lập để dụ pháo binh và không quân của mình dồn hết về bờ biển, bỏ trống bầu trời trên đầu nút giao Khe Mây.\n\nMục tiêu thật duy nhất trong sáu giờ tới chính là bẻ gãy cổ chai Khe Mây để cô lập Bắc Vực khỏi Long Vũ. Anh đừng tin đám dấu đỏ ngoài vịnh kia mà chia mỏng lực lượng nhé!",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 2 } },
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "notFlag": "bay_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_14a_bay_goi_tu_ben_pha"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "tam" },
+              { "notFlag": "tam_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_14b_tam_goi_tu_xa_lan"
+        },
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch7_ep1_14c_loc_giu_cau_phao"
+        }
+      ],
+      "next": "ch7_ep1_14d_bao_cao_un_tac_khe_may"
+    },
+    {
+      "id": "ch7_ep1_13b_giai_ma_bang_dong_cu",
+      "type": "narration",
+      "location": "Phòng Giải Mã Vô Tuyến — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "somber",
+      "text": "Giữa tiếng chuông báo động réo gắt, tôi sải bước tới bàn máy vô tuyến, đặt tay lên bản sao Bảng Mã Morse Khắc Đồng mà Trần Mỹ Linh từng giữ đến hơi thở cuối cùng trên đỉnh núi Bắc Vực. Cậu sĩ quan thông tin trẻ đang toát mồ hôi nhìn hai cụm tín hiệu đỏ rực trên màn hình.\n\nNhớ lại câu nói cũ của Linh rằng sóng sạch quá mới là sóng có bẫy, tôi yêu cầu tổ kỹ thuật đo độ nhiễu nền của từng tín hiệu ven biển. Chỉ sau chín mươi giây đối chiếu, chân tướng lộ ra: đoàn thiết giáp ngoài cửa sông Long Vũ không có tạp âm động cơ thủy lực mà chỉ là xung giả lập.\n\nToàn bộ hỏa lực thật của Hắc Ưng đang trút xuống nút giao Khe Mây — nơi hàng chục đoàn xe và sà lan của hai chiến khu đang ùn ứ chờ lệnh thông tuyến.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "notFlag": "bay_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_14a_bay_goi_tu_ben_pha"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "tam" },
+              { "notFlag": "tam_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_14b_tam_goi_tu_xa_lan"
+        },
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch7_ep1_14c_loc_giu_cau_phao"
+        }
+      ],
+      "next": "ch7_ep1_14d_bao_cao_un_tac_khe_may"
+    },
+    {
+      "id": "ch7_ep1_14a_bay_goi_tu_ben_pha",
+      "type": "dialogue",
+      "location": "Đầu sóng Vô tuyến — Bến Phà Khe Mây",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "urgent",
+      "condition": {
+        "all": [
+          { "charAlive": "bay" },
+          { "notFlag": "bay_hi_sinh_thien_lang" }
+        ]
+      },
+      "text": "Alô! Thống Soái nghe rõ bên bến phà Khe Mây không chú em?! Cối địch nó rải sát mép sông làm cháy hai sà lan dầu ở đầu bến rồi, khói đen bít hết đường nhìn!\n\nMà tức muốn nổ phổi là hai mươi chiếc xe tải chở đạn với thuốc men của tui nổ máy sẵn sàng chạy đường vòng hết trơn, vậy mà trạm gác giao liên cứ giữ lại không cho qua phà vì chưa thấy biên bản hiệp đồng hai chiến khu đóng dấu đỏ!\n\nMấy cậu tài xế trẻ dưới này đứng ngồi không yên dưới làn đạn pháo, có cậu mới hai mươi tuổi đã phải tự tay lấy bạt ướt dập lửa trên thùng xe kế bên.\n\nTui nhai đại viên kẹo gừng trong hộp táp-lô cho đỡ khát cổ rồi nè. Đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người — chứ cứ đứng chôn chân chờ giấy họp trên đó là tụi nó bằm nát cả đoàn xe dưới bến này mất!",
+      "effects": [
+        { "addRel": { "char": "bay", "delta": 1 } }
+      ],
+      "next": "ch7_ep1_15_hung_doi_hop_bon_ben"
+    },
+    {
+      "id": "ch7_ep1_14b_tam_goi_tu_xa_lan",
+      "type": "dialogue",
+      "location": "Đầu sóng Vô tuyến — Bến Sà Lan Khe Mây",
+      "speaker": "tam",
+      "speakerTitle": "Chuẩn úy hậu cần Trần Văn Tám",
+      "mood": "urgent",
+      "condition": {
+        "all": [
+          { "charAlive": "tam" },
+          { "notFlag": "tam_hi_sinh_thien_lang" }
+        ]
+      },
+      "text": "Thống Soái ơi, tui là Tám anh nuôi dưới bến Khe Mây đây! Đạn pháo nó đánh trúng bến dầu phía Đông rồi, anh em phải lấy bạt ướt trùm kín mấy kiện lương khô với bông băng mới nhập từ Long Vũ lên!\n\nDân chài quanh bến kéo cả xuồng máy ra phụ tụi tui tản hàng vô rạch nhỏ, vậy mà mấy ông trực ban hậu cần cứ gào qua loa bắt đứng nguyên vị trí chờ điện xác nhận đổi tuyến từ phòng họp 14 giờ chiều nay!\n\nMấy thùng thuốc cho trạm xá trên đèo cao mà ẩm ướt hay cháy rụi dưới bến này thì tội anh em thương binh trên đó lắm chú em ơi. Cơm nguội ngoài chiến hào tụi tui vá được, chứ máu lính chảy rồi không vá bằng kim chỉ nổi đâu.\n\nTui giữ hộp kim chỉ trong túi ngực mà tay run không phải vì sợ đạn, mà tức vì hàng nằm phơi mưa lửa giữa đồng không mông quạnh chỉ để đợi một tờ giấy hẹn họp!",
+      "effects": [
+        { "addRel": { "char": "tam", "delta": 1 } }
+      ],
+      "next": "ch7_ep1_15_hung_doi_hop_bon_ben"
+    },
+    {
+      "id": "ch7_ep1_14c_loc_giu_cau_phao",
+      "type": "dialogue",
+      "location": "Đầu sóng Vô tuyến — Cầu Phao Khe Mây",
+      "speaker": "loc",
+      "speakerTitle": "Đại úy Công binh Bùi Văn Lộc",
+      "mood": "urgent",
+      "condition": { "charAlive": "loc" },
+      "text": "Báo cáo Thống Soái, tôi là Bùi Văn Lộc đang giữ cầu phao số 2 tại Khe Mây! Một nhịp phao phía Bắc vừa dính mảnh UAV nhưng tổ công binh đã neo giữ xong, xe nặng vẫn qua được từng chiếc một.\n\nVấn đề không nằm ở dây neo cầu đâu anh — chỗ dây này em cột chặt rồi! Khó nhất là đoàn xe từ Long Vũ lên và đoàn xe từ Bắc Vực xuống đang kẹt cứng hai đầu bờ vì lệnh vận chuyển của hai chiến khu chưa khớp giờ nhường đường.\n\nTrên đầu cầu bây giờ khói dầu mù mịt, các khẩu đội phòng không tầm thấp đang phải bắn chặn liên tục để che cho bến phà. Chỉ cần giữ nguyên thế ùn ứ thêm ba mươi phút nữa là cả dải bờ sông sẽ thành mồi ngon cho pháo tầm xa.\n\nNếu anh cho phép chỉ huy tại bến tự bắt tay điều phối thẳng với đội trưởng xe Bắc Vực mà khỏi chờ cuộc họp giấy ở Sở Chỉ Huy, tụi em giải tỏa hết nút nghẽn này trong vòng hai mươi phút!",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch7_ep1_15_hung_doi_hop_bon_ben"
+    },
+    {
+      "id": "ch7_ep1_14d_bao_cao_un_tac_khe_may",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "urgent",
+      "text": "Trên loa vô tuyến dã chiến, tiếng còi xe tải dồn dập hòa lẫn tiếng pháo nổ sát mặt sông Khe Mây. Đội trưởng công binh giữ cầu phao báo cáo khẩn rằng cầu vẫn chịu được tải trọng nhưng hơn bốn mươi xe tiếp vận từ hai chiến khu đang ùn ứ hai bên bờ.\n\nNguyên nhân không phải do địa hình sạt lở mà do trạm điều hành địa phương vẫn đang bị trói bởi quy trình cũ: mọi thay đổi lộ trình liên vùng phải chờ cuộc họp hiệp đồng bốn bên lúc 14 giờ ký biên bản phân định trách nhiệm.\n\nTrong tiếng rè rè của sóng ngắn, giọng các sĩ quan trực bến bắt đầu khản đặc vì phải gào lệnh phân luồng bằng miệng dưới làn mảnh đạn rơi lả tả xuống mặt nước.\n\nMỗi phút đứng chờ thủ tục giữa bãi đất trống bên cầu phao là thêm một cơ hội để những chiếc UAV trinh sát của Hắc Ưng khóa tọa độ vào đoàn xe.",
+      "next": "ch7_ep1_15_hung_doi_hop_bon_ben"
+    },
+    {
+      "id": "ch7_ep1_15_hung_doi_hop_bon_ben",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Trung Tâm — 13 giờ 30 phút",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng — Phó Tham mưu trưởng",
+      "mood": "tense",
+      "text": "Thống Soái hãy cân nhắc kỹ trước khi phá bỏ quy trình chỉ huy hợp đồng. Phiên họp bốn bên lúc 14 giờ chiều nay đã có lịch từ Bộ Tổng Tham Mưu để xác lập rõ trách nhiệm pháp lý nếu hàng hóa thất thoát dọc đường.\n\nNếu cậu để hai chiến khu tự ý đổi lộ trình và chia hàng theo báo cáo miệng từ bến phà, lỡ xảy ra cháy nổ hoặc nhầm lẫn đơn vị nhận dầu thì ai là người chịu kỷ luật trước Hội Đồng Thống Soái? Đừng biến bộ máy chính quy thành một bến chợ mạnh ai nấy chạy.\n\nHơn nữa, các biên bản đối chiếu ngân sách của Hội Đồng đều dựa trên chữ ký hiệp đồng bốn cửa. Phá lệ hôm nay có nghĩa là ngày mai cậu tự đứng trước ban kiểm tra mà không có bất kỳ văn bản bảo vệ nào.\n\nChỉ còn ba mươi phút nữa là các cục trưởng có mặt đủ. Giữ nguyên lệnh chờ họp là cách an toàn nhất cho chiếc ghế Tứ Tinh của cậu đấy.",
+      "next": "ch7_ep1_16_choice_gach_bo_cuoc_hop"
+    },
+    {
+      "id": "ch7_ep1_16_choice_gach_bo_cuoc_hop",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Trung Tâm — 13 giờ 35 phút",
+      "text": "Trên bảng lịch công tác treo tường, dòng chữ '14:00 — Họp hiệp đồng tiếp vận 4 bên' nằm ngay cạnh tiếng kêu cứu dồn dập từ bến phà Khe Mây.\n\nPhạm Quang Hùng đứng khoanh tay chờ chữ ký duy trì quy trình hành chính, trong khi dưới bến sông từng đoàn xe chở đạn và thuốc men đang phơi mình dưới làn trinh sát của Khối Thiết Phong. Bạn ra lệnh thế nào?",
+      "choices": [
+        {
+          "id": "c19_gach_bo_hop_tu_phoi_hop",
+          "label": "Cầm bút chì đỏ gạch phăng lịch họp 14 giờ, ra lệnh cho Bắc Vực và Long Vũ tự phối hợp trực tiếp qua sóng chỉ huy dã chiến ngay lập tức",
+          "effects": [
+            { "setFlag": "gach_bo_cuoc_hop_tu_phoi_hop" },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "hung", "delta": -3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_ep1_gach_bo_cuoc_hop",
+                "title": "Gạch bỏ cuộc họp giấy — Hai chiến khu tự phối hợp",
+                "entry": "Xóa bỏ cuộc họp thủ tục lúc 14 giờ, trao quyền trực tiếp cho chỉ huy thực địa Bắc Vực và Long Vũ mở đường qua Khe Mây."
+              }
+            }
+          ],
+          "next": "ch7_ep1_17a_gach_bo_hop_tu_phoi_hop"
+        },
+        {
+          "id": "c19_lenh_khan_muoi_phut",
+          "label": "Biến cuộc họp thành lệnh đứng mười phút: ép các cục trưởng ký giấy trắng ủy quyền ngay tại chỗ để hai chiến khu lập tức điều xe",
+          "effects": [
+            { "setFlag": "gach_bo_cuoc_hop_tu_phoi_hop" },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_17b_lenh_khan_muoi_phut"
+        },
+        {
+          "id": "c19_giu_cuoc_hop_14_gio",
+          "label": "Tuân thủ điều lệnh chính quy: giữ đoàn xe tản vào lùm cây chờ đúng cuộc họp 14 giờ thông qua biên bản phân bổ trách nhiệm",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -5 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } },
+            { "addRel": { "char": "hung", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_17c_sa_lay_cuoc_hop_ba_gio"
+        },
+        {
+          "id": "c19_giao_hai_tu_lenh_vung_tu_xu_ly",
+          "label": "Không hủy cũng không dự họp, chuyển thẳng quyền quyết định cho hai Tư lệnh vùng tự thu xếp mà không phát lệnh thống nhất từ Trung tâm",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -1 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } }
+          ],
+          "next": "ch7_ep1_17d_giao_tu_chu_hai_dau"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_17a_gach_bo_hop_tu_phoi_hop",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — 13 giờ 38 phút",
+      "mood": "warm",
+      "text": "Mũi bút chì đỏ vạch một đường dứt khoát xuyên ngang dòng chữ họp giao ban trên bảng kính. Tôi mở thẳng kênh vô tuyến chung giữa sở chỉ huy tiền phương Bắc Vực và quân cảng Long Vũ, tuyên bố hủy toàn bộ thủ tục xác nhận giấy trong vòng bảy mươi hai giờ.\n\nChỉ cần hai đầu thực địa khớp tần số và báo cáo trực tiếp từng đoàn xe lăn bánh, mọi chữ ký hợp thức hóa sẽ do chính Thống Soái chịu trách nhiệm sau chiến dịch. Tiếng thở phào vang lên ngay từ bến phà Khe Mây qua sóng radio dã chiến.\n\nNgay lập tức, đội trưởng xe vận tải từ Long Vũ và sĩ quan điều phối tuyến sắt Bắc Vực bắt đầu gọi tên nhau trực tiếp trên sóng mở, tự phân chia xe chở thuốc đi trước, xe chở đạn bám sau theo đúng nhịp pháo kích giãn cách.\n\nChưa đầy mười phút sau, các tổ công binh đã hạ chắn barie, cho từng xe tải nối đuôi nhau vượt cầu phao giữa lúc sương chiều vừa sà xuống mặt sông.",
+      "next": "ch7_ep1_18_hac_ung_don_kep"
+    },
+    {
+      "id": "ch7_ep1_17b_lenh_khan_muoi_phut",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — 13 giờ 45 phút",
+      "mood": "tense",
+      "text": "Không ai được phép ngồi xuống ghế da. Tôi triệu tập gấp bốn trưởng ban có mặt tại chỗ, đặt tờ lệnh trống lên mặt kính sa bàn và cho đúng mười phút để bàn giao quyền điều phối trực tiếp xuống hai đầu chiến khu.\n\nTrước ánh nhìn lạnh băng của bốn ngôi sao Tứ Tinh, những lý do xin lùi giờ của văn phòng tham mưu lập tức tắt ngấm. Đúng 13 giờ 45 phút, bức điện giải phóng nút Khe Mây được phát đi đồng thời bằng cả sóng ngắn lẫn đường dây cáp quang dự phòng.\n\nTrên bảng theo dõi điện tử, từng chấm xanh biểu thị các phân đội xe tải bắt đầu tách hàng khỏi bãi đất trống ven sông, len theo những khúc cua ven vách đá hướng thẳng lên cửa đèo phía Bắc.\n\nCác đoàn xe vận tải bắt đầu rồ máy tách khỏi bãi tập kết chỉ vài phút trước khi đợt trinh sát điện tử tiếp theo của đối phương quét qua thung lũng.",
+      "next": "ch7_ep1_18_hac_ung_don_kep"
+    },
+    {
+      "id": "ch7_ep1_17c_sa_lay_cuoc_hop_ba_gio",
+      "type": "narration",
+      "location": "Phòng Họp Lớn — Sở Chỉ Huy Liên Chiến Khu, 15 giờ 30 phút",
+      "mood": "somber",
+      "text": "Cuộc họp 14 giờ khởi đầu bằng nửa tiếng chờ đại diện Cục Nhiên liệu từ sân bay về muộn, rồi kéo dài lê thê qua từng điều khoản quy trách nhiệm hao hụt dọc tuyến sắt. Phạm Quang Hùng chăm chú ghi biên bản rất ngay ngắn, từng chữ ký nháy được chuyển vòng qua năm bàn tay.\n\nNgoài cửa kính hai lớp, mặt trời đã ngả bóng xuống thung lũng trong khi dưới Khe Mây hơn bốn mươi xe tải vẫn tắt máy nép dưới hàng cây chịu trận pháo cầm chừng của địch. Nhiều tài xế trẻ gửi điện xin lệnh rời bến lần thứ tư mà vẫn chỉ nhận được dòng chữ 'Chờ kết luận phiên họp'.\n\nMỗi lần một đại biểu đứng lên tranh luận về tỷ lệ khấu hao lốp xe, tim tôi lại thắt lại khi nghe tiếng rì rì từ màn hình radar ghi nhận độ cao của các tổ bay địch đang dần hạ xuống hướng sông.\n\nKhi tờ biên bản cuối cùng vừa ráo mực, còi báo động từ trạm radar tiền phương bỗng hú dài cắt ngang tiếng bút đặt xuống bàn.",
+      "next": "ch7_ep1_18_hac_ung_don_kep"
+    },
+    {
+      "id": "ch7_ep1_17d_giao_tu_chu_hai_dau",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — Chiều muộn",
+      "mood": "tense",
+      "text": "Quyết định nhả dây cương từ trung tâm giúp hai chiến khu bớt được một tầng giấy tờ, nhưng thiếu đi bàn tay điều tiết chung ở Khe Mây khiến đội hình xe Bắc Vực và đội xà lan Long Vũ giẫm chân lên nhau trong giờ đầu tiên.\n\nXe từ núi xuống đòi qua cầu trước để kịp ca bảo dưỡng, trong khi đoàn xe chở thuốc từ cảng lên lại chiếm mất lối vào bến phà duy nhất. Phải mất gần một giờ cãi vã qua điện đài, các sĩ quan tại chỗ mới tự chia được lượt đi lẻ và lượt đi chẵn.\n\nDưới mặt sông đục ngầu, hai chiếc sà lan tiếp tế phải quay đầu giữa dòng nước xoáy để nhường đường cho xe kéo pháo đang lùi dốc xuống mép cầu phao.\n\nKhoảng thời gian chệch nhịp ấy vừa đủ để máy bay trinh sát tầm cao của Thiết Phong chụp trọn tọa độ đoạn đường tiếp cận bờ sông.",
+      "next": "ch7_ep1_18_hac_ung_don_kep"
+    },
+    {
+      "id": "ch7_ep1_18_hac_ung_don_kep",
+      "type": "dispatch",
+      "location": "Phòng Tác Chiến Trung Tâm — 16 giờ 05 phút",
+      "mood": "urgent",
+      "text": "[BỨC ĐIỆN MÃ HÓA CHẶN ĐƯỢC TỪ ĐÀI CHỈ HUY THIẾT PHONG — TÍN HIỆU: HẮC ƯNG]\n\n\"Xác suất đứt gãy trục vận tải Khe Mây đạt mức 68% trong khung giờ hoàng hôn. Các tổ UAV cảm tử đánh thẳng vào cầu phao số 2; đồng thời pháo tầm xa khóa chặt dốc đường sắt dẫn lên Bắc Vực.\"\n\n\"Gửi Bộ Tư Lệnh Liên Chiến Khu đối phương: Mọi hệ thống lớn đều gãy tại khớp nối hẹp nhất. Hãy xem trong 18 giờ tới, các ông giữ được núi hay giữ được sông.\"",
+      "next": "ch7_ep1_19_choice_khan_cap_khe_may"
+    },
+    {
+      "id": "ch7_ep1_19_choice_khan_cap_khe_may",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Liên Chiến Khu — 16 giờ 06 phút (KHẨN CẤP)",
+      "timedSeconds": 15,
+      "timeoutChoiceId": "c19_giu_nguyen_phuong_an_cu",
+      "text": "Bốn mươi xe tải, ba đoàn tàu dầu và sà lan quân y đang nằm trong tầm ngắm của bầy UAV cảm tử Thiết Phong lao xuống Khe Mây! Chỉ còn 15 giây để phát lệnh phản ứng!",
+      "choices": [
+        {
+          "id": "c19_mo_tuyen_duong_vong_ket_hop",
+          "label": "Ra lệnh tản sà lan vào các rạch phụ Long Vũ nối tuyến dân sinh, cho xe tải chuyển hướng vượt đèo đá vôi cũ và kéo lưới phòng không bọc đầu cầu",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch7_ep1_20_kiem_dinh_lien_tuyen"
+        },
+        {
+          "id": "c19_don_hoa_luc_cuu_dau_bac_vuc",
+          "label": "Dồn toàn bộ pháo phòng không và ca nô hộ tống bảo vệ đoàn tàu dầu lên Bắc Vực, bỏ mặc các sà lan hàng phụ ven bến tự xoay xở",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } }
+          ],
+          "next": "ch7_ep1_20_kiem_dinh_lien_tuyen"
+        },
+        {
+          "id": "c19_phan_tan_xe_tai_nho_le",
+          "label": "Xé lẻ toàn bộ đoàn xe thành từng tốp ba chiếc tắt đèn chạy xuyên đêm qua đường mòn bản dân, chấp nhận chậm tiến độ để bảo toàn người và hàng",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } }
+          ],
+          "next": "ch7_ep1_20_kiem_dinh_lien_tuyen"
+        },
+        {
+          "id": "c19_giu_nguyen_phuong_an_cu",
+          "label": "Giữ nguyên đội hình trên trục lộ chính Khe Mây chờ trạm radar xác minh xong hướng bay của bầy UAV rồi mới nổ súng đánh chặn",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": -4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch7_ep1_21b_mat_kiem_soat_tuyen_tiep_te"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_20_kiem_dinh_lien_tuyen",
+      "type": "narration",
+      "location": "Khe Mây & Hành lang Đèo Đá Vôi — Chập tối",
+      "mood": "urgent",
+      "text": "Mười tám tiếng đồng hồ căng như dây đàn trôi qua giữa tiếng động cơ gầm rú dưới màn mưa phùn lạnh buốt và những chùm đạn pháo cao xạ vạch sáng rực bầu trời Khe Mây. Từng toa tàu dầu, từng sà lan thuốc men và từng chiếc xe tải phủ bạt đều phải chạy đua với ánh chớp của bầy UAV cảm tử.\n\nKhả năng sống sót của huyết mạch Liên Chiến Khu giờ đây không còn nằm ở một chữ ký cuối ngày mà được quyết định bởi toàn bộ những gì ta đã chuẩn bị từ sáng tới giờ: tốc độ cởi trói thủ tục hành chính, sức bền hậu cần và mức độ sẵn sàng của hai đầu chiến khu.\n\nRạng sáng hôm sau, bảng tổng hợp tổn thất và thông số lưu thông từ bến Khe Mây bắt đầu hiện lên trên màn hình phòng tác chiến.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "gach_bo_cuoc_hop_tu_phoi_hop" },
+              { "flag": "pha_huy_kho_tiep_van_hac_ung" },
+              { "statMin": { "stat": "TiepTe", "value": 54 } }
+            ]
+          },
+          "next": "ch7_ep1_21a_giu_vung_lien_chien_khu"
+        }
+      ],
+      "next": "ch7_ep1_21b_mat_kiem_soat_tuyen_tiep_te"
+    },
+    {
+      "id": "ch7_ep1_21a_giu_vung_lien_chien_khu",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — Rạng sáng hôm sau",
+      "mood": "warm",
+      "text": "Đường truyền từ bến Khe Mây sáng đèn xanh đều đặn sau một đêm dài nghẹt thở. Nhờ quyết định tháo gỡ thủ tục kịp lúc và sự phối hợp nhịp nhàng giữa bộ phận phòng không với các tổ lái xe, gần chín mươi phần trăm đoàn tiếp vận đã vượt qua vùng hỏa lực an toàn.\n\nBa chiếc UAV cảm tử cuối cùng lao xuống cầu phao số 2 đều bị lưới pháo tầm thấp bắn rụng trước khi kịp chạm mặt nước, trong khi các nhánh rạch phụ phía Long Vũ vẫn âm thầm đưa trọn số máy phát điện và thuốc cấp cứu ngược lên ga đèo Bắc Vực.\n\nBài toán xác suất của Hắc Ưng lần đầu tiên vấp phải một biến số mà máy tính không đo đếm nổi: sự chủ động của những người lính khi không còn bị trói chân bởi giấy tờ.",
+      "effects": [
+        { "setFlag": "giu_vung_lien_chien_khu" },
+        { "addStat": { "stat": "TiepTe", "delta": 5 } },
+        { "addStat": { "stat": "SiKhi", "delta": 4 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch7_ep1_giu_vung_lien_khu",
+            "title": "Giữ vững huyết mạch Liên Chiến Khu",
+            "entry": "Đánh bại đòn phong tỏa kép của Hắc Ưng tại Khe Mây, bảo toàn tuyến tiếp vận giữa Bắc Vực và Long Vũ."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              {
+                "any": [
+                  { "flag": "son_bi_thuong_bach_vu" },
+                  { "charState": { "char": "son", "state": "injured" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_22a_son_chong_nang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              { "charState": { "char": "son", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_22b_son_diem_quan_so"
+        }
+      ],
+      "next": "ch7_ep1_22c_kiem_dem_tuyen_truoc"
+    },
+    {
+      "id": "ch7_ep1_21b_mat_kiem_soat_tuyen_tiep_te",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Trung Tâm — Rạng sáng hôm sau",
+      "mood": "somber",
+      "text": "Trên màn hình bản đồ trung tâm, đoạn nối màu xanh lục ở Khe Mây chuyển sang màu đỏ báo động kéo dài. Một đợt tập kích chớp nhoáng của bầy UAV cảm tử đã đánh chìm hai sà lan dầu ngay sát mố cầu phao số 2 và làm trật bánh bốn toa tàu tiếp tế dưới chân dốc.\n\nSự chậm trễ trong khâu chuyển hướng và những lỗ hổng tiếp vận tích tụ từ trước khiến hai chiến khu rơi vào tình trạng đứt gãy cục bộ đúng lúc rét đậm quay trở lại. Các khẩu đội ở Bắc Vực lập tức nhận lệnh siết chặt cơ số đạn, còn những bến xuồng Long Vũ phải tạm đình chỉ vận tải ban ngày.\n\nNgồi lặng trước mặt kính sa bàn ám khói trong tâm trí, tôi ghi thẳng hai chữ 'Khe Mây' vào trang sổ bìa xanh như một vết sẹo không thể xóa nhòa.",
+      "effects": [
+        { "setFlag": "mat_kiem_soat_tuyen_tiep_te" },
+        { "addStat": { "stat": "TiepTe", "delta": -6 } },
+        { "addStat": { "stat": "SiKhi", "delta": -4 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": -3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch7_ep1_mat_tuyen_tiep_te",
+            "title": "Đứt gãy tuyến tiếp tế Khe Mây",
+            "entry": "Nút giao Khe Mây bị đánh gãy trong đòn tập kích của Hắc Ưng, khiến mạch tiếp vận giữa Bắc Vực và Long Vũ tạm thời mất kiểm soát."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              {
+                "any": [
+                  { "flag": "son_bi_thuong_bach_vu" },
+                  { "charState": { "char": "son", "state": "injured" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_22a_son_chong_nang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              { "charState": { "char": "son", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_22b_son_diem_quan_so"
+        }
+      ],
+      "next": "ch7_ep1_22c_kiem_dem_tuyen_truoc"
+    },
+    {
+      "id": "ch7_ep1_22a_son_chong_nang",
+      "type": "dialogue",
+      "location": "Trạm Chuyển Tiếp Đèo Nam — Sở Chỉ Huy Tiền Phương",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "son" },
+          {
+            "any": [
+              { "flag": "son_bi_thuong_bach_vu" },
+              { "charState": { "char": "son", "state": "injured" } }
+            ]
+          }
+        ]
+      },
+      "text": "Báo cáo Thống Soái. Tôi vừa từ viện quân y ra. Chân còn đau. Nhưng đầu vẫn tỉnh. Tôi lật sổ quân số đây.\n\nNgắn thôi. Đêm qua lính giữ chốt không lùi. Mười hai tổ chốt đủ mặt. Có ba đồng chí bị thương nhẹ. Tôi đã cho chuyển về trạm xá.\n\nĐêm rét cắt da. Địch bắn cầm canh tới sáng. Khói pháo mù khe đá. Không ai rời hố chiến đấu. Tôi tự kiểm tra từng băng đạn.\n\nChân tôi đi chậm rồi. Nhưng mắt vẫn trông được lính. Lính của tôi, tôi chịu. Thuộc tên chưa, Thống Soái? Đừng quên một người nào dưới chân dốc.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_23a_khang_hai_nhip_vai"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              {
+                "any": [
+                  { "flag": "khang_bat_dong_thien_lang" },
+                  { "charState": { "char": "khang", "state": "estranged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_23b_khang_lanh_nhat"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch7_ep1_23c_dung_nong_ruot_xung_phong"
+        },
+        {
+          "condition": { "charAlive": "nam" },
+          "next": "ch7_ep1_23d_nam_chinh_ve_ao"
+        }
+      ],
+      "next": "ch7_ep1_23e_dem_tinh_sau_tieng_sung"
+    },
+    {
+      "id": "ch7_ep1_22b_son_diem_quan_so",
+      "type": "dialogue",
+      "location": "Trạm Chuyển Tiếp Đèo Nam — Sở Chỉ Huy Tiền Phương",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "son" },
+          { "charState": { "char": "son", "state": "alive" } },
+          { "notFlag": "son_bi_thuong_bach_vu" }
+        ]
+      },
+      "text": "Báo cáo Thống Soái. Tuyến đèo Nam giữ nguyên. Không một chốt nào bỏ vị trí. Ngắn thôi. Tôi đã điểm danh hết từng tiểu đội.\n\nHỏa lực địch đêm qua rất gắt. Pháo rải dọc suối ba tiếng. Đạn cối hết nửa cơ số. Nhưng lính không nao núng. Thuộc tên chưa?\n\nGió bấc thổi rát mặt. Đêm qua sương muối đóng dày. Cả đại đội chia nhau từng bình nước ấm. Không ai kêu ca nửa lời. Tôi đã ký xong sổ trực.\n\nTôi giữ nguyên danh sách cũ. Lính của tôi, tôi chịu. Hội Đồng sắp họp ở Thủ đô. Cậu đi cho vững. Tuyến này để tôi lo.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_23a_khang_hai_nhip_vai"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              {
+                "any": [
+                  { "flag": "khang_bat_dong_thien_lang" },
+                  { "charState": { "char": "khang", "state": "estranged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_23b_khang_lanh_nhat"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch7_ep1_23c_dung_nong_ruot_xung_phong"
+        },
+        {
+          "condition": { "charAlive": "nam" },
+          "next": "ch7_ep1_23d_nam_chinh_ve_ao"
+        }
+      ],
+      "next": "ch7_ep1_23e_dem_tinh_sau_tieng_sung"
+    },
+    {
+      "id": "ch7_ep1_22c_kiem_dem_tuyen_truoc",
+      "type": "narration",
+      "location": "Trạm Chuyển Tiếp Đèo Nam — Sở Chỉ Huy Tiền Phương",
+      "mood": "calm",
+      "text": "Chiều muộn, tôi xuống tận trạm chuyển tiếp dưới chân Đèo Nam để ký sổ kiểm đếm trực tiếp cùng các tiểu đoàn trưởng giữ chốt. Áo khoác của ai cũng lấm lem bùn xám và muội khói từ những chiếc xe vừa chạy thoát qua khu vực oanh tạc.\n\nTrên bảng đen dã chiến, danh sách từng tổ lái xe và từng tiểu đội công binh được viết ngay ngắn bằng phấn trắng, không thiếu một tên họ nào. Không ai nhắc nhiều đến chiến công trên báo cáo; thứ họ quan tâm nhất là bao nhiêu thùng đạn và bao nhiêu bọc băng gạc đã lên được tới hầm gác cao nhất.\n\nKhi những đoàn xe cuối cùng khuất dần vào khúc cua sương mù, một người quen cũ bước ra từ hiên hầm chỉ huy.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch7_ep1_23a_khang_hai_nhip_vai"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              {
+                "any": [
+                  { "flag": "khang_bat_dong_thien_lang" },
+                  { "charState": { "char": "khang", "state": "estranged" } }
+                ]
+              }
+            ]
+          },
+          "next": "ch7_ep1_23b_khang_lanh_nhat"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch7_ep1_23c_dung_nong_ruot_xung_phong"
+        },
+        {
+          "condition": { "charAlive": "nam" },
+          "next": "ch7_ep1_23d_nam_chinh_ve_ao"
+        }
+      ],
+      "next": "ch7_ep1_23e_dem_tinh_sau_tieng_sung"
+    },
+    {
+      "id": "ch7_ep1_23a_khang_hai_nhip_vai",
+      "type": "dialogue",
+      "location": "Hiên Hầm Giao Ban — Đèo Nam",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Ê Thống Soái, đứng đây hóng gió một chút đi ông. Đêm qua dưới Khe Mây khói lửa mù trời, nhìn cái bật lửa trong túi tui kêu tách một tiếng rồi đóng lại mà nhớ hồi hai thằng mình chia nhau nửa điếu thuốc ở vọng gác Thiên Minh ghê.\n\nTui nói thiệt nha: đừng có nói chuyện kiểu trên giấy với tui khi bước vô phòng Hội Đồng tuần tới. Coi chừng cái bản đồ nó lừa mắt mình đó nha — lên tới cấp bốn sao rồi mà còn dám gạch bỏ cuộc họp giấy để lính dưới bến chạy được việc, vậy là ông vẫn còn là thằng bạn cùng giường tầng ngày xưa.\n\nMấy anh em cũ từ Xích Phong với Thiên Lang lên tới đây nhắc tên ông hoài, chỉ sợ ông ngồi phòng máy lạnh lâu quá rồi quên mất cái mùi bùn ướt dưới chốt. Thấy ông tự mình chạy thẳng xuống đèo kiểm từng danh sách là tui nhẹ cả bụng.\n\nNè, tui gõ hai cái lên vai áo Thống Soái đây: còn nghe nhau là còn đội hình. Lên bàn Hội Đồng sắp tới, có chuyện gì khó nuốt cứ nhớ phía dưới tụi tui còn giữ chắc tay súng.",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 2 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+      ],
+      "next": "ch7_ep1_24_dispatch_dai_thong_soai"
+    },
+    {
+      "id": "ch7_ep1_23b_khang_lanh_nhat",
+      "type": "dialogue",
+      "location": "Hiên Hầm Giao Ban — Đèo Nam",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "somber",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          {
+            "any": [
+              { "flag": "khang_bat_dong_thien_lang" },
+              { "charState": { "char": "khang", "state": "estranged" } }
+            ]
+          }
+        ]
+      },
+      "text": "Báo cáo Thống Soái, toàn bộ số liệu bàn giao chốt trực của cụm cơ động phía Đông đã ký xác nhận đầy đủ trong tập hồ sơ trên bàn. Tôi xin phép đứng ngoài hiên trao tận tay rồi quay về đơn vị ngay.\n\nTôi không có thói quen nói chuyện kiểu trên giấy với Thủ trưởng nữa, nên có sao nói vậy một câu cuối thôi: coi chừng cái bản đồ nó lừa mắt mình đó. Bốn ngôi sao trên vai áo sáng thiệt đó, nhưng khoảng cách từ phòng sa bàn xuống tới người lính dưới hào không đo bằng mấy cái gạch chì đâu.\n\nTừ sau chuyện ở Thiên Lang tới giờ, tui giữ đúng hai chữ kỷ luật để làm việc chung với ông, không dám phiền tới tình bạn cũ nữa. Miễn sao đạn và thuốc dưới này đừng bị cắt ngang lưng chừng vì những cuộc mặc cả ở hậu phương là lính tụi tui biết ơn rồi.\n\nNắp chiếc bật lửa kim loại trong tay anh khẽ bật lên một tiếng tách khô khốc giữa màn sương rồi khép lại. Chúc Thống Soái giữ vững vị trí trong kỳ họp Hội Đồng sắp tới.",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": -1 } }
+      ],
+      "next": "ch7_ep1_24_dispatch_dai_thong_soai"
+    },
+    {
+      "id": "ch7_ep1_23c_dung_nong_ruot_xung_phong",
+      "type": "dialogue",
+      "location": "Bãi Tập Kết Trinh Sát — Đèo Nam",
+      "speaker": "dung",
+      "speakerTitle": "Thiếu tá Trinh sát Hoàng Tiến Dũng",
+      "mood": "tense",
+      "condition": { "charAlive": "dung" },
+      "text": "Báo cáo Thống Soái! Anh em tổ trinh sát tụi tôi vừa bám theo dấu tụi biệt kích Thiết Phong rút chạy khỏi rìa sông Khe Mây. Tụi nó bỏ lại cả hai bệ phóng UAV bị pháo mình quất nát ở bãi lau!\n\nTôi vuốt chặt quai mũ sắt nói thẳng với ông một câu: chờ tới sáng là tụi nó rút sạch qua bên kia suối đá mất rồi! Cho tôi dẫn một mũi luồn sâu vượt đèo đêm nay đánh thẳng vào ổ chỉ huy tiền tiêu của tụi nó đi.\n\nMấy thằng lính trẻ trong phân đội tôi lau súng từ chiều tới giờ nóng hết cả tay rồi, không thể để tụi nó rình rập bắn lén vào đoàn xe tiếp tế thêm một đêm nào nữa đâu.\n\nÔng sắp lên ghế cao hơn họp với Hội Đồng Tối Cao rồi thì cứ yên tâm, tuyến trinh sát ngoài bìa rừng này vẫn còn tôi gác cửa không để thằng nào lọt vào đâu!",
+      "effects": [
+        { "addRel": { "char": "dung", "delta": 2 } },
+        { "addStat": { "stat": "SiKhi", "delta": 2 } }
+      ],
+      "next": "ch7_ep1_24_dispatch_dai_thong_soai"
+    },
+    {
+      "id": "ch7_ep1_23d_nam_chinh_ve_ao",
+      "type": "dialogue",
+      "location": "Hiên Hầm Giao Ban — Đèo Nam",
+      "speaker": "nam",
+      "speakerTitle": "Đại úy Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "condition": { "charAlive": "nam" },
+      "text": "Chú đứng yên một chút để anh soi lại cái ve áo với dây đeo cặp cho ngay ngắn coi nào. Hồi xưa đeo lon Thiếu úy mà lệch cái khuy áo là anh chỉnh giùm, nay lên tới bốn sao Thống Soái rồi vẫn cứ hay mải nhìn bản đồ mà quên cài cổ áo gió.\n\nLính tráng mệt được, chứ không được để lưng đồng đội lạnh. Nhìn chú vẫn chịu xuống tận bến phà hỏi han từng thằng lái xe, thằng công binh như hồi ở Thiên Minh, anh thấy yên lòng hẳn.\n\nỞ tuyến sau huấn luyện tân binh hay lên tới trạm trung chuyển này, anh vẫn kể cho tụi nhỏ nghe chuyện cái đêm gió sét đầu tiên trên vọng gác cũ để tụi nó hiểu vì răng phải cột dây cho chắc.\n\nCái nghề ni sai một li là mất một nhà, lên ngồi bàn Hội Đồng lớn cỡ mô cũng đừng để đám giấy tờ trên đó làm chú quên mùi khói bếp với tiếng chén trà đặc của anh em dưới ni nghe chưa.",
+      "effects": [
+        { "addRel": { "char": "nam", "delta": 2 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch7_ep1_24_dispatch_dai_thong_soai"
+    },
+    {
+      "id": "ch7_ep1_23e_dem_tinh_sau_tieng_sung",
+      "type": "narration",
+      "location": "Hiên Hầm Giao Ban — Đèo Nam",
+      "mood": "somber",
+      "text": "Đêm xuống rất sâu trên triền đèo gió rít. Đứng một mình bên lan can bê tông nhìn về hai phía — nơi dãy núi Bắc Vực chìm trong màn sương muối và phương Nam xa xăm vẫn hắt lên quầng sáng mờ của những bến cảng Long Vũ — tôi bỗng thấy bốn ngôi sao trên cầu vai áo nặng hơn bao giờ hết.\n\nNhững người bạn cùng giường tầng, người tiểu đội trưởng chỉnh ve áo ngày xưa hay chàng trinh sát xông xáo giờ người ở tuyến hậu cần thương tật, người đã nằm lại dưới lớp đất đá biên giới. Những trang giấy trong cuốn sổ bìa xanh nằm trong túi ngực như đang giữ hộ hơi ấm của họ giữa đêm đông.\n\nTừ dưới chân dốc, ánh đèn pha nhỏ xíu của một chiếc xe công binh tuần đường quét qua hàng cọc tiêu sơn trắng đỏ rồi lại mất hút vào khúc cua sương mù.\n\nTiếng bước chân dồn dập của sĩ quan cơ yếu vang lên từ cửa hầm, phá tan khoảng lặng ngắn ngủi trước bình minh.",
+      "next": "ch7_ep1_24_dispatch_dai_thong_soai"
+    },
+    {
+      "id": "ch7_ep1_24_dispatch_dai_thong_soai",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "calm",
+      "text": "[SẮC LỆNH HỘI ĐỒNG THỐNG SOÁI TỐI CAO — PHÂN KỲ II: HỘ TINH LIÊN KẾT]\n\n\"Chuẩn y kết quả điều hành Liên Đại Chiến Khu Bắc Vực & Long Vũ trong giai đoạn chuyển tiếp khẩn cấp. Phong quân hàm ĐẠI THỐNG SOÁI (Hộ Tinh Liên Kết), triệu tập tham dự Phiên Họp Học Thuyết & Thanh Tra Tối Cao vào ngày mai tại Thủ đô.\"\n\n\"Yêu cầu trước khi rời Sở Chỉ Huy Liên Chiến Khu: Hoàn tất việc phân định cơ chế ký duyệt và nhân sự kế nhiệm điều hành thường trực cho Liên Chiến Khu Bắc Vực & Long Vũ.\"",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch7_ep1_dai_thong_soai",
+            "title": "Đại Thống Soái — Hộ Tinh Liên Kết",
+            "entry": "Nhận quân hàm Đại Thống Soái (Hộ Tinh Liên Kết) và đối mặt bài toán chuyển giao quyền điều hành Liên Chiến Khu cho thế hệ kế nhiệm."
+          }
+        }
+      ],
+      "next": "ch7_ep1_25_hung_giu_ghe_va_con_dau"
+    },
+    {
+      "id": "ch7_ep1_25_hung_giu_ghe_va_con_dau",
+      "type": "dialogue",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng — Phó Tham mưu trưởng",
+      "mood": "tense",
+      "text": "Chúc mừng cậu lên hàng Đại Thống Soái Hộ Tinh Liên Kết. Giờ cậu đã chính thức ngồi chung hàng với các trụ cột tối cao của Hội Đồng, nhưng anh khuyên thật một câu trước giờ ký Hiến chương điều hành Liên Chiến Khu.\n\nĐừng dại trao con dấu tác chiến và quyền điều phối kho vận cho đám sĩ quan trẻ dưới quyền. Cậu mà lùi ghế nhường quyền ký lệnh trực tiếp cho tụi cấp dưới tự quyết ở hai chiến khu, chỉ cần một sự cố nhỏ thôi là cậu mất hết tay nắm thực lực ngay trong kỳ họp Hội Đồng ngày mai.\n\nNgười khôn ngoan giữ ghế Tứ Tinh luôn khóa chặt chữ ký cuối trên bàn mình, còn việc hành chính cứ giao cho hệ thống tham mưu của anh phụ trách. Đôi khi phải giữ trọn quyền lực trong một bàn tay thì bàn tay ấy mới đủ uy trấn được cả hội trường.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "loc" },
+              { "charAlive": "quang" },
+              { "charState": { "char": "quang", "state": "alive" } }
+            ]
+          },
+          "next": "ch7_ep1_26a_loc_va_quang_ban_ke_nhiem"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch7_ep1_26b_vinh_hoi_chuyen_giao_ca"
+        }
+      ],
+      "next": "ch7_ep1_26c_nhung_chi_huy_tre_truoc_ban"
+    },
+    {
+      "id": "ch7_ep1_26a_loc_va_quang_ban_ke_nhiem",
+      "type": "dialogue",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "loc",
+      "speakerTitle": "Đại úy Công binh Bùi Văn Lộc",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "loc" },
+          { "charAlive": "quang" },
+          { "charState": { "char": "quang", "state": "alive" } }
+        ]
+      },
+      "text": "Thưa Đại Thống Soái, tôi đứng cạnh anh Vũ Minh Quang ở đây không phải để xin ghế hay xin hàm đâu anh. Hồi ở Thiên Minh em còn run tay buộc không chặt nổi quai ba lô, giờ ngồi trước bản đồ Liên Chiến Khu vẫn còn thói quen nắm chặt tay vào mép bàn cho vững.\n\nAnh Quang vừa xoay nắp bút tính xong toàn bộ phương án chuyển giao rồi: nếu mỗi quyết định đổi tuyến phà hay cấp máy phát dưới đèo đều phải chờ điện từ Thủ đô ký ngược về thì tụi em ngoài mặt trận lại tắc nghẽn như hôm qua thôi.\n\nChỗ dây này tụi em cột chặt được rồi anh ơi. Chỉ cần Đại Thống Soái tin tưởng giao quyền điều phối thực địa cho thế hệ kế nhiệm, tụi em dám ký tên chịu trách nhiệm trước mọi sai sót của mình.",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 2 } },
+        { "addRel": { "char": "quang", "delta": 1 } }
+      ],
+      "next": "ch7_ep1_27_choice_ghe_ke_nhiem"
+    },
+    {
+      "id": "ch7_ep1_26b_vinh_hoi_chuyen_giao_ca",
+      "type": "dialogue",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm — Sở Chỉ Huy Liên Chiến Khu",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh — Viện Học thuyết",
+      "mood": "calm",
+      "condition": { "charAlive": "vinh" },
+      "text": "Cậu nhìn ba chiếc ghế trống đặt đối diện mình bên bàn tròn kìa. Phía sau những cái ghế ấy là cả một lớp sĩ quan đi lên từ bùn đất Thiên Minh, Xích Thủy, Bạch Vũ — họ đủ tuổi nghề để nhận ca trực mới rồi.\n\nTôi gõ đuôi bút lên mép bàn hỏi cậu một câu cuối ở Sở Chỉ Huy này: cậu định ôm hết con dấu Liên Chiến Khu lên tận Hội Đồng Tối Cao để chứng tỏ mình không thể thay thế, hay dám lùi ghế một bước để người kế nhiệm tự tập quyết định?\n\nMột đội quân mạnh không phải đội quân có một vị Đại Thống Soái làm việc hai mươi tiếng mỗi ngày. Nó là đội quân mà dù cậu rời khỏi căn phòng này, guồng máy sạch sẽ vẫn chạy tiếp không sai một nhịp.",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } }
+      ],
+      "next": "ch7_ep1_27_choice_ghe_ke_nhiem"
+    },
+    {
+      "id": "ch7_ep1_26c_nhung_chi_huy_tre_truoc_ban",
+      "type": "narration",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm — Sở Chỉ Huy Liên Chiến Khu",
+      "mood": "calm",
+      "text": "Ánh đèn trần rọi thẳng xuống chiếc bàn tròn gỗ lim nơi ba chiếc ghế chỉ huy tác chiến kế nhiệm vẫn đang để trống. Đứng sau dãy ghế ấy là những sĩ quan trẻ từng trực tiếp dẫn quân qua các trận đánh sinh tử ở Bắc Vực và Long Vũ, ánh mắt vừa rắn rỏi vừa chờ đợi.\n\nBản Hiến chương điều hành Liên Chiến Khu nằm mở sẵn trên mặt bàn, chỉ còn thiếu một nét bút khoanh chọn cơ chế ký duyệt: hoặc giữ toàn bộ quyền phủ quyết tập trung trong tay Đại Thống Soái như lời khuyên của Phạm Quang Hùng, hoặc thực sự đẩy ghế lùi lại để thế hệ kế nhiệm đứng vào vị trí cầm lái thực địa.\n\nNgoài cửa sổ, tiếng cánh quạt chiếc trực thăng đưa tôi về Thủ đô họp Hội Đồng Tối Cao đã bắt đầu quay những vòng khởi động đầu tiên.",
+      "next": "ch7_ep1_27_choice_ghe_ke_nhiem"
+    },
+    {
+      "id": "ch7_ep1_27_choice_ghe_ke_nhiem",
+      "type": "choice",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm — Trước giờ lên đường",
+      "text": "Bản Hiến chương quyền hạn Liên Chiến Khu Bắc Vực & Long Vũ đang chờ quyết định cuối cùng của Đại Thống Soái Hộ Tinh Liên Kết. Bạn chọn cách đặt vị thế của mình với những chiếc ghế kế nhiệm thế nào?",
+      "choices": [
+        {
+          "id": "c19_lui_ghe_trao_quyen_ke_nhiem",
+          "label": "Đẩy ghế lùi lại một bước khỏi bàn tròn, ký giao toàn bộ quyền điều hành tác chiến và tiếp vận thường trực Liên Chiến Khu cho lớp sĩ quan kế nhiệm",
+          "effects": [
+            { "setFlag": "lui_ghe_trao_quyen_ke_nhiem" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "hung", "delta": -4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch7_ep1_lui_ghe_ke_nhiem",
+                "title": "Lùi ghế trao quyền kế nhiệm",
+                "entry": "Rút khỏi quyền ký duyệt thường nhật tại Liên Chiến Khu, trao toàn quyền quyết định thực địa cho thế hệ sĩ quan kế nhiệm trước giờ họp Hội Đồng Tối Cao."
+              }
+            }
+          ],
+          "next": "ch7_ep1_28a_lui_ghe_trao_quyen"
+        },
+        {
+          "id": "c19_dong_chu_tri_luan_phien",
+          "label": "Thiết lập cơ chế đồng chủ trì luân phiên: để sĩ quan thực địa ký lệnh tiếp vận và tác chiến trực tiếp, bạn chỉ giữ vai trò bảo trợ trước Hội Đồng",
+          "effects": [
+            { "setFlag": "lui_ghe_trao_quyen_ke_nhiem" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "hung", "delta": -2 } }
+          ],
+          "next": "ch7_ep1_28b_dong_chu_tri_ke_nhiem"
+        },
+        {
+          "id": "c19_giu_quyen_phu_quyet_tuyet_doi",
+          "label": "Giữ chặt quyền phủ quyết tối hậu của Đại Thống Soái đối với mọi điều động liên vùng để tránh sai lệch trong thời điểm nhạy cảm",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+            { "addRel": { "char": "hung", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_28c_om_tron_quyen_bon_sao"
+        },
+        {
+          "id": "c19_chia_quyen_voi_van_phong_hung",
+          "label": "Chia đôi quyền phê duyệt tiếp vận với ban tham mưu của Phạm Quang Hùng để đổi lấy sự đồng thuận nhanh chóng tại Hội Đồng Tối Cao",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -3 } },
+            { "addRel": { "char": "hung", "delta": 4 } }
+          ],
+          "next": "ch7_ep1_28d_chia_quyen_voi_hung"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_28a_lui_ghe_trao_quyen",
+      "type": "narration",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm",
+      "mood": "warm",
+      "text": "Tiếng chân ghế gỗ lướt nhẹ trên nền đá hoa cương vang lên rất rõ giữa căn phòng lặng ngắt. Tôi đứng dậy, kéo chiếc ghế chủ tọa lùi hẳn ra phía sau một bước rồi đặt con dấu điều hành Liên Chiến Khu vào chính giữa mặt bàn tròn.\n\nTừ khoảnh khắc này, các sĩ quan kế nhiệm không còn phải ngước nhìn về Thủ đô xin từng chữ ký điều xe hay đổi tuyến cầu phao nữa. Họ có đầy đủ thẩm quyền quyết định trên chiến trường mình đứng, đồng thời mang trọn trách nhiệm danh dự trước hàng quân.\n\nNhững gương mặt trẻ quanh bàn tròn đồng loạt đứng nghiêm, bàn tay đặt lên bản đồ Liên Chiến Khu không còn vẻ rụt rè chờ lệnh mà ánh lên sự tự tin của người làm chủ ca trực mới.\n\nPhạm Quang Hùng lặng lẽ gấp tập giấy riêng, ánh mắt lạnh đi thấy rõ khi nhận ra chiếc bệ quyền lực tập trung mà ông ta quen thao túng vừa bị chính tay tôi tháo bỏ khỏi bàn tròn.",
+      "next": "ch7_ep1_29_choice_truoc_phien_toa_ch7_ep2"
+    },
+    {
+      "id": "ch7_ep1_28b_dong_chu_tri_ke_nhiem",
+      "type": "narration",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm",
+      "mood": "calm",
+      "text": "Tôi khoanh tròn điều khoản đồng chủ trì luân phiên trên bản Hiến chương, giao cho hai sĩ quan phụ trách thực địa Bắc Vực và Long Vũ trực tiếp ký mọi lệnh điều phối ngày và đêm, còn chữ ký Đại Thống Soái chỉ đóng vai trò bảo chứng chiến lược trước Hội Đồng Tối Cao.\n\nCơ chế này vừa cắt đứt cơn ác mộng chờ giấy của tuyến Khe Mây, vừa rèn cho thế hệ sĩ quan kế nhiệm bản lĩnh tự gánh sức ép quyết định dưới làn đạn. Những cái gật đầu dứt khoát quanh bàn tròn cho thấy họ đã sẵn sàng nhận lấy phần việc nặng ấy.\n\nTừng cặp sĩ quan Bắc Vực và Long Vũ lập tức trao đổi sổ tần số liên lạc ngay bên bàn gỗ trước khi bước ra xe chỉ huy trở về đơn vị.\n\nBầu không khí chuyển giao diễn ra gọn ghẽ, kỷ luật mà vẫn giữ nguyên ngọn lửa tin cậy giữa những người cùng đi qua chiến trường.",
+      "next": "ch7_ep1_29_choice_truoc_phien_toa_ch7_ep2"
+    },
+    {
+      "id": "ch7_ep1_28c_om_tron_quyen_bon_sao",
+      "type": "narration",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm",
+      "mood": "tense",
+      "text": "Tôi đặt con dấu Đại Thống Soái ngay sát khuỷu tay mình, tuyên bố giữ nguyên quyền phủ quyết tối hậu đối với mọi lệnh chuyển quân và điều phối kho vận giữa hai chiến khu cho đến khi chiến dịch kết thúc. Không một mệnh lệnh lớn nào được ban hành nếu thiếu mã xác nhận từ bàn làm việc của tôi.\n\nTính thống nhất mệnh lệnh được giữ ở mức tuyệt đối, nhưng ánh mắt của những người lính trẻ đứng bên ngoài bàn tròn thoáng chút hụt hẫng. Họ lặng lẽ thu lại tập phương án dự phòng vừa thức trắng đêm chuẩn bị.\n\nTrên mặt bàn rộng, ba chiếc ghế kế nhiệm vẫn nằm ngay ngắn mà không có ai ngồi vào — một khoảng trống yên ắng kéo dài suốt buổi chiều giao ca.\n\nPhạm Quang Hùng khẽ nhếch môi gật đầu tán thành — một vị Đại Thống Soái ôm trọn mọi đầu mối ký duyệt luôn là mảnh đất dễ thương lượng nhất trước bàn Hội Đồng.",
+      "next": "ch7_ep1_29_choice_truoc_phien_toa_ch7_ep2"
+    },
+    {
+      "id": "ch7_ep1_28d_chia_quyen_voi_hung",
+      "type": "narration",
+      "location": "Phòng Bàn Tròn Ghế Kế Nhiệm",
+      "mood": "somber",
+      "text": "Bút mực vừa chạm xuống điều khoản phân chia thẩm quyền, văn phòng tham mưu của Phạm Quang Hùng lập tức nắm trọn phân nửa chữ ký đối với các tuyến vận tải và hợp đồng nhiên liệu Liên Chiến Khu. Đổi lại, lịch trình bảo vệ uy tín cho tôi tại Hội Đồng Tối Cao được sắp xếp suôn sẻ đến bất ngờ.\n\nThế nhưng khi bước ra cửa phòng, tôi không dám nhìn thẳng vào mắt những sĩ quan trẻ đang đứng đợi dọc hành lang. Chiếc ghế kế nhiệm đáng lẽ thuộc về những người đổ mồ hôi dưới bùn lầy Khe Mây lại vừa bị cắt đôi trên bàn thỏa hiệp chính trị.\n\nNhững tờ biên bản mới thơm mùi mực in bỗng trở nên nặng trĩu trong chiếc cặp da đặt bên hông ghế trực thăng.\n\nTiếng cánh quạt trực thăng gầm vang ngoài sân đáp như giục giã tôi bước nhanh vào cuộc đối diện sắp tới tại Thủ đô.",
+      "next": "ch7_ep1_29_choice_truoc_phien_toa_ch7_ep2"
+    },
+    {
+      "id": "ch7_ep1_29_choice_truoc_phien_toa_ch7_ep2",
+      "type": "choice",
+      "location": "Sân Đáp Trực Thăng Liên Chiến Khu — Hoàng hôn",
+      "text": "Trước khi bước lên khoang trực thăng bay về Thủ đô dự Phiên họp Học thuyết và Tòa án Chống Tham nhũng của Hội Đồng Thống Soái Tối Cao, bạn thực hiện động tác chuẩn bị cuối cùng nào?",
+      "choices": [
+        {
+          "id": "c19_khoi_dong_cau_hang_khong_khan_cap",
+          "label": "Khẩn cấp điều phi đội vận tải lập cầu hàng không tạm thời bù đắp lỗ hổng Khe Mây vừa bị đứt gãy trước khi bước vào phòng Hội Đồng",
+          "condition": { "flag": "mat_kiem_soat_tuyen_tiep_te" },
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_bottleneck"
+        },
+        {
+          "id": "c19_ghi_ten_ke_nhiem_mang_chung_tu",
+          "label": "Ghi tên những sĩ quan nhận ca kế nhiệm vào cuốn sổ bìa xanh, đồng thời khóa chặt toàn bộ cuống phiếu chênh lệch dầu mang thẳng ra Hội Đồng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addRel": { "char": "thao", "delta": 1 } }
+          ],
+          "next": "ch7_ep1_bottleneck"
+        },
+        {
+          "id": "c19_tang_du_tru_mua_dong_ben_khe_may",
+          "label": "Ban hành mật lệnh tăng thêm hai mươi phần trăm cơ số dự trữ thuốc và nhiên liệu tại các kho phụ quanh Khe Mây cho cả dân lẫn quân",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } }
+          ],
+          "next": "ch7_ep1_bottleneck"
+        },
+        {
+          "id": "c19_doc_menh_lenh_doan_ket_hai_chien_khu",
+          "label": "Phát sóng ngắn một mệnh lệnh ngắn gọn chào hai chiến khu: giữ vững lưng cho nhau giữa mùa gió bấc cho tới ngày toàn thắng",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch7_ep1_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch7_ep1_bottleneck",
+      "type": "narration",
+      "location": "Không phận Thủ đô — Đêm trước Phiên họp Hội Đồng Thống Soái Tối Cao",
+      "mood": "urgent",
+      "isChapterEnd": true,
+      "text": "Chiếc trực thăng nâng độ cao xuyên qua màn mây xám đặc, bỏ lại bên dưới dải đèn tín hiệu nhấp nháy dọc tuyến đường sắt nối từ cửa biển Long Vũ ngược lên dãy núi đá Bắc Vực. Trong túi áo ngực bên trái, cuốn sổ bìa xanh nằm im lặng bên cạnh tập hồ sơ phản gián gấp góc và những mảnh ghi nhớ từ ngày đầu nhận bốn ngôi sao.\n\nChỉ trong chưa đầy hai ngày đêm ở Liên Chiến Khu, mọi lớp vỏ hào nhoáng của quân hàm Tứ Tinh đều bị chiến trường bóc tách trần trụi: từ việc gỡ án treo cho người dám giữ sự thật, gạch bỏ cuộc họp giấy giữa làn UAV cảm tử, cho đến khoảnh khắc tự tay đẩy chiếc ghế quyền lực lùi lại nhường chỗ cho thế hệ kế nhiệm.\n\nPhía dưới mũi bay, tòa nhà mái vòm của Hội Đồng Thống Soái Tối Cao đã rực sáng ánh đèn đêm. Ngày mai, bản học thuyết tác chiến mới và phiên tòa phanh phui đường dây rút ruột hậu phương sẽ chính thức mở màn trước toàn bộ giới chỉ huy cao nhất.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch7_ep1_ket_thuc",
+            "title": "Khép lại Hồi 19 — Tiến vào Hội Đồng Thống Soái Tối Cao",
+            "entry": "Hoàn tất chuyển giao điều phối Liên Chiến Khu Bắc Vực & Long Vũ với quân hàm Đại Thống Soái Hộ Tinh Liên Kết, sẵn sàng cho phiên họp Học thuyết và Tòa án Chống Tham nhũng."
+          }
+        }
+      ]
+    }
+  ]
+}

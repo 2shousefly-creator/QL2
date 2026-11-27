@@ -1,0 +1,1110 @@
+{
+  "id": "ch3_ep3",
+  "episodeOrder": 9,
+  "chapterNumber": 3,
+  "title": "Chương III · Hồi 9: Lũ Quét Cầu Vân Long",
+  "ql2ChapterId": "nco",
+  "rankRange": "Thượng Sĩ",
+  "nextChapterId": "ch4_ep1",
+  "entryNodeId": "ch3_ep3_01_mua_lu_van_long",
+  "summary": "Giữa mùa mưa lũ quét chia cắt thung lũng Vân Long, Thượng Sĩ Trung Đội Phó đối mặt đợt tiến công đêm của Khối Thiết Phong tại Cầu Vân Long — nơi quyết định trong 12 giây giữa bẻ lệnh cứu tổ trinh sát hay giật kíp cắt cầu đúng giờ sẽ định đoạt sinh mạng đồng đội trước ngưỡng cửa Cấp Úy.",
+  "nodes": [
+    {
+      "id": "ch3_ep3_01_mua_lu_van_long",
+      "type": "narration",
+      "location": "Bờ kè phía đông Cầu Vân Long — Chiều mưa đầu mùa",
+      "mood": "tense",
+      "text": "Mưa gió tây nam đổ xuống thung lũng Vân Long sang ngày thứ tư không dứt hạt, biến con suối cạn đầy đá cuội trắng hồi đầu mùa thành một dòng nước đục ngầu phù sa đỏ rực. Từng cuộn sóng dữ cuốn theo rễ tre, thân gỗ mục và cành nứa dập nát đập rầm rầm vào hàng mố đá hộc bên dưới Cầu Vân Long.\n\nCây cầu dã chiến bắc ngang khe suối rộng bốn mươi mét này được ghép từ những thanh dầm gỗ lim ngâm dầu đen bóng, giằng giữ bằng hai bó cáp thép lớn neo sâu vào vách đá hai bờ. Đứng trên bờ kè đông trong bộ quân phục ướt sũng lạnh ngắt, tôi soi đèn pin xuống từng vạch sơn trắng đo mực nước dưới chân trụ.\n\nHai vạch dưới cùng đã chìm nghỉm dưới bọt nước nâu sẫm. Trên ve áo lúc này là quân hàm Thượng Sĩ — bậc cuối cùng của hàng ngũ Hạ Sĩ Quan — còn trong túi áo ngực trái, cuốn sổ bìa xanh của thầy Vinh vẫn nằm khít bên cuốn sổ trực chung vừa thống nhất cho ba mươi lính Trung Đội 1.\n\nNgoài cửa lán chỉ huy, ba tiểu đội của Vân Long đang khẩn trương vác thêm bao cát đắp cao bờ kè, mặt mũi đứa nào cũng sạm nước mưa và thiếu ngủ. Không khí yên ả của những ngày đầu chuyển về thung lũng đã lùi xa sau tiếng gầm trầm đục vọng lại từ thượng nguồn khe Đá Trắng.",
+      "next": "ch3_ep3_02_bay_xe_tai_do_deo"
+    },
+    {
+      "id": "ch3_ep3_02_bay_xe_tai_do_deo",
+      "type": "dialogue",
+      "location": "Sân lán tiếp tế Trung Đội 1 — Vân Long",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Tới nơi rồi đây chú em Thượng Sĩ ơi! Đường đèo bên ngoài sạt mất nửa thân ta-luy rồi, chiếc xe này mà trễ nửa tiếng nữa là tui phải cõng thùng đạn đi bộ vô thung lũng luôn đó chớ.\n\nLính tráng mau ra bưng phụ mấy hòm đạn khô, cuộn cáp dự phòng với bao thư nhà lên giá cao liền đi, nước khe ngoài kia lên thấy ớn lạnh xương sống rồi. Còn đây, hộc táp-lô xe tui còn giữ kỹ hộp kẹo gừng cay, chú em cầm chia anh em ngậm cho ấm cổ họng đêm mưa.\n\nĐường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người. Hồi nãy đổ dốc ngang khúc cua Đá Trắng, tui thấy nước suối nhánh tự dưng sủi bọt đục mà bốc mùi lá mục nồng nặc lắm, chú coi chừng phía thượng nguồn có biến đó nghe.",
+      "effects": [
+        { "addRel": { "char": "bay", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "gia_lang" },
+          "next": "ch3_ep3_03a_gia_lang_canh_bao"
+        }
+      ],
+      "next": "ch3_ep3_03b_ky_uc_gia_lang"
+    },
+    {
+      "id": "ch3_ep3_03a_gia_lang_canh_bao",
+      "type": "dialogue",
+      "location": "Hiên lán chỉ huy Trung Đội 1 — Vân Long",
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Bản Sương Mù)",
+      "mood": "tense",
+      "condition": { "charAlive": "gia_lang" },
+      "text": "Già lội tắt đường mòn từ sườn bản xuống đây từ hồi trưa, sợ không kịp báo cho mấy chú bộ đội giữ cầu trước lúc trời sập tối. Chim rừng dưới khe Đá Trắng từ sáng sớm đã bay tán loạn qua bên kia đỉnh núi, không một con nào chịu đậu lại hốc đá uống nước.\n\nCây gậy trúc trong tay già gõ nhẹ ba cái xuống bậc đá ướt. Nước suối hôm nay không chỉ đục đất đỏ mà còn nổi váng bùn thối từ tầng rễ cây cổ thụ bị bứt ngầm trên cao, đó là dấu rừng sắp nhả một cơn lũ ống quét sạch lòng khe.\n\nRừng không giấu dấu chân người vội. Hồi ở Bản Sương Mù già trao bản đường mòn suối đá cho anh chỉ huy giữ làm mắt đêm, nay xuống tới Vân Long nhớ nhìn kỹ những đoạn dốc đá vôi bị kẹt gốc cây, bên Thiết Phong có muốn mò sang cũng không tránh nổi bùn trơn đâu.\n\nGià hớp một ngụm nước chè nóng từ chiếc ca sắt anh Nam vừa bưng ra, rồi chỉ tay lên dải mây đen đặc đang cuộn tròn trên đỉnh đèo tây. Nội đêm nay con nước lớn sẽ đổ xuống thung lũng này, mấy chú giữ cầu đừng tin vào mặt nước lặng phía hạ lưu.",
+      "effects": [
+        { "addRel": { "char": "gia_lang", "delta": 1 } }
+      ],
+      "next": "ch3_ep3_04_choice_ung_pho_tin_lu"
+    },
+    {
+      "id": "ch3_ep3_03b_ky_uc_gia_lang",
+      "type": "narration",
+      "location": "Hiên lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "somber",
+      "text": "Chưa kịp bóc hết thùng đạn khô trên thùng xe của bác tài Bảy, một người thanh niên dân tộc áo tơi rách bươm từ hướng đường mòn Bản Sương Mù hớt hải chạy xuống báo tin mực nước khe Đá Trắng đang dâng trắng xóa bất thường, chim rừng bay rạt cả triền núi.\n\nNghe cậu thanh niên nhắc tới cái khe đá phía thượng nguồn, lòng tôi bỗng thắt lại khi nhớ tới Già Kiên — người già làng từng gõ gậy trúc cảnh báo về con nước vùng cao nay không còn đứng bên hiên bản nữa. Trong túi áo ngực trái, trang sổ chép tên những người ngã xuống ở Thiên Minh như nặng thêm vài phần.\n\nNếu trước đây tôi đã nhận được bản vẽ đường mòn suối đá từ Bản Sương Mù, từng ký hiệu vách đá trơn và hốc thoát lũ trên giấy giờ hiện lên rõ mồn một như lời dặn cuối cùng để giữ lấy anh em đêm nay.\n\nTôi rút khăn lau khô tay cho cậu thanh niên rồi mời vào bếp sưởi ấm, đồng thời gọi ba tiểu đội trưởng ra hiên nghe lại toàn bộ dấu hiệu con nước trên khe Đá Trắng trước khi trời tối hẳn.",
+      "next": "ch3_ep3_04_choice_ung_pho_tin_lu"
+    },
+    {
+      "id": "ch3_ep3_04_choice_ung_pho_tin_lu",
+      "type": "choice",
+      "location": "Sân lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "tense",
+      "text": "Chỉ còn khoảng bốn tiếng đồng hồ trước khi bóng tối trùm kín thung lũng và trận mưa thượng nguồn đạt đỉnh. Bạn quyết định dồn nhân lực của Trung Đội 1 vào việc chuẩn bị nào trước tiên?",
+      "choices": [
+        {
+          "id": "c_so_tan_ha_luu",
+          "label": "Cắt một kíp xuống bản hạ lưu phụ dân kê cao kho thóc và di chuyển người già lên gò đất cao trước khi lũ tràn",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "bay", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_05a_ho_tro_ha_luu"
+        },
+        {
+          "id": "c_neo_cap_ke_kho",
+          "label": "Dồn toàn bộ anh em ra gia cố thêm dây cáp neo mố Cầu Vân Long, đưa toàn bộ đạn dược và kíp nổ lên kệ chống ngập",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } }
+          ],
+          "next": "ch3_ep3_05b_ke_kho_neo_cap"
+        },
+        {
+          "id": "c_ve_tuyen_thoat_lu",
+          "label": "Đích thân dẫn tiểu đội trưởng Trinh sát leo sườn đá đánh dấu cọc tiêu thoát lũ và hành lang rút quân đêm cho từng tổ",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_05c_ve_tuyen_thoat_lu"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_05a_ho_tro_ha_luu",
+      "type": "narration",
+      "location": "Xóm ven suối hạ lưu — Thung lũng Vân Long",
+      "mood": "warm",
+      "text": "Tôi giữ lại hai tổ trực chiến ở đầu cầu, rồi tự mình cùng tám chiến sĩ và bác tài Bảy chạy xe tải xuống cụm nhà sàn ven bãi bồi hạ lưu. Mưa quất rát mặt, bà con đang luống cuống buộc lại bè nứa và gánh từng thúng lúa ướt khỏi gian bếp thấp.\n\nAnh em xắn quần lội bùn đến ngang gối, người khiêng bao thóc lên thùng xe tải cho bác Bảy chở lên gò miếu, người dìu các cụ già qua đoạn mương nước xiết. Tuy mất gần hai tiếng đồng hồ và tốn thêm một phần pin đèn, dây thừng dự trữ của trung đội, nhưng khi trời sập tối không một hộ dân nào còn kẹt lại vùng trũng.\n\nMột bà cụ móm mém nắm chặt cổ tay áo ướt của tôi, nhét vội mấy củ gừng tươi vào túi quần trước khi leo lên gò cao tránh lũ. Lúc quay ngược dốc về chốt cầu, nhìn những chấm đèn dầu le lói an toàn phía sau, anh em bước chân nặng trĩu bùn đất mà không ai kêu ca nửa lời.",
+      "next": "ch3_ep3_06_tram_song_linh_khoi_dong"
+    },
+    {
+      "id": "ch3_ep3_05b_ke_kho_neo_cap",
+      "type": "narration",
+      "location": "Mố cầu phía đông & Kho đạn dã chiến — Vân Long",
+      "mood": "calm",
+      "text": "Tôi hạ lệnh tạm gác mọi việc lặt vặt trong lán, chia ba tiểu đội thành hai mũi dốc sức làm việc suốt hai tiếng rưỡi không nghỉ tay. Mũi thứ nhất căng thêm hai sợi cáp thép phụ từ dầm gỗ chính neo sâu vào hai tảng đá ngầm bên sườn đông để cầu không bị dòng lũ xô lệch trục.\n\nMũi còn lại đóng cọc gỗ kê cao toàn bộ các hòm đạn trung liên, lựu đạn và kíp nổ dự phòng lên tận tầng giá sát mái bạt dã chiến, phủ thêm hai lớp vải dầu chống dột. Tay chân đứa nào cũng trầy xước rớm máu vì gờ sắt hộp đạn và dây cáp trơn trượt.\n\nMấy chiến sĩ công binh còn lấy nhựa thông đun nóng trét kín lại từng mép hộp nối dây dẫn điện dọc mố cầu. Đổi lại, đến chập tối cả kho khí tài lẫn hệ thống dây neo cầu đều nằm gọn gàng trong thế sẵn sàng nổ súng bất chấp mực nước dâng cao tới đâu.",
+      "next": "ch3_ep3_06_tram_song_linh_khoi_dong"
+    },
+    {
+      "id": "ch3_ep3_05c_ve_tuyen_thoat_lu",
+      "type": "narration",
+      "location": "Sườn núi đá phía đông — Thung lũng Vân Long",
+      "mood": "tense",
+      "text": "Tôi cầm cuốn sổ bìa xanh bọc túi ni-lông cùng tiểu đội trưởng Trinh sát bám sườn đá vôi phía đông đi rà lại từng hốc rút quân cao hơn mực lũ lịch sử. Ở những khúc cua bị sương mù che khuất, chúng tôi đóng cọc tre buộc mảnh vải trắng phản quang làm dấu cho các tổ hỏa lực ban đêm.\n\nDọc lối mòn rậm rạp, tôi đối chiếu từng khúc khe đá với kinh nghiệm địa hình núi cao, đánh dấu rõ những đoạn dốc dễ sạt bùn và hai gờ đá có thể đặt giá súng trung liên bắn chéo sang mố cầu tây. Quần áo ướt sũng rách tươm vì gai rừng, hai bắp chân mỏi nhừ sau khi leo trượt mấy lượt trên nền đá trơn.\n\nTrở về lán khi trời sẩm tối, tấm sơ đồ hành lang rút quân và góc bắn chéo đã được chép thẳng vào trang sổ chung để cả ba tiểu đội cùng nắm rõ.",
+      "next": "ch3_ep3_06_tram_song_linh_khoi_dong"
+    },
+    {
+      "id": "ch3_ep3_06_tram_song_linh_khoi_dong",
+      "type": "narration",
+      "location": "Hầm vô tuyến dã chiến — Gò đá Vân Long",
+      "mood": "tense",
+      "text": "Sáu giờ tối, mưa quất lộp độp lên mái tăng ni-lông của căn hầm thông tin đào khoét vào sườn gò đá cao bên bờ đông. Bên trong chỉ thắp một ngọn đèn pin che tán sắc ánh xanh dịu, hắt lên khuôn mặt gầy và đôi tai đeo ống nghe áp chặt của Trần Mỹ Linh.\n\nNgoài cửa hầm, hơi đất ướt bốc lên nồng ngái quyện cùng mùi nhựa thông hàn mạch điện thoang thoảng từ chiếc máy vô tuyến dã chiến. Đầu ngón tay phải của Linh cứ gõ đều đặn một nhịp Morse rất khẽ lên mặt bàn gỗ tạp, chân mày khẽ nhíu lại khi vặn núm dò tần số chính.\n\nThấy tôi vén tấm bạt ướt bước vào, cô rút một bên tai nghe xuống ngang cổ, chỉ tay về phía kim đồng hồ đo cường độ tín hiệu đang đứng im bất thường giữa cơn giông.",
+      "branches": [
+        {
+          "condition": { "flag": "tin_canh_bao_mat_ma_linh" },
+          "next": "ch3_ep3_07a_linh_tin_tuong"
+        }
+      ],
+      "next": "ch3_ep3_07b_linh_canh_giac"
+    },
+    {
+      "id": "ch3_ep3_07a_linh_tin_tuong",
+      "type": "dialogue",
+      "location": "Hầm vô tuyến dã chiến — Gò đá Vân Long",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Anh tới đúng lúc lắm. Tần số 47.8 megahertz của tiểu đoàn mười lăm phút nay tự dưng sạch bóng tiếng rè sấm chớp, nghe êm ru như phát từ phòng kín chứ không phải giữa bão rừng Vân Long đâu.\n\nHồi ở Thiên Minh anh tin lời em đổi qua kênh dự phòng kịp lúc nên lần này em không chờ lệnh lặp lại nữa, em chép sẵn ba dải tần nhảy bước theo bảng mã đồng khắc tay của mình rồi. Sóng sạch quá mới là sóng có bẫy.\n\nEm vừa chuyển điện xác nhận ngầm với đài trên bằng ký hiệu phụ lúc 17 giờ 50. Đêm nay nếu tụi Thiết Phong có phát lệnh giả kêu mình hoãn hay kéo quân khỏi cầu trên sóng chính, anh cứ nhìn đèn báo kênh phụ bên em mà đánh, đừng nghe giọng đọc rõ trên máy lớn nha anh.",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } },
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "next": "ch3_ep3_08_quang_tham_muu_ban_do"
+    },
+    {
+      "id": "ch3_ep3_07b_linh_canh_giac",
+      "type": "dialogue",
+      "location": "Hầm vô tuyến dã chiến — Gò đá Vân Long",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Báo cáo Thượng Sĩ, đường sóng chính 47.8 megahertz hai mươi phút nay im phẳng bất thường giữa lúc mây giông dày đặc trên đỉnh núi. Sóng sạch quá mới là sóng có bẫy.\n\nTôi nhớ hồi ở Thiên Minh tổ chỉ huy từng giữ nguyên sóng chính cho kịp nhịp liên lạc nên suýt dính bẫy nhiễu giả của Thiết Phong, lần này xuống Vân Long tôi đề nghị cho khóa kênh dự phòng từ trước khi trời tối hẳn. Không thể để mất đường liên lạc ngay lúc lũ chia cắt hai bờ suối được.\n\nTôi đã khắc sẵn quy ước nhảy tần ba phút một lần lên tấm đồng mỏng, nếu Thượng Sĩ duyệt cho phát mật hiệu kiểm tra qua máy phụ ngay bây giờ thì trạm Vân Long còn giữ được tai mắt trước nửa đêm.",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": -1 } }
+      ],
+      "next": "ch3_ep3_08_quang_tham_muu_ban_do"
+    },
+    {
+      "id": "ch3_ep3_08_quang_tham_muu_ban_do",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang (Sĩ quan liên lạc Tham mưu)",
+      "mood": "tense",
+      "text": "Tất cả ngừng trao đổi bên lề được rồi, tôi vừa đi kiểm tra xong hệ thống trụ cầu cùng tốc độ dòng chảy mặt suối. Vũ Minh Quang rút chiếc bút máy từ túi áo ngực, xoay nắp bút đúng ba vòng rất gọn trước khi đặt đầu bút lên tờ bản đồ thủy văn trải trên bàn tre.\n\nLưu lượng nước đang tăng gấp bốn lần mức trung bình mùa khô, trong khi trinh sát đường không tiểu đoàn phát hiện một mũi xe bọc thép hạng nhẹ Thiết Phong đang cơ động dọc đường mòn tây cách cầu không quá bảy cây số. Theo phương án phòng ngự số 3 của Ban Tham mưu, cầu Vân Long phải cắt đứt tuyệt đối đúng mốc G+03 phút kể từ khi có báo động đỏ.\n\nCảm tính không giữ nổi chốt đâu. Cậu cầm quyền chỉ huy tại chỗ thì phải tính bằng xác suất đi — chậm một nhịp đóng cầu là cả thung lũng sau lưng và tuyến tiếp tế của bác tài Bảy bị chọc thủng.",
+      "next": "ch3_ep3_09_choice_tranh_luan_quang"
+    },
+    {
+      "id": "ch3_ep3_09_choice_tranh_luan_quang",
+      "type": "choice",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "tense",
+      "text": "Vũ Minh Quang vẫn giữ nguyên vẻ mặt lạnh lùng kiểu bàn tham mưu, chờ bạn xác nhận phương án hiệp đồng đêm nay trước khi cậu ta quay lên đài quan sát sườn đông.",
+      "choices": [
+        {
+          "id": "c_hiep_dong_tinh_xac_suat",
+          "label": "Cùng Quang đối chiếu lại biên độ nước dâng với nhật ký thực địa của ba tiểu đội để điều chỉnh cữ thời gian dự phòng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 2 } }
+          ],
+          "next": "ch3_ep3_10a_quang_tinh_xac_suat"
+        },
+        {
+          "id": "c_phan_bac_lich_giay",
+          "label": "Gạt thẳng biểu đồ giờ cố định: ở dưới lòng suối bùn đất đổi từng phút, không thể khóa sinh mạng lính bằng con số trên giấy",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": -2 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_10b_quang_giu_khoang_cach"
+        },
+        {
+          "id": "c_phan_cong_quang_giu_dai",
+          "label": "Đề nghị Quang trực tiếp lên gò đá ngồi cạnh trạm vô tuyến của Linh để giữ liên lạc hỏa lực yểm trợ với tiểu đoàn",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addRel": { "char": "linh", "delta": 1 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_10c_quang_nhan_vi_tri"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_10a_quang_tinh_xac_suat",
+      "type": "narration",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "calm",
+      "text": "Tôi kéo cuốn sổ chung của Trung Đội 1 lại sát ngọn đèn bão, chỉ cho Quang xem các ký hiệu vết sạt lở bờ suối mà ba tiểu đội trưởng tự ghi chú bằng bút chì sáp mấy hôm trước. Ánh mắt Quang dừng lại khá lâu ở cột ghi tốc độ bùn đá đổ từ khe Đá Trắng.\n\nCậu ta không tranh cãi thêm mà xoay ngược chiếc bút máy, gạch lại hai đường biên sai số thủy văn vào cuốn sổ tay bìa đen của mình. Quang thừa nhận nếu chỉ tính theo mặt cắt lý thuyết của bản đồ tiểu đoàn thì độ trễ thực tế của nước lũ có thể sai lệch tới chín mươi giây.\n\nKhi Quang gật đầu khép sổ bước ra hiên lán, ngoài sân lính gác báo có người từ chốt sườn vừa lội mưa xuống tới trạm.",
+      "branches": [
+        {
+          "condition": { "flag": "hoa_giai_khang_va_dung" },
+          "next": "ch3_ep3_11a_khang_dung_an_y"
+        },
+        {
+          "condition": { "flag": "ung_ho_dung_dot_kich" },
+          "next": "ch3_ep3_11b_dung_hung_hang"
+        }
+      ],
+      "next": "ch3_ep3_11c_khang_dung_khac_khau"
+    },
+    {
+      "id": "ch3_ep3_10b_quang_giu_khoang_cach",
+      "type": "narration",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "tense",
+      "text": "Nghe tôi gạt phăng mốc giờ cứng trên bản đồ thủy văn, hai gò má Quang thoáng căng lại dưới ánh đèn dầu vàng vọt. Cậu ta xoay nắp bút máy ba vòng khô khốc rồi đóng tạch lại, nhét thẳng vào túi áo ngực mà không viết thêm nét nào.\n\nQuang nói gọn một câu rằng cậu ta tôn trọng quyền chỉ huy thực địa của Thượng Sĩ tại chỗ, nhưng mọi sai lệch so với khung thời gian của Ban Tham mưu tối nay sẽ phải ghi nguyên văn vào biên bản tác chiến ngày mai. Không khí trong lán tre chật hẹp đặc quánh lại trong vài giây khó thở.\n\nĐúng lúc ấy, tiếng giày đinh giẫm bùn lép nhép ngoài hiên vang lên cắt ngang sự im lặng nặng nề giữa hai chúng tôi.",
+      "branches": [
+        {
+          "condition": { "flag": "hoa_giai_khang_va_dung" },
+          "next": "ch3_ep3_11a_khang_dung_an_y"
+        },
+        {
+          "condition": { "flag": "ung_ho_dung_dot_kich" },
+          "next": "ch3_ep3_11b_dung_hung_hang"
+        }
+      ],
+      "next": "ch3_ep3_11c_khang_dung_khac_khau"
+    },
+    {
+      "id": "ch3_ep3_10c_quang_nhan_vi_tri",
+      "type": "narration",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "mood": "calm",
+      "text": "Tôi chỉ lên chấm cao độ gò đá phía sau hầm vô tuyến: nếu cầu Vân Long có biến lúc nửa đêm, một sĩ quan liên lạc biết đọc tọa độ pháo và tần số dự phòng ngay bên cạnh Linh sẽ có ích hơn nhiều việc ngồi đếm giây ở bờ kè.\n\nQuang suy tính đúng ba nhịp thở rồi gật đầu dứt khoát. Cậu ta cuộn gọn tờ bản đồ thủy văn vào ống nhựa chống ẩm, nói rằng sẽ đích thân giữ liên lạc song song với tiểu đoàn và kiểm soát đường hỏa lực cối chi viện nếu đội hình dưới cầu bị ép góc.\n\nKhi Quang khoác áo mưa rẽ bùn đi về phía gò đá, hai bóng người quen thuộc từ sườn đồi và chốt ngoài cũng vừa bước vào dưới mái hiên.",
+      "branches": [
+        {
+          "condition": { "flag": "hoa_giai_khang_va_dung" },
+          "next": "ch3_ep3_11a_khang_dung_an_y"
+        },
+        {
+          "condition": { "flag": "ung_ho_dung_dot_kich" },
+          "next": "ch3_ep3_11b_dung_hung_hang"
+        }
+      ],
+      "next": "ch3_ep3_11c_khang_dung_khac_khau"
+    },
+    {
+      "id": "ch3_ep3_11a_khang_dung_an_y",
+      "type": "dialogue",
+      "location": "Hiên lán chỉ huy — Vân Long",
+      "speaker": "khang",
+      "speakerTitle": "Trung sĩ Lê Minh Khang",
+      "mood": "warm",
+      "text": "Còn nghe nhau là còn đội hình, tui từ chốt sườn chạy xuống ngó mặt ông một cái rồi lát quay lại giữ góc súng chéo trên đồi liền. Hồi nãy trên đường mòn gặp thằng Dũng đi trinh sát về, hai thằng không còn cãi nhau như hồi mới vô Thiên Minh nữa đâu nha.\n\nKhang bật nắp chiếc bật lửa kim loại kêu tách một tiếng rồi đóng lại, quay sang vỗ nhẹ hai cái lên vai Dũng đang đứng giũ nước mũ sắt bên cạnh. Nhờ hồi đó ông đứng ra gỡ khúc mắc giữa hai đứa, giờ thằng Dũng chịu nghe tui dặn đường rút phụ trước khi cắm đầu xông vô khe đá rồi.\n\nNhưng mà nói thiệt với ông: coi chừng cái bản đồ nó lừa mắt mình đó nha, mưa kiểu này bên kia cầu trơn như mỡ, đừng có nói chuyện kiểu trên giấy với tụi tui.",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } },
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "next": "ch3_ep3_12_nam_soi_day_sung"
+    },
+    {
+      "id": "ch3_ep3_11b_dung_hung_hang",
+      "type": "dialogue",
+      "location": "Hiên lán chỉ huy — Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "tense",
+      "text": "Báo cáo Thượng Sĩ, tôi vừa rà mép suối tây về tới đây! Hồi ở Thiên Minh ông ủng hộ quả đột kích của tôi trúng phóc tim địch nên lần này anh em tổ trinh sát máu lắm rồi, không chịu ngồi bó gối bên bờ đông nhìn sang đâu!\n\nHoàng Tiến Dũng vuốt mạnh quai mũ sắt đánh cái cạch dưới cằm, hai mắt sáng rực dưới ánh đèn pin. Chờ tới sáng là tụi nó rút sạch rồi! Nếu mình chỉ ngồi bên này cầu chờ tụi Thiết Phong mò tới đầu dốc mới đánh thì mất hết thế chủ động.\n\nĐể tôi dắt hai thằng nữa sang cầu bám khe đá bờ tây ngay trong đêm nay, tụi tôi nắm tận mặt coi xe bọc thép nó đi đường nào rồi báo về cho cả trung đội khóa đầu cầu!",
+      "effects": [
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "next": "ch3_ep3_12_nam_soi_day_sung"
+    },
+    {
+      "id": "ch3_ep3_11c_khang_dung_khac_khau",
+      "type": "dialogue",
+      "location": "Hiên lán chỉ huy — Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "tense",
+      "text": "Tôi nói thẳng trước mặt ông luôn cho gọn: thằng Khang bên chốt sườn cứ bắt anh em co cụm bên bờ đông giữ sức, nhưng mà chờ tới sáng là tụi nó rút sạch rồi!\n\nDũng hất hàm về phía bóng Khang đang đứng lau nòng súng dưới mái bạt, rồi vuốt chặt quai mũ sắt. Mùa mưa tầm nhìn tụt xuống chưa tới hai chục mét, không đẩy tổ trinh sát sang bờ tây nghe ngóng trước thì tới lúc xe Thiết Phong bò tới sát dầm cầu mình mới giật mình nổ súng à?\n\nTôi xin nhận mũi ba người qua cầu bám khe đá ngay bây giờ, có động tĩnh gì bên đó tụi tôi bắn pháo hiệu hoặc lên sóng phụ liền cho anh em bên này tính!",
+      "next": "ch3_ep3_12_nam_soi_day_sung"
+    },
+    {
+      "id": "ch3_ep3_12_nam_soi_day_sung",
+      "type": "dialogue",
+      "location": "Góc bếp dã chiến Trung Đội 1 — Vân Long",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "tense",
+      "text": "Khoan hãy cãi nhau hăng máu quá mấy chú, đứng yên đây anh coi lại cái quai ba lô với dây đeo súng cho từng đứa một đã. Trung sĩ Nam bước tới kéo nhẹ dây đeo khẩu tiểu liên trên vai Dũng, rồi nắn lại khóa bao xe hai chiến sĩ trẻ đi kèm.\n\nCái nghề ni sai một li là mất một nhà. Nước suối dưới chân cầu đang réo ù ù như sắp nuốt mặt dầm gỗ rồi đó, qua bờ tây đêm ni là đi trên lưỡi dao chứ không phải dạo rừng mùa khô mô.\n\nLính tráng mệt được, chứ không được để lưng đồng đội lạnh. Chú Thượng Sĩ tính cho kỹ đường đi lối về của tụi nó đi, đừng để sang bên kia rồi mất hút giữa tiếng lũ.\n\nAnh Nam vỗ nhẹ lên bao đạn dự phòng bên hông từng người, rồi lùi lại nhường chỗ cho bạn trước chiếc đèn pin che ánh sáng xanh.",
+      "next": "ch3_ep3_13_choice_cu_to_trinh_sat"
+    },
+    {
+      "id": "ch3_ep3_13_choice_cu_to_trinh_sat",
+      "type": "choice",
+      "location": "Bếp dã chiến Trung Đội 1 — Vân Long",
+      "mood": "tense",
+      "text": "Đêm đang đặc quánh lại trong tiếng mưa sầm sập. Tổ trinh sát ba người do Hoàng Tiến Dũng dẫn đầu đang chờ lệnh xuất phát qua Cầu Vân Long sang bờ tây.",
+      "choices": [
+        {
+          "id": "c_bam_duong_mon_suoi_da",
+          "label": "Cho Dũng dẫn tổ ba người sang bờ tây bám đúng tuyến đường mòn sườn núi đá, quy định giờ rút tối đa trước 03 giờ sáng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "dung", "delta": 1 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_14a_len_duong_theo_moc"
+        },
+        {
+          "id": "c_tham_sau_khe_da_trang",
+          "label": "Giao Dũng thọc sâu vào khe Đá Trắng đặt mìn cảnh giới và đếm đầu xe Thiết Phong dù tốn thời gian hơn",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addRel": { "char": "dung", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch3_ep3_14b_len_duong_sau_khe"
+        },
+        {
+          "id": "c_chot_sat_dau_cau_tay",
+          "label": "Giới hạn tổ trinh sát chỉ chốt cách đầu cầu tây không quá một trăm năm mươi mét, thấy ánh đèn xe là rút ngay",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addRel": { "char": "dung", "delta": -2 } }
+          ],
+          "next": "ch3_ep3_14c_chot_gan_dau_cau"
+        },
+        {
+          "id": "c_dung_ban_ve_gia_lang",
+          "label": "Trao cho Dũng bản vẽ đường mòn suối đá của Già Kiên để bám sườn cao tránh bùn trơn và giữ hướng rút phụ về cầu",
+          "condition": { "flag": "nhan_duong_mon_gia_lang" },
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "dung", "delta": 2 } },
+            { "addRel": { "char": "gia_lang", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_14a_len_duong_theo_moc"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_14a_len_duong_theo_moc",
+      "type": "narration",
+      "location": "Đầu cầu Vân Long — 23 giờ 30",
+      "mood": "tense",
+      "text": "Tôi trải tấm sơ đồ nhỏ ra dưới ánh đèn pin che tay, đánh dấu ba khúc quanh sườn đá bên bờ tây và dặn Dũng tuyệt đối bám đường cao, tránh lòng khe trũng phòng lũ ống quét xuống bất ngờ. Dũng gật đầu gọn lỏn, vuốt quai mũ sắt thêm lần nữa rồi dẫn hai chiến sĩ trinh sát cúi rạp người lướt qua những tấm ván gỗ trơn bóng của Cầu Vân Long.\n\nMặt cầu rung nhẹ dưới bước chân chạy gấp của ba bóng áo rằn ri. Khang đứng tựa gốc cây sườn đông bắn nhẹ một tiếng huýt sáo ám hiệu trước khi trèo ngược lên chốt cao giữ sườn.\n\nXong phần trinh sát, tôi quay bước xuống bậc đất lầy dưới gầm mố cầu phía đông để kiểm tra công tác đấu nối dây kích nổ của tổ công binh.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "loc_vung_tam_binh_nhat" },
+              { "flag": "kem_cap_loc_kien_nhan" }
+            ]
+          },
+          "next": "ch3_ep3_15a_loc_vung_tam"
+        }
+      ],
+      "next": "ch3_ep3_15b_loc_hoang_loan"
+    },
+    {
+      "id": "ch3_ep3_14b_len_duong_sau_khe",
+      "type": "narration",
+      "location": "Đầu cầu Vân Long — 23 giờ 30",
+      "mood": "tense",
+      "text": "Tôi đồng ý cho tổ của Dũng mang theo hai quả mìn định hướng và cuộn dây bẫy cơ động, luồn sâu vào đoạn thắt cổ chai ở khe Đá Trắng để kìm bước tiến cơ giới Thiết Phong nếu chúng xuất hiện sớm hơn dự báo. Dũng cười khẽ trong bóng tối, nhét thêm hai băng đạn vào bao xe rồi ra hiệu cho đồng đội xuất phát.\n\nBa bóng người nhanh chóng mất hút vào màn mưa xám xịt bên kia bờ tây, chỉ còn tiếng ván cầu kẽo kẹt vọng lại giữa tiếng nước suối gầm. Anh Nam đứng bên bờ kè khẽ lắc đầu lo ngại cho đoạn khe sâu dễ bị cắt đường về.\n\nTôi nén tiếng thở dài, lội bùn xuống gầm mố cầu phía đông kiểm tra hộp kíp nổ với tổ công binh của Lộc.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "loc_vung_tam_binh_nhat" },
+              { "flag": "kem_cap_loc_kien_nhan" }
+            ]
+          },
+          "next": "ch3_ep3_15a_loc_vung_tam"
+        }
+      ],
+      "next": "ch3_ep3_15b_loc_hoang_loan"
+    },
+    {
+      "id": "ch3_ep3_14c_chot_gan_dau_cau",
+      "type": "narration",
+      "location": "Đầu cầu Vân Long — 23 giờ 30",
+      "mood": "tense",
+      "text": "Tôi dứt khoát không cho phép đẩy lực lượng quá xa tầm yểm trợ của trung liên bờ đông trong đêm mưa mù. Dũng tuy nhăn mặt hậm hực, song trước lệnh rõ ràng của Trung đội phó vẫn nghiêm chỉnh chấp hành, dẫn tổ ba người qua cầu lập ổ phục kích ngay sau gờ đá đầu dốc tây.\n\nTừ chốt bờ đông, chúng tôi vẫn có thể nhận thấy ánh đèn pin che tay của Dũng nháy lên hai lần báo vị trí đã ổn định, cách cầu chừng hơn trăm mét. Nhưng màn sương đặc quánh dưới thung lũng chỉ cho phép quan sát được trong tầm vài chục bước chân.\n\nTôi rảo bước xuống bậc đất sét trơn trượt dưới gầm mố cầu phía đông để kiểm tra công tác đấu kíp phá cầu cùng Bùi Văn Lộc.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "loc_vung_tam_binh_nhat" },
+              { "flag": "kem_cap_loc_kien_nhan" }
+            ]
+          },
+          "next": "ch3_ep3_15a_loc_vung_tam"
+        }
+      ],
+      "next": "ch3_ep3_15b_loc_hoang_loan"
+    },
+    {
+      "id": "ch3_ep3_15a_loc_vung_tam",
+      "type": "dialogue",
+      "location": "Gầm mố cầu phía đông — Cầu Vân Long",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "calm",
+      "text": "Anh xuống coi thử đi anh, hộp kíp chính với hộp nối dây phụ dưới gầm dầm cầu em bọc kín ba lớp băng keo chống nước rồi quấn thêm miếng bao cao su cắt dọc cho khỏi thấm hơi ẩm rồi đó. Hồi nãy em còn lấy dây dù cột neo chặt đường dây chính vô cọc sắt đóng sâu trong hốc đá nữa.\n\nNước suối dưới chân cầu chảy xiết dữ thiệt nhưng sóng vỗ không giật nổi đường dây đâu anh. Kìm bấm, đèn pin dự phòng với cuộn dây nối khẩn cấp em treo gọn bên hông trái hết rồi.\n\nAnh đi trước một bước đi, chỗ dây này em cột chặt với anh em phía sau hết rồi. Đêm nay có lệnh nhấn nút lúc nào em giữ chắc tay lúc đó, không làm trễ nửa giây đâu anh.",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch3_ep3_16_phut_yen_tinh_truoc_bao"
+    },
+    {
+      "id": "ch3_ep3_15b_loc_hoang_loan",
+      "type": "dialogue",
+      "location": "Gầm mố cầu phía đông — Cầu Vân Long",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "urgent",
+      "text": "Dạ... dạ anh ơi, nước dưới mố cầu lên tới đầu gối tụi em rồi mà đá cuội nó lăn dưới đáy suối nghe ầm ầm ghê quá... Hai tay em lạnh cóng hết trơn, băng keo cứ đụng nước mưa là tuột hoài làm em quấn tới ba lần vẫn thấy hở mép.\n\nBùi Văn Lộc nắm chặt hai tay vào quai dây bao xe trước ngực, hơi thở gấp gáp phả ra từng làn hơi trắng mỏng. Lỡ lát nữa giữa lúc nổ súng mà nước lũ giật đứt mối nối chỗ hốc đá này thì sao anh? Em đứng sát ngay hộp dây ở đây giữ trực tiếp luôn được không anh...\n\nEm sợ rời tay ra nó sút dây mất, mà hồi xưa trên sân tập cứ bị la mắng hoài giờ nghe tiếng nước gầm là tay em nó cứ run bắn lên.",
+      "next": "ch3_ep3_16_phut_yen_tinh_truoc_bao"
+    },
+    {
+      "id": "ch3_ep3_16_phut_yen_tinh_truoc_bao",
+      "type": "narration",
+      "location": "Bờ kè phía đông — 02 giờ 45 sáng",
+      "mood": "calm",
+      "text": "Gần ba giờ sáng, cơn mưa như trút nước bất ngờ dịu lại trong chừng mười phút, chỉ còn tiếng nước suối réo ồ ồ dưới lòng khe sâu hun hút. Trong hốc đá sau bờ bao cát, anh Nam chắt nốt bình trà đặc nóng hổi chia đều vào mấy chiếc nắp bi-đông bằng nhôm móp méo.\n\nBác tài Bảy ngồi bó gối bên thùng xe tải đậu lùi sâu trong lùm tre, lấy thêm mấy viên kẹo gừng dúi vào tay hai chiến sĩ trẻ đang run lập cập vì ngấm nước mưa suốt nửa đêm. Khói thuốc rê từ góc chốt hỏa lực bay là là trên mặt đất ướt trước khi tan vào sương núi.\n\nTôi lặng lẽ mở cuốn sổ bìa xanh ra dưới ánh đèn che tay, liếc nhanh qua những cái tên từ Quang Trung tới Thiên Minh và Vân Long. Mấy người lính trẻ vừa ngậm kẹo gừng vừa tựa lưng vào bao cát chợp mắt chừng mười phút giữ sức.\n\nKhoảnh khắc yên ắng kỳ lạ ấy khiến cả ba mươi con người đều căng tai lắng nghe. Trên nền trời đen đặc phía thượng nguồn, một tia chớp trắng lòa bỗng rạch ngang đỉnh núi, kéo theo tiếng rền trầm đục không giống tiếng sấm thông thường.",
+      "next": "ch3_ep3_17_linh_bat_tin_hieu_la"
+    },
+    {
+      "id": "ch3_ep3_17_linh_bat_tin_hieu_la",
+      "type": "dialogue",
+      "location": "Hầm vô tuyến gò đá — 03 giờ 02 sáng",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "urgent",
+      "text": "Báo động toàn trung đội! Tín hiệu nhiễu sạch trên tần số chính vừa ngắt cái rụp đúng ba giây trước — đúng như em dự đoán, sóng sạch quá mới là sóng có bẫy!\n\nĐầu ngón tay Linh gõ liên hồi trên phím chuyển mạch khi cô bật phắt sang kênh phụ khắc tay. Em vừa bắt được hai loạt tín hiệu ngắn rất yếu từ máy cầm tay tổ trinh sát của anh Dũng ở bờ tây, kèm tiếng động cơ hạng nặng đang bò qua khúc cua dốc đất bên kia khe!\n\nCùng lúc đó trạm quan sát trên đỉnh Đá Trắng báo khẩn về đài tiểu đoàn: đập tự nhiên do cây đổ chắn ngang khe thượng nguồn vừa vỡ toang rồi!",
+      "next": "ch3_ep3_18_cong_dien_bao_dong_do"
+    },
+    {
+      "id": "ch3_ep3_18_cong_dien_bao_dong_do",
+      "type": "dispatch",
+      "location": "Trạm chỉ huy tiền phương — Cầu Vân Long",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN TÁC CHIẾN KHẨN — BAN CHỈ HUY TIỂU ĐOÀN]\n\"1. Lũ quét thượng nguồn khe Đá Trắng đã vỡ dòng; bức tường nước lũ sẽ tràn qua mặt Cầu Vân Long trong chưa đầy 4 phút!\n\n2. Mũi trinh sát cơ giới hạng nhẹ của Khối Thiết Phong đã lọt qua đèo tây, đang ép thẳng xuống đầu cầu.\n\n3. LỆNH TUYỆT ĐỐI: Kích nổ cắt đứt hoàn toàn Cầu Vân Long đúng mốc G+03 phút! Nghiêm cấm tự ý trì hoãn thời điểm phá cầu dưới mọi hình thức!\"",
+      "next": "ch3_ep3_19_dung_bi_ghim_bo_tay"
+    },
+    {
+      "id": "ch3_ep3_19_dung_bi_ghim_bo_tay",
+      "type": "dialogue",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng (qua bộ đàm)",
+      "mood": "urgent",
+      "text": "Vân Long một gọi đầu cầu! Tụi nó thọc sườn nhanh hơn dự kiến, một thằng bên tao vừa ăn đạn vào bắp đùi sau tảng đá cách đầu cầu tây năm chục mét không tự lết về nổi!\n\nTrong tiếng bộ đàm rè rít tiếng đạn vạch đường nổ chát chúa, giọng Hoàng Tiến Dũng vẫn rống lên gãy gọn. Đạn trung liên tụi nó đang quét ngang mặt dầm gỗ rồi, tụi tao ghìm lại được tụi bộ binh nhưng tiếng xe bọc thép đã rít ngay khúc ngoặt sau lưng!\n\nNghe rõ trả lời! Nếu bên đó giữ lệnh cắt cầu đúng giờ thì giật mìn đi, đừng để xe tụi nó lọt qua cầu! Còn muốn cứu anh em thì dồn hỏa lực ghìm sườn trái xuống cho tao dìu thằng nhỏ băng qua ngay!",
+      "next": "ch3_ep3_20_quang_va_nam_giua_mua"
+    },
+    {
+      "id": "ch3_ep3_20_quang_va_nam_giua_mua",
+      "type": "dialogue",
+      "location": "Cửa hầm chỉ huy bờ đông — Cầu Vân Long",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang",
+      "mood": "urgent",
+      "text": "Không kịp tính chuyện sang bờ tây nữa đâu Thượng Sĩ! Vũ Minh Quang giữ chặt chiếc đồng hồ bấm giây dạ quang trước mặt, giọng nói sắc lạnh cắt ngang tiếng mưa gào.\n\nNước lũ đầu nguồn chỉ còn cách đây hơn một cây số, nghe tiếng cây gãy rào rào trên khe rồi kia kìa! Nếu cậu trì hoãn quá mốc G+03 để kéo ba người qua mặt cầu, vừa lúc cầu chưa sập thì xe thiết giáp Thiết Phong lao tới khóa cứng kíp nổ hoặc sóng lũ đánh đứt dây điện trước khi cầu gãy!\n\nTính bằng xác suất đi — mất ba trinh sát còn hơn mất cả trung đội và vỡ toang tuyến phòng ngự thung lũng!",
+      "next": "ch3_ep3_21_nam_chot_quyet_dinh"
+    },
+    {
+      "id": "ch3_ep3_21_nam_chot_quyet_dinh",
+      "type": "dialogue",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "urgent",
+      "text": "Chú cầm chắc tay kích nổ hay chạy qua cầu thì quyết ngay trong hơi thở ni đi! Tiếng súng trung liên của Khang từ chốt sườn trên vừa bất ngờ rộ lên từng tràng dài đỏ rực xé màn đêm, bắn ép xuống triền đá bờ tây yểm trợ.\n\nAnh Nam gào sát tai tôi giữa tiếng đất đá rung chuyển dưới chân kè. Thằng Khang trên đồi đang mở góc bắn ghìm đầu tụi Thiết Phong xuống cho mình rồi đó, nhưng nước thượng nguồn đang đổ tới chân dốc như sấm rồi!\n\nLính tráng mệt được, chứ không được để lưng đồng đội lạnh — chú là Trung đội phó, lệnh của chú lúc ni là mạng của cả ba đứa bên kia lẫn ba chục anh em bên ni!",
+      "next": "ch3_ep3_22_choice_12_giay_cau_van_long"
+    },
+    {
+      "id": "ch3_ep3_22_choice_12_giay_cau_van_long",
+      "type": "choice",
+      "location": "Trạm kích nổ Cầu Vân Long — Bờ đông",
+      "mood": "urgent",
+      "timedSeconds": 12,
+      "timeoutChoiceId": "c_cho_xac_nhan_tieu_doan",
+      "text": "Đồng hồ bấm giờ chỉ còn tính bằng giây. Bức tường nước lũ nâu đỏ đang gào thét từ khúc cua thượng nguồn lao xuống, đạn Thiết Phong rạch sáng mặt dầm gỗ, trong khi tổ trinh sát ba người vẫn mắc kẹt bên kia cầu!",
+      "choices": [
+        {
+          "id": "c_dich_than_cuu_to",
+          "label": "Bẻ lệnh giờ nổ — tự mình mang dây cứu hộ cùng anh Nam lao qua mặt cầu đang ngập lũ kéo tổ Dũng quay về",
+          "effects": [
+            { "setFlag": "cuu_to_trinh_sat_van_long" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 8 } },
+            { "addStat": { "stat": "SiKhi", "delta": 6 } },
+            { "addStat": { "stat": "KyLuat", "delta": -7 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addRel": { "char": "nam", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addRel": { "char": "dung", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": -1 } }
+          ],
+          "next": "ch3_ep3_23a_dich_than_cuu"
+        },
+        {
+          "id": "c_cuu_va_dat_min_phu",
+          "label": "Lệnh tổ Dũng gài bộc phá phụ hãm xe địch đầu cầu tây, cử Lộc giữ dây cứu hộ bờ đông mở hành lang hẹp cho cả hai cùng rút",
+          "effects": [
+            { "setFlag": "cuu_to_trinh_sat_van_long" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addRel": { "char": "dung", "delta": 1 } },
+            { "addRel": { "char": "loc", "delta": 1 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_23b_chia_mui_kip_phu"
+        },
+        {
+          "id": "c_giu_lenh_cat_cau",
+          "label": "Chấp hành tuyệt đối lệnh cắt cầu đúng mốc G+03 phút — nhấn nút kích nổ ngay để khóa chặt cửa ngõ thung lũng",
+          "effects": [
+            { "setFlag": "giu_lenh_cat_cau_van_long" },
+            { "setFlag": "dung_hi_sinh_van_long" },
+            { "setCharState": { "char": "dung", "state": "dead" } },
+            { "addStat": { "stat": "KyLuat", "delta": 8 } },
+            { "addStat": { "stat": "SiKhi", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -8 } },
+            { "addRel": { "char": "khang", "delta": -2 } },
+            { "addRel": { "char": "nam", "delta": -2 } },
+            { "addRel": { "char": "quang", "delta": 2 } }
+          ],
+          "next": "ch3_ep3_23c_giu_lenh_cat_cau"
+        },
+        {
+          "id": "c_cho_xac_nhan_tieu_doan",
+          "label": "Giữ hỏa lực cầm chừng, chờ tín hiệu xác nhận cuối cùng từ Tiểu đoàn trước khi quyết định bấm nút nổ",
+          "effects": [
+            { "setFlag": "giu_lenh_cat_cau_van_long" },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } },
+            { "addStat": { "stat": "SiKhi", "delta": -6 } },
+            { "addStat": { "stat": "TiepTe", "delta": -5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+            { "addRel": { "char": "quang", "delta": -2 } },
+            { "addRel": { "char": "nam", "delta": -1 } }
+          ],
+          "next": "ch3_ep3_23d_do_du_phuc_kich"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_23a_dich_than_cuu",
+      "type": "narration",
+      "location": "Trên mặt Cầu Vân Long — Giữa dòng lũ dâng",
+      "mood": "urgent",
+      "text": "Không kịp giải thích thêm với Quang một chữ nào, tôi quấn vội đầu sợi dây thừng cứu hộ quanh thắt lưng, gào lớn cho tổ Hỏa lực dồn toàn bộ trung liên bắn rát triền dốc tây rồi cùng anh Nam và hai chiến sĩ xung kích lao thẳng ra mặt cầu.\n\nNước lũ đỏ ngầu đã dâng ngập quá cổ chân trên lớp ván gỗ lim trơn nhẫy. Từng đợt sóng dữ đánh ầm ầm vào thân cầu khiến hai bó cáp thép rên lên kèn kẹt như sắp đứt phăng, còn đạn vạch đường của Thiết Phong tóe lửa trắng xóa trên thanh giằng đầu cầu.\n\nTới sau tảng đá bờ tây, tôi xốc thốc người lính trinh sát bị thương ở đùi lên vai, còn Dũng vừa gào hét chỉ hướng vừa xả hết băng đạn cản đường để cả nhóm cắm đầu chạy ngược về bờ đông giữa tiếng gầm long trời của cơn lũ quét đang ập tới khúc cua.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "ky_luat_cung_loc" },
+              { "notFlag": "loc_vung_tam_binh_nhat" }
+            ]
+          },
+          "next": "ch3_ep3_24a_loc_hi_sinh"
+        },
+        {
+          "condition": { "statMax": { "stat": "TiepTe", "value": 49 } },
+          "next": "ch3_ep3_24b_nam_bi_thuong"
+        },
+        {
+          "condition": { "statMax": { "stat": "KyLuat", "value": 48 } },
+          "next": "ch3_ep3_24b_nam_bi_thuong"
+        }
+      ],
+      "next": "ch3_ep3_24c_bao_toan_trung_doi"
+    },
+    {
+      "id": "ch3_ep3_23b_chia_mui_kip_phu",
+      "type": "narration",
+      "location": "Hai đầu Cầu Vân Long — Giữa làn đạn chéo",
+      "mood": "urgent",
+      "text": "Tôi gào vào tổ hợp gọi Dũng ném hai gói bộc phá dự phòng thẳng vào cụm neo cáp phía tây để thổi sạt lề đường hãm mũi xe thiết giáp Thiết Phong, đồng thời lệnh cho Lộc kéo sợi dây cứu hộ nối kíp phụ dọc bờ kè đông giữ sẵn hành lang rút.\n\nBên bờ đông, tôi cùng anh Nam và tổ Hỏa lực đứng tì báng súng vào bờ bao cát bắn ghìm liên tục từng loạt ngắn áp chế triền dốc tây. Ba giây sau, một tiếng nổ gọn ghẽ bùng lên ở đầu dốc bên kia làm mảnh đất đá đổ ụp xuống trước mũi chiếc xe dẫn đường của địch.\n\nLợi dụng đám khói mù vừa bốc lên, Dũng cùng một chiến sĩ xốc đồng đội bị thương lảo đảo lao lên mặt cầu gỗ đang ngập nửa bắp chân, bám chặt lấy sợi dây cứu hộ chạy thục mạng về phía chúng tôi.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "ky_luat_cung_loc" },
+              { "notFlag": "loc_vung_tam_binh_nhat" }
+            ]
+          },
+          "next": "ch3_ep3_24a_loc_hi_sinh"
+        },
+        {
+          "condition": { "statMax": { "stat": "TiepTe", "value": 49 } },
+          "next": "ch3_ep3_24b_nam_bi_thuong"
+        },
+        {
+          "condition": { "statMax": { "stat": "KyLuat", "value": 48 } },
+          "next": "ch3_ep3_24b_nam_bi_thuong"
+        }
+      ],
+      "next": "ch3_ep3_24d_kip_phu_thanh_cong"
+    },
+    {
+      "id": "ch3_ep3_23c_giu_lenh_cat_cau",
+      "type": "narration",
+      "location": "Trạm kích nổ Cầu Vân Long — Bờ đông",
+      "mood": "somber",
+      "text": "Tôi cúi gằm mặt nhìn kim giây dạ quang trên mặt đồng hồ đeo tay, hai hàm răng nghiến chặt đến bật máu giữa tiếng gọi đứt quãng vọng qua bộ đàm từ bờ tây. Đúng mốc G+03 phút không sai một nhịp, tôi dứt khoát hạ tay xoay mạnh cần máy kích nổ.\n\nBa khối thuốc nổ dọc nhịp dầm gỗ và hai mố cáp thép đồng loạt phát hỏa. Cả cây Cầu Vân Long nứt toác trong cột lửa da cam chói lòa, gãy gập xuống bức tường nước lũ đỏ quạch vừa kịp ập tới cuốn phăng từng thanh gỗ lim xuống hạ lưu. Chiếc xe thiết giáp đầu tiên của Thiết Phong thắng cháy lốp ngay mép vực sạt.\n\nTrong ánh chớp lửa tắt dần trên mặt nước dữ, chỉ có một chiến sĩ trinh sát bị thương kịp lăn xuống mép sông được tổ của Khang kéo vớt ở khúc cua dưới; còn Hoàng Tiến Dũng đã đứng hẳn dậy khỏi tảng đá, xả hết băng đạn cuối cùng cản mũi bộ binh địch để bạn mình lao xuống nước trước khi một loạt đạn cối nuốt chửng bóng anh bên bờ tây.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Lũ quét Cầu Vân Long: Chấp hành lệnh G+03",
+            "entry": "Kích nổ cắt đứt Cầu Vân Long đúng giờ theo lệnh Tiểu đoàn, chặn đứng mũi cơ giới Khối Thiết Phong. Trinh sát Hoàng Tiến Dũng hi sinh bên bờ tây khi bắn yểm trợ cho đồng đội thoát lũ."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25d_nam_ben_mo_cau_dem"
+    },
+    {
+      "id": "ch3_ep3_23d_do_du_phuc_kich",
+      "type": "narration",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "mood": "urgent",
+      "text": "Mười hai giây chần chừ gào hỏi qua bộ đàm giữa tiếng nhiễu rè rít trở thành khoảng trống chết người trên chiến trường. Từ bên kia khúc cua sườn tây, hai quả pháo sáng của Khối Thiết Phong vọt thẳng lên nền trời đen kịt, nhuộm cả thung lũng Vân Long trong thứ ánh sáng trắng bệch tàn nhẫn.\n\nChiếc xe bọc thép nhẹ dẫn đầu của địch gầm rú lao vọt ra tới mép cầu tây, nòng súng máy trên tháp pháo lập tức vãi đạn xối xả vào bờ bao cát phía đông, kéo theo ba quả đạn cối 60 ly dập thẳng xuống trận địa của chúng ta. Tổ trinh sát của Dũng bên kia cầu bị ánh pháo sáng phơi lộ hoàn toàn giữa bùn lầy không còn chỗ tránh.\n\nĐất đá bay rào rào phủ kín công sự, tiếng kêu cứu và tiếng súng đan xen hỗn loạn chỉ cách lúc bức tường nước lũ đổ ập tới mặt cầu vài giây đồng hồ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "ky_luat_cung_loc" },
+              { "notFlag": "loc_vung_tam_binh_nhat" }
+            ]
+          },
+          "next": "ch3_ep3_24e_do_du_mat_loc_va_dung"
+        }
+      ],
+      "next": "ch3_ep3_24f_do_du_nam_thuong_mat_dung"
+    },
+    {
+      "id": "ch3_ep3_24a_loc_hi_sinh",
+      "type": "narration",
+      "location": "Hốc đá mố cầu phía đông — Cầu Vân Long",
+      "mood": "somber",
+      "text": "Đúng giây phút tôi dìu được người lính bị thương qua quá nửa nhịp cầu, một thân cây gỗ lớn từ thượng nguồn theo dòng lũ quét đập rầm vào mố trụ đông. Cú va chạm khủng khiếp giật phăng sợi dây neo bảo vệ làm đứt đôi mối nối hộp kíp điện bên bờ kè.\n\nDưới ánh pháo sáng vừa vọt lên, Bùi Văn Lộc sững người mất hai nhịp, đôi tay run bần bật y như hồi bị phạt chạy sân ở Quang Trung. Phía sau lưng chúng tôi, tốp bộ binh Thiết Phong đầu tiên đã tràn lên đầu dầm tây vừa kịp lúc Dũng lùi nốt bước cuối xuống nền đất đông.\n\nKhông còn kịp bấm lại kẹp dây mới, Lộc bỗng bừng tỉnh, không quay lưng chạy lên dốc mà lao thẳng xuống bậc đá ngập ngang ngực. Cậu lấy hai bàn tay trần ép chặt hai đầu dây đồng bị đứt vào thẳng hai cực pin kích nổ ngay giữa mép sóng lũ.\n\nMột tiếng nổ long trời hất tung cả nhịp cầu gỗ-cáp xuống hẻm suối cuốn phăng đội hình địch. Nhưng cột đất đá sạt lở cùng cơn sóng lũ khổng lồ cũng lập tức nuốt chửng bóng dáng người lính trẻ miền Tây bên hốc đá.",
+      "effects": [
+        { "setFlag": "loc_hi_sinh_van_long" },
+        { "setCharState": { "char": "loc", "state": "dead" } },
+        { "addStat": { "stat": "SiKhi", "delta": -8 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Sự hi sinh của Bùi Văn Lộc tại Cầu Vân Long",
+            "entry": "Bẻ lệnh giờ nổ để cứu tổ trinh sát của Dũng vượt lũ. Khi dây kích nổ bị sóng lũ giật đứt, Bùi Văn Lộc đã lao xuống giữ chặt hai đầu dây bằng tay trần và hi sinh khi cầu sập."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25a_dem_tim_day_bao_dan_loc"
+    },
+    {
+      "id": "ch3_ep3_24b_nam_bi_thuong",
+      "type": "narration",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "mood": "urgent",
+      "text": "Ba người tổ trinh sát vừa lăn mình xuống rãnh hào bờ đông thì loạt bắn yểm trợ của tổ Hỏa lực đột ngột khựng lại đúng năm giây vì hụt băng đạn dự phòng hoặc trật nhịp phối hợp. Khoảng lặng chết người ấy đủ để xạ thủ cối của Thiết Phong từ dốc tây thả liền một quả đạn rơi trúng đỉnh bờ bao cát sau lưng chúng tôi.\n\nÁnh lửa chớp lòa xé rách màn mưa. Trung sĩ Nguyễn Hoàng Nam kịp thời lao người xô ngã hai chiến sĩ trẻ xuống lòng hào bùn, hứng trọn luồng mảnh gang nóng rực găm thẳng qua bả vai trái và đùi phải. Mùi máu tanh hòa ngay vào mùi thuốc phóng khét lẹt.\n\nTôi nghiến răng lao tới xoay mạnh tay quay máy kích nổ dự phòng. Ngọn lửa vàng chói bùng lên giữa nhịp dầm chính, cắt đứt toàn bộ Cầu Vân Long rơi ầm xuống cơn lũ dữ ngay trước mũi xe đối phương trước khi tôi ôm chặt lấy anh Nam đang lả đi trong bùn lầy.",
+      "effects": [
+        { "setFlag": "nam_bi_thuong_van_long" },
+        { "setCharState": { "char": "nam", "state": "injured" } },
+        { "addStat": { "stat": "SiKhi", "delta": -4 } },
+        { "addStat": { "stat": "TiepTe", "delta": -4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Cứu tổ trinh sát — Trung sĩ Nam bị thương",
+            "entry": "Kéo trọn tổ trinh sát của Dũng qua Cầu Vân Long trước cơn lũ quét, nhưng khoảng hở hỏa lực đã khiến Trung sĩ Nguyễn Hoàng Nam trúng mảnh cối nặng khi che chắn cho anh em."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25b_lan_quan_y_nam_thuong"
+    },
+    {
+      "id": "ch3_ep3_24c_bao_toan_trung_doi",
+      "type": "narration",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "mood": "tense",
+      "text": "Nhờ lượng đạn dự phòng đầy đủ và cự ly hiệp đồng rành mạch giữa ba tiểu đội, các khẩu trung liên bờ đông giữ nhịp bắn áp chế đều đặn không kẽ hở, kết hợp cùng làn đạn sườn từ chốt của Khang làm mũi xung kích Thiết Phong phải chúi đầu sau triền đá không ngóc lên ngắm bắn nổi.\n\nTôi vác người trinh sát bị thương lăn xuống lòng hào bờ đông, theo sát ngay sau là Dũng và người đồng đội cuối cùng vừa kịp nhảy thoát khỏi đầu dầm gỗ chỉ bốn giây trước khi bức tường nước lũ đỏ ngầu tràn qua mặt cầu. Dưới hốc đá, Lộc nghe đúng hiệu còi liền gạt mạnh cần kíp bọc băng keo chống nước hoạt động trơn tru.\n\nMột tiếng nổ trầm đục rung chuyển cả hẻm núi. Hai nhịp cầu chính cùng dây cáp thép sụp gọn xuống dòng lũ cuồn cuộn, khóa chặt cửa ngõ thung lũng Vân Long mà toàn trung đội không mất một ai.",
+      "effects": [
+        { "setFlag": "bao_ve_trung_doi_van_long" },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Vượt lũ cứu đồng đội — Bảo toàn Trung Đội 1",
+            "entry": "Bẻ lệnh giờ nổ vài phút để đích thân kéo an toàn tổ trinh sát của Dũng vượt lũ qua Cầu Vân Long trước khi đánh sập cầu, bảo toàn nguyên vẹn lực lượng."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25c_bep_am_sau_lu"
+    },
+    {
+      "id": "ch3_ep3_24d_kip_phu_thanh_cong",
+      "type": "narration",
+      "location": "Bờ kè phía đông — Cầu Vân Long",
+      "mood": "tense",
+      "text": "Đống đất đá do gói bộc phá phụ của Dũng giật sập ngay đầu dốc tây đã chặn cứng bánh trước chiếc xe thiết giáp Thiết Phong trong khoảnh khắc quyết định. Hai người tổ trinh sát bám chặt lấy sợi dây cứu hộ do Lộc neo sẵn, kéo đồng đội bị thương lướt qua mặt cầu ngập nước đang rung lên từng hồi.\n\nKhi người cuối cùng vừa khuỵu xuống sau bờ bao cát phía đông, tôi phất mạnh tay ra hiệu cho Lộc bên hộp kích chính. Sợi dây điện bọc kín ba lớp chống nước truyền tín hiệu chuẩn xác ngay ở nhịp nhấn đầu tiên.\n\nCây cầu gỗ-cáp nổ tung giữa bức tường nước lũ vừa ập tới, nhấn chìm hoàn toàn con đường tiến công của địch xuống lòng suối đá sâu hun hút mà cả mũi xung kích lẫn tổ trinh sát đều trở về đủ mặt.",
+      "effects": [
+        { "setFlag": "bao_ve_trung_doi_van_long" },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Kíp phụ chặn địch — Bảo toàn Trung Đội 1",
+            "entry": "Phối hợp Dũng gài bộc phá phụ hãm xe địch đầu cầu tây cùng Lộc giữ dây cứu hộ bờ đông, kéo trọn tổ trinh sát về trước khi cắt đứt Cầu Vân Long."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25c_bep_am_sau_lu"
+    },
+    {
+      "id": "ch3_ep3_24e_do_du_mat_loc_va_dung",
+      "type": "narration",
+      "location": "Mố cầu phía đông — Cầu Vân Long",
+      "mood": "somber",
+      "text": "Ánh pháo sáng trắng dã cùng tiếng đạn cối dồn dập khiến mọi tiếng hét qua bộ đàm đứt gãy hoàn toàn. Trên bờ tây, tổ trinh sát ba người của Hoàng Tiến Dũng bị hỏa lực súng máy trên xe thiết giáp phủ kín tảng đá trú ẩn, không còn một khe hở nào để bứt qua cầu.\n\nDưới hốc đá bờ đông, một mảnh cối phạt đứt sợi dây điện chính vừa lúc chiếc xe dẫn đầu của Thiết Phong thò mũi lên thanh dầm gỗ đầu cầu tây. Bùi Văn Lộc sững người nhìn sợi dây đứt giữa hai bàn tay run rẩy, rồi giữa tiếng gào của anh Nam, cậu bỗng lao thẳng vào làn đạn ép chặt hai đầu dây trần vào cực pin.\n\nCầu Vân Long gãy sập trong tiếng nổ dữ dội cuốn luôn chiếc xe đi đầu của địch xuống dòng lũ quét, nhưng cái giá cho mười hai giây do dự là sinh mạng của cả Bùi Văn Lộc bên bờ đông lẫn Hoàng Tiến Dũng ở bờ tây.",
+      "effects": [
+        { "setFlag": "loc_hi_sinh_van_long" },
+        { "setCharState": { "char": "loc", "state": "dead" } },
+        { "setFlag": "dung_hi_sinh_van_long" },
+        { "setCharState": { "char": "dung", "state": "dead" } },
+        { "addStat": { "stat": "SiKhi", "delta": -10 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Thảm kịch 12 giây do dự tại Cầu Vân Long",
+            "entry": "Chờ xác nhận Tiểu đoàn trong lúc phục kích làm lộ trận địa dưới pháo sáng. Hoàng Tiến Dũng hi sinh bên bờ tây, còn Bùi Văn Lộc hi sinh khi ép dây trần kích nổ cầu."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25a_dem_tim_day_bao_dan_loc"
+    },
+    {
+      "id": "ch3_ep3_24f_do_du_nam_thuong_mat_dung",
+      "type": "narration",
+      "location": "Mố cầu phía đông — Cầu Vân Long",
+      "mood": "somber",
+      "text": "Mười hai giây chờ tín hiệu xác nhận khiến thế trận bên bờ đông rơi vào thế bị động hoàn toàn dưới ánh pháo sáng địch. Bên kia cầu, tổ trinh sát của Hoàng Tiến Dũng bắn trả đến viên đạn cuối cùng rồi bị hỏa lực cơ giới Thiết Phong áp đảo hoàn toàn sau mỏm đá tai mèo.\n\nThấy mũi xe địch đã chạm mép dầm gỗ đầu cầu tây mà dây kích chính lại kẹt hỏng vì mảnh đạn, Trung sĩ Nguyễn Hoàng Nam gạt phăng hai chiến sĩ trẻ sang một bên. Anh lao thẳng qua làn khói mù, xoay tay quay máy phát dự phòng bằng tất cả sức lực.\n\nMột quả đạn cối nổ sát bờ kè hất anh ngã sấp xuống bùn với mảng máu lớn thấm ướt vai áo trái và bắp đùi. Đúng khoảnh khắc ấy, Cầu Vân Long nổ tung gãy sập trước bánh xe đối phương, nhưng Trung đội 1 đã mất vĩnh viễn mũi trinh sát bờ tây cùng người tiểu đội trưởng dày dạn nhất nằm trên cáng thương.",
+      "effects": [
+        { "setFlag": "dung_hi_sinh_van_long" },
+        { "setCharState": { "char": "dung", "state": "dead" } },
+        { "setFlag": "nam_bi_thuong_van_long" },
+        { "setCharState": { "char": "nam", "state": "injured" } },
+        { "addStat": { "stat": "SiKhi", "delta": -7 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_cau_van_long",
+            "title": "Phục kích Cầu Vân Long: Mất Dũng, anh Nam bị thương",
+            "entry": "Do dự chờ lệnh xác nhận khiến Thiết Phong thọc sát đầu cầu. Tổ trinh sát Hoàng Tiến Dũng hi sinh bên bờ tây; Trung sĩ Nam bị thương nặng khi lao ra quay kíp dự phòng phá cầu."
+          }
+        }
+      ],
+      "next": "ch3_ep3_25b_lan_quan_y_nam_thuong"
+    },
+    {
+      "id": "ch3_ep3_25a_dem_tim_day_bao_dan_loc",
+      "type": "narration",
+      "location": "Triền đá phía đông Cầu Vân Long — Đêm sau trận đánh",
+      "mood": "somber",
+      "text": "Ba giờ rưỡi sáng, cơn mưa trút nước rút dần về phía tây, chỉ còn tiếng nước lũ gầm gào cuộn qua hai trụ đá trơ sắt thép giữa lòng hẻm núi. Dưới mái bạt dã chiến bên bờ kè, không ai nói với ai nửa lời.\n\nMột chiến sĩ công binh mò dọc mép bùn gần hốc đá kích nổ nhặt lên sợi dây đeo bao đạn rách tươm, trên lớp vải bạt ướt sũng vẫn còn hằn rõ mấy chữ mực tím nhòe: 'Bùi Văn Lộc — Cái Bè'. Tôi cầm sợi dây bết bùn đất đặt lên lòng bàn tay mà thấy lạnh buốt tận xương.\n\nCái giá cho lần phạt chạy sân vội vã thuở trước và tâm lý chưa kịp vững của cậu lính trẻ giờ đây hiện thành một khoảng trống không gì bù đắp nổi trong hàng quân.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch3_ep3_26a_dung_im_truoc_loc"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_25b_lan_quan_y_nam_thuong",
+      "type": "dialogue",
+      "location": "Lán quân y dã chiến — Trung Đội 1 Vân Long",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "somber",
+      "text": "Đừng có ngồi mặt dài thườn thượt như rứa nữa chú ơi, mắt chú đỏ ngầu cả rồi kìa. Anh Nam nằm trên chiếc cáng vải dã chiến, vai trái quấn dày băng trắng thấm vệt máu hồng nhạt, vẫn gắng gượng nhếch môi cười.\n\nCái vết mảnh đạn ni chỉ găm phần mềm ngoài vai với bắp đùi thôi, y sĩ nói không phạm xương khớp hay mạch máu lớn mô. Anh về tuyến sau vá lại mấy mũi rồi xin đi kèm mấy khóa tân binh mới cho đỡ nhớ mùi sương rừng.\n\nChú ở lại giữ chắc lấy anh em, nhớ lời anh dặn: cái nghề ni sai một li là mất một nhà, đừng bao giờ để lính mình phải trả giá vì thiếu mấy băng đạn hay trễ một nhịp còi nghe chưa.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch3_ep3_26b_dung_tham_nam"
+        },
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch3_ep3_26d_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_25c_bep_am_sau_lu",
+      "type": "narration",
+      "location": "Lán chỉ huy dã chiến — Trung Đội 1 Vân Long",
+      "mood": "warm",
+      "text": "Dưới mái bạt dã chiến còn rỏ nước mưa tí tách, ba ông tiểu đội trưởng Vân Long lặng lẽ nhường góc đất khô ráo nhất cạnh bếp củi đang bập bùng cho ba chiến sĩ trinh sát vừa từ cõi chết trở về sưởi ấm đôi tay tím tái.\n\nKhông còn ánh mắt dè chừng lạnh nhạt với người Trung đội phó trẻ như những ngày đầu mới đặt chân tới thung lũng nữa. Tiểu đội trưởng Hỏa lực tự tay rót từng nắp bi-đông trà gừng nóng chuyền vòng quanh bếp, rồi đặt cuốn sổ chung đầy vết bùn lên cạnh ngọn đèn bão.\n\nChính những dòng ký hiệu tự ghi trong cuốn sổ ấy đã giữ cho nhịp súng và nhịp chân của ba mươi con người khớp khít với nhau ngay ở khoảnh khắc sinh tử nhất.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch3_ep3_26c_dung_nhan_sai_va_cam_on"
+        },
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch3_ep3_26d_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_25d_nam_ben_mo_cau_dem",
+      "type": "dialogue",
+      "location": "Bờ kè phía đông Cầu Vân Long — Đêm khuya",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "somber",
+      "text": "Chú làm đúng từng giây theo lệnh của trên... giữ được cả thung lũng ni không cho xe thiết giáp Thiết Phong tràn qua cầu. Anh Nam đứng lặng bên mép hố nổ còn bốc mùi thuốc phóng khét lẹt, tay nắm chặt quai súng trường.\n\nKhông ai trên ban chỉ huy tiểu đoàn bắt bẻ được chú nửa chữ mô hết trơn, giấy khen chắc chắn nằm sẵn trên bàn sáng mai rồi. Nhưng mà lát nữa mở cuốn sổ bìa xanh ra, chú nhớ tự tay viết đủ tên thằng Dũng với thằng nhỏ còn nằm lại bên kia bờ tây nghe chưa.\n\nLính tráng mệt được, chứ không được để lưng đồng đội lạnh. Đừng bao giờ quen tay coi kim đồng hồ bấm giờ thay cho mạng người lính của mình dưới làn đạn.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch3_ep3_26d_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_26a_dung_im_truoc_loc",
+      "type": "dialogue",
+      "location": "Mái bạt bờ kè đông — Cầu Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "somber",
+      "condition": { "charAlive": "dung" },
+      "text": "Hoàng Tiến Dũng ngồi lặng trước sợi dây bao đạn bết bùn của Lộc, hai tay từ từ tháo chiếc mũ sắt trên đầu xuống đặt cạnh đầu gối — lần đầu tiên tôi thấy người lính Hải Phòng bộc trực ấy lặng thinh lâu đến thế.\n\nHồi trước ở Thiên Minh tao cứ nghĩ thằng nhóc miền Tây ấy nhát gan, chỉ biết cột dây ba lô chậm chạp... Nhưng lúc cầu sắp nổ mà dây điện đứt, chính tay nó ép pin giữ cầu cho tụi tao chạy thoát.\n\nDũng ngước lên nhìn thẳng vào mắt tôi, giọng khàn đặc nhưng không còn chút bốc đồng nào. Mạng tao với hai thằng trinh sát đêm nay là do thằng Lộc đổi lấy đó. Lên cấp nào đi nữa cũng đừng quên ghi tên nó đầu trang.",
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_26b_dung_tham_nam",
+      "type": "dialogue",
+      "location": "Cửa lán quân y dã chiến — Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "tense",
+      "condition": { "charAlive": "dung" },
+      "text": "Hoàng Tiến Dũng đứng nghiêm ngoài cửa lán quân y, áo rằn ri rách toạc một bên tay vẫn còn vương đầy bùn đất đỏ. Cậu ta khẽ vuốt lại quai mũ sắt rồi cúi nhìn xuống chiếc cáng thương của anh Nam.\n\nHồi nãy tôi nóng máu cứ đòi vượt cầu bằng được, báo hại anh Nam đứng bờ đông phải hứng mảnh cối che cho cả đám. Tới lúc chạy gần tới bờ mới thấy nếu không có hỏa lực bên này giữ nhịp thì tụi tôi bỏ xác bên kia sông rồi.\n\nTừ rày tôi nghe lời anh em tính đường rút trước khi lao lên, không dám cãi bừa nữa đâu. Anh Nam ráng nằm dưỡng thương tuyến sau, phần chốt ngoài này tụi tôi giữ phụ Thượng Sĩ.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch3_ep3_26d_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_26c_dung_nhan_sai_va_cam_on",
+      "type": "dialogue",
+      "location": "Bếp dã chiến Trung Đội 1 — Vân Long",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "warm",
+      "condition": { "charAlive": "dung" },
+      "text": "Uống cạn ngụm trà gừng nóng, Hoàng Tiến Dũng khà một tiếng dài rồi quay sang huých nhẹ vai tôi, tay vẫn theo thói quen vuốt nhẹ quai mũ sắt đặt bên cạnh.\n\nHồi nãy bị kẹt sau tảng đá bờ tây, nghe tiếng đạn trung liên với tiếng ông hét giữa mặt cầu ngập nước mà tụi tao sướng rơn cả người — biết chắc lưng mình không bị bỏ lại một mình. Thằng nhỏ bị thương ở đùi đã được băng chặt ga-rô rồi, không sao đâu.\n\nMấy bữa trước còn chê anh em bên bờ đông giữ kẽ, hôm nay mới thấy đánh nhau giữa mùa lũ mà không có cả trung đội kề vai thì trinh sát giỏi mấy cũng thành mồi cho pháo.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch3_ep3_26d_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_26d_loc_vung_vang",
+      "type": "dialogue",
+      "location": "Hành lang lán công binh — Vân Long",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "calm",
+      "condition": { "charAlive": "loc" },
+      "text": "Anh ơi, em thu dọn xong cuộn dây kích nổ dự phòng với kiểm tra lại hết kẹp niêm phong hộp kíp cho ca gác sáng rồi. Gương mặt Lộc lấm lem bùn đất nhưng ánh mắt bình tĩnh lạ thường, hai bàn tay không còn nắm chặt quai dây ba lô run rẩy như trước nữa.\n\nHồi nãy đứng dưới hốc đá nhìn nước lũ dâng ngang ống chân em cũng run dữ lắm, nhưng nhớ lời anh dặn với mấy buổi anh ngồi chỉ em cột dây hồi ở Thiên Minh nên hai tay không làm rớt thứ gì hết.\n\nEm lau khô cây kìm bấm cất vô túi rồi. Anh đi trước một bước, chỗ dây này em cột chặt với anh em phía sau hết rồi, không có tuột đâu anh.",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch3_ep3_27_khang_ben_bo_suoi"
+    },
+    {
+      "id": "ch3_ep3_27_khang_ben_bo_suoi",
+      "type": "dialogue",
+      "location": "Bờ kè phía đông Cầu Vân Long — Gần sáng",
+      "speaker": "khang",
+      "speakerTitle": "Trung sĩ Lê Minh Khang",
+      "mood": "tense",
+      "text": "Còn nghe nhau là còn đội hình. Tui mới rút súng từ chốt sườn trên xuống là chạy thẳng qua đây với ông liền, bùn đất còn dính tới tận gối đây nè. Khang bước tới gõ nhẹ hai lần lên vai tôi rồi bật nắp chiếc bật lửa kim loại kêu tách một tiếng, đóng lại mà không châm.\n\nĐứng từ trên đồi nhìn xuống lúc cầu gãy mà tim tui muốn nhảy khỏi lồng ngực. Nghe nói ban chỉ huy mặt trận đang thảo công văn khen thưởng trung đội mình vì giữ cứng được cửa ngõ Vân Long trước đợt lũ quét với mũi cơ giới Thiết Phong đó nha.\n\nNhưng mà tui nói thiệt với ông: trên tờ công văn người ta chỉ ghi ngày giờ cầu sập với số đạn tiêu hao, chứ không ai ghi hết cái giá bằng thịt bằng xương dưới bùn đêm nay đâu. Coi chừng cái bản đồ nó lừa mắt mình đó nha, đừng có nói chuyện kiểu trên giấy với tui.",
+      "next": "ch3_ep3_28_quang_mo_so_bao_cao"
+    },
+    {
+      "id": "ch3_ep3_28_quang_mo_so_bao_cao",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Trung Đội 1 — Rạng sáng",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Trời sắp sáng hẳn rồi, xe quân y với đoàn tiếp quản kỹ thuật của tiểu đoàn sẽ tới trước bảy giờ. Vũ Minh Quang ngồi xuống bên chiếc bàn tre ẩm ướt, lau khô mặt bàn bằng chiếc khăn mùi xoa rồi xoay nắp bút máy đúng ba vòng trước khi mở bản mẫu báo cáo tác chiến.\n\nKết quả trận phòng ngự Cầu Vân Long nhìn chung đã đạt mục tiêu chiến lược: mũi cơ giới nhẹ của Thiết Phong bị chặn đứng hoàn toàn bên bờ tây, tuyến thung lũng được giữ kín. Bây giờ chỉ còn phần diễn giải chi tiết quá trình kích nổ, số liệu đạn tiêu hao và nguyên nhân thương vong gửi về Ban Tham mưu.\n\nTôi cần chữ ký xác nhận của cậu với tư cách chỉ huy trực tiếp tại hiện trường. Cậu muốn trình bày bản báo cáo này theo hướng nào?",
+      "next": "ch3_ep3_29_choice_bao_cao_sau_tran"
+    },
+    {
+      "id": "ch3_ep3_29_choice_bao_cao_sau_tran",
+      "type": "choice",
+      "location": "Lán chỉ huy Trung Đội 1 — Rạng sáng",
+      "mood": "calm",
+      "text": "Tờ biên bản báo cáo sau trận đánh nằm ngay trước mặt dưới ánh đèn dầu cạn bấc. Cách bạn ghi nhận trận Cầu Vân Long hôm nay sẽ định hình cái nhìn của Ban Tham mưu về bạn khi bước sang cấp Úy.",
+      "choices": [
+        {
+          "id": "c_bao_cao_trung_thuc_tung_phut",
+          "label": "Ghi trung thực từng mốc phút lệch giờ, từng viên đạn thiếu hụt và tên đầy đủ người bị thương hoặc hi sinh để làm bài học thực chiến",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addRel": { "char": "quang", "delta": 1 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_30a_bao_cao_trung_thuc"
+        },
+        {
+          "id": "c_nhan_manh_ket_qua_giu_thung_lung",
+          "label": "Nhấn mạnh chiến công chặn đứng xe Thiết Phong và giữ vững cửa ngõ thung lũng, gọt gọn phần tranh cãi giờ kích nổ cho sạch hồ sơ",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch3_ep3_30b_bao_cao_thanh_tich"
+        },
+        {
+          "id": "c_uu_tien_dan_sinh_va_cau_phao",
+          "label": "Đặt mục kiến nghị cấp bách về dây cáp cầu phao, quân y và lương thực cứu trợ dân vùng ngập lên đầu bản báo cáo trước mục thành tích",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addRel": { "char": "bay", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": -1 } }
+          ],
+          "next": "ch3_ep3_30c_uu_tien_dan_sinh"
+        },
+        {
+          "id": "c_ghi_danh_trinh_sat_vo_tuyen",
+          "label": "Đích thân ghi nhận công trạng của trinh sát, đài thông tin Linh và tổ Hỏa lực bờ đông vào phần đầu bản báo cáo trước khi ký giáp lai",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addRel": { "char": "linh", "delta": 2 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_30d_ghi_danh_anh_em"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_30a_bao_cao_trung_thuc",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Vũ Minh Quang đọc lướt qua những dòng chữ thẳng thắn tôi vừa viết thêm bằng mực xanh — kể cả từng phút lệch quy định hay khoản đạn dự phòng suýt hụt — rồi bất ngờ gật đầu rất nhẹ.\n\nThú thực, nhiều người ở vị trí cậu sẽ chọn xóa bớt mấy chỗ lấn cấn giờ giấc cho đẹp hồ sơ đề bạt. Nhưng số liệu thật tuy gai mắt trên bàn họp lại giúp Ban Tham mưu tính đúng xác suất rủi ro cho mặt trận sông Xích Thủy sắp tới.\n\nTôi sẽ giữ nguyên bản gốc này kẹp vào hồ sơ chiến dịch, không chỉnh sửa thêm một chữ nào.",
+      "next": "ch3_ep3_31_cong_dien_thang_cap"
+    },
+    {
+      "id": "ch3_ep3_30b_bao_cao_thanh_tich",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "speaker": "quang",
+      "speakerTitle": "Thiếu úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Đặt bút ký xong tờ biên bản gọn ghẽ sạch sẽ không một vết gạch xóa, Quang khẽ mỉm cười gài nắp bút máy lại. Cậu bắt đầu hiểu cách vận hành của cấp chỉ huy lớn hơn rồi đấy.\n\nTrên bàn hội đồng tiểu đoàn hay trung đoàn, người ta nhìn vào việc cửa ngõ Vân Long có đứng vững trước Thiết Phong hay không, chứ không ai đủ thời gian ngồi bóc tách từng giây tranh cãi dưới mưa bão. Làm gọn hồ sơ giúp cả tập thể giữ được đà khen thưởng và bổ sung quân số nhanh hơn.\n\nTuy vậy ở góc lán, ánh mắt Khang thoáng liếc qua tờ giấy trắng tinh ấy rồi lẳng lặng quay đi nhìn xuống dòng nước đục.",
+      "next": "ch3_ep3_31_cong_dien_thang_cap"
+    },
+    {
+      "id": "ch3_ep3_30c_uu_tien_dan_sinh",
+      "type": "dialogue",
+      "location": "Sân lán tiếp tế — Vân Long",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Bác tài Bảy ghé vai qua cửa lán nghe đọc đoạn kiến nghị xin cáp cầu phao, thuốc sát trùng với gạo cứu trợ vùng ngập hạ lưu, liền cười ha hả vỗ đùi cái đét.\n\nChú em Thượng Sĩ làm vậy coi được quá chớ! Chiến công để mai mốt người ta phong, còn bụng dân dưới bãi bồi với vết thương anh em thì sáng nay phải có gạo có thuốc liền mới trụ nổi.\n\nChừng nào xe tiếp viện tiểu đoàn đổ đèo xuống, tui đứng ngay đầu dốc nhận trước mấy bao hàng này chở thẳng xuống gò miếu cho bà con khỏi ngóng!",
+      "next": "ch3_ep3_31_cong_dien_thang_cap"
+    },
+    {
+      "id": "ch3_ep3_30d_ghi_danh_anh_em",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Trung Đội 1 — Vân Long",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "warm",
+      "text": "Trần Mỹ Linh vừa thu dọn cuộn dây ăng-ten dự phòng bước vào lán, thoáng sững người khi thấy dòng chữ ghi nhận ca trực dò bẫy nhiễu vô tuyến cùng tên các xạ thủ bờ đông nằm ngay trang đầu bản báo cáo.\n\nCô khẽ chạm vào bảng mã Morse khắc đồng đeo bên thắt lưng, giọng nói điềm tĩnh thường ngày bỗng dịu hẳn lại. Cảm ơn anh, bình thường mấy người ngồi phòng thông tin tụi em hay tổ hỏa lực giữ cánh chỉ là vài dòng ký hiệu nhỏ ở phụ lục cuối thôi.\n\nĐược nhắc tên rõ ràng như vầy, mai mốt có đi tuyến nào tụi em cũng giữ chắc tần số sau lưng anh không rời nửa nhịp.",
+      "next": "ch3_ep3_31_cong_dien_thang_cap"
+    },
+    {
+      "id": "ch3_ep3_31_cong_dien_thang_cap",
+      "type": "dispatch",
+      "location": "Lán chỉ huy Trung Đội 1 Vân Long — 06 giờ 20 sáng",
+      "mood": "calm",
+      "text": "[CÔNG ĐIỆN ĐIỀU ĐỘNG CÁN BỘ — BỘ CHỈ HUY MẶT TRẬN]\n\"Ghi nhận tinh thần chỉ huy quả cảm giữ vững cửa ngõ Cầu Vân Long trong điều kiện lũ quét và tập kích hiệp đồng của Khối Thiết Phong.\n\nQuyết định phong quân hàm **Thiếu Úy** cho đồng chí Thượng Sĩ Trung Đội Phó Trung Đội 1 Vân Long, điều động gấp về nhận nhiệm vụ Trung đội trưởng thuộc **Đại Đội 3 Huyền Ưng** trên mặt trận rừng rậm và cầu phao **sông Xích Thủy**.\n\nThời gian bàn giao sổ trực và cơ số khí tài tại Vân Long: hoàn tất trước 07 giờ 00 sáng nay.\"",
+      "next": "ch3_ep3_32_bay_va_linh_tien_xe"
+    },
+    {
+      "id": "ch3_ep3_32_bay_va_linh_tien_xe",
+      "type": "dialogue",
+      "location": "Bến xe dã chiến Vân Long — 06 giờ 45 sáng",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Chà chà, Thiếu Úy mới tinh tươm rồi nghe chú em! Bác tài Bảy vừa nổ máy chiếc xe tải mui bạt chuẩn bị rời thung lũng, vừa thò tay qua cửa kính dúi vào túi áo ngực tôi hai viên kẹo gừng cuối cùng trong hộp thiếc.\n\nĐường xuống sông Xích Thủy nghe nói rừng rậm ẩm ướt mà cầu phao ngoài đó pháo địch dập dữ lắm, không có hiền như suối đá Thiên Minh hay khe Vân Long đâu. Nhưng chú em yên tâm: đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người — chừng nào xe tui chạy tuyến tiếp vận ngang Huyền Ưng tui lại ghé tìm chú!\n\nBên cạnh, Linh đứng nghiêm đưa tay chào điều lệnh gọn gàng, còn Khang đứng tựa gốc tre đưa tay gõ nhẹ hai cái vào không trung thay cho lời hẹn gặp lại nơi tuyến trước.",
+      "next": "ch3_ep3_33_choice_trang_cuoi_ch3"
+    },
+    {
+      "id": "ch3_ep3_33_choice_trang_cuoi_ch3",
+      "type": "choice",
+      "location": "Thùng xe tải dã chiến — Cửa ngõ Vân Long",
+      "mood": "calm",
+      "text": "Trước khi chiếc xe tải chuyển bánh đưa bạn rời khỏi thung lũng Vân Long bước sang hàng ngũ sĩ quan Cấp Úy, bạn mở cuốn sổ bìa xanh của thầy Vinh ra lần cuối ở Chương III. Bạn sẽ viết gì vào trang giấy mới?",
+      "choices": [
+        {
+          "id": "c_ghi_ten_dong_doi_van_long",
+          "label": "Viết đủ tên từng đồng đội đã sát cánh, nằm trên cáng thương hay vĩnh viễn nằm lại dưới dòng lũ Vân Long",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_bottleneck"
+        },
+        {
+          "id": "c_ghi_thong_so_tac_chien",
+          "label": "Chép ngắn gọn cữ nước lũ quét, cách bọc kíp chống nước và bài học hiệp đồng vô tuyến cho trung đội mới ở Xích Thủy",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch3_ep3_bottleneck"
+        },
+        {
+          "id": "c_de_nua_trang_trong_tu_nhac",
+          "label": "Chỉ ghi ngày tháng Cầu Vân Long sập rồi chừa nửa trang trắng để tự nhắc rằng không tấm bản đồ nào đo hết giá máu xương",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": 2 } }
+          ],
+          "next": "ch3_ep3_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep3_bottleneck",
+      "type": "narration",
+      "location": "Đèo dốc rời thung lũng Vân Long — Bình minh sau lũ",
+      "mood": "warm",
+      "isChapterEnd": true,
+      "text": "Bình minh lên trắng bạc trên mặt nước lũ đang bắt đầu rút khỏi hẻm suối Vân Long, để lộ hai đầu mố đá loang lổ khói đen và những thanh dầm gỗ lim gãy toác trôi dạt vào bụi tre ven bờ. Ai còn đứng vững vẫy tay trên triền đá, ai lên xe chuyển thương hay nằm lại giữa dòng nước xoáy đều đã khắc sâu vào từng thớ gỗ của cây cầu gãy.\n\nTôi gập cuốn sổ bìa xanh đặt sâu vào túi áo ngực trái ngay trên nhịp tim, bàn tay chạm nhẹ lên ngôi sao vàng đầu tiên sắp khâu lên ve áo Cấp Úy. Chiếc xe tải phủ bạt gài cầu leo qua đỉnh dốc sương mù, bỏ lại phía sau những năm tháng Hạ Sĩ Quan lấm lem bùn đất từ chiếc chìa khóa kho súng Thiên Minh tới trận sinh tử ở Vân Long.\n\nPhía trước vùng rừng rậm sông Xích Thủy, Đại Đội 3 Huyền Ưng cùng hàng trăm con người mới, những cây cầu phao bắc qua dòng sông rộng và những bản đồ chiến trường phức tạp hơn gấp bội đang chờ đón người Trung đội trưởng Thiếu Úy bước tới.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch3_ep3_bottleneck",
+            "title": "Hội tụ Chương III: Lũ quét Cầu Vân Long & Ngưỡng Cấp Úy",
+            "entry": "Hoàn thành chặng đường Hạ Sĩ Quan qua trận lũ quét cắt Cầu Vân Long. Nhận quân hàm Thiếu Úy điều động về Trung đội trưởng thuộc Đại Đội 3 Huyền Ưng trên mặt trận sông Xích Thủy."
+          }
+        }
+      ]
+    }
+  ]
+}

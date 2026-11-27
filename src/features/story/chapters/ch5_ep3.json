@@ -1,0 +1,1282 @@
+{
+  "id": "ch5_ep3",
+  "episodeOrder": 15,
+  "chapterNumber": 5,
+  "title": "Chương V · Hồi 15: Lữ Đoàn Thiên Lang & Vùng Lũ Trắng",
+  "ql2ChapterId": "field_officer",
+  "rankRange": "Đại Tá",
+  "nextChapterId": "ch6_ep1",
+  "entryNodeId": "ch5_ep3_01_lu_doan_thien_lang",
+  "summary": "Nhận quân hàm Đại Tá chỉ huy Lữ Đoàn Thiên Lang giữa mùa mưa lũ trắng đồng kết hợp đòn đánh vu hồi và phá hoại của Khối Thiết Phong. Cùng Y sĩ Nguyễn Thu Hà đánh dấu bản đồ nhỏ Thiên Lang bằng bút chì 2B, đối mặt cuộc khủng hoảng xe thuốc của Phan Văn Bảy và xuồng cơm của Trần Văn Tám giữa đập tràn ngập nước, trước khi đưa ra quyết định sinh tử bảo vệ cửa xả chính.",
+  "nodes": [
+    {
+      "id": "ch5_ep3_01_lu_doan_thien_lang",
+      "type": "narration",
+      "location": "Bến xuồng Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "mood": "tense",
+      "text": "Rời dãy đồi đá tai mèo gió buốt của Bạch Vũ chưa đầy nửa ngày xe chạy, đoàn công tác đã phải bỏ lại ô tô tải hai cầu bên mép quốc lộ ngập ngang trục bánh. Trước mắt chúng tôi, cả vùng đồng bằng trũng Thiên Lang chìm trong màn mưa trắng xóa nối liền mặt ruộng với bầu trời xám đặc.\n\nDọc hai bên bờ đê bao đang oằn mình chắn lũ, những mái nhà ngói rêu phong và ngọn tre làng chỉ còn nhô lên lấp ló như những hòn đảo cô độc giữa biển nước đục ngầu. Thỉnh thoảng lại có một chiếc xuồng ba lá chở đầy bao gạo và trẻ nhỏ lặng lẽ chèo ngược dòng tránh pháo cầm canh từ bờ tây.\n\nTrên cầu vai áo dã chiến còn ám mùi khói pháo Bạch Vũ, hai vạch bạc và ba ngôi sao vàng Đại Tá vừa được gắn vội dưới mái tôn dột nước của trạm chuyển tiếp. Trọng trách Lữ đoàn trưởng Lữ Đoàn Thiên Lang đặt lên vai tôi vào đúng lúc nước thượng nguồn đang dồn về từng giờ, xóa nhòa ranh giới giữa đường quân sự và kênh rạch dân sinh.\n\nTrong túi áo ngực trái, cuốn sổ bìa xanh thầy Trần Quốc Vinh trao từ thuở Quang Trung nằm ép sát tấm thẻ chỉ huy bằng nhựa cứng. Tôi hít sâu hơi gió tanh mùi phù sa và rơm rạ mục, bước xuống chiếc xuồng máy đang nổ máy chờ sẵn để vào thẳng khu kho nổi trung tâm.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_dai_ta_thien_lang",
+            "title": "Đại Tá — Lữ Đoàn Thiên Lang",
+            "entry": "Nhận quân hàm Đại Tá và quyền chỉ huy Lữ Đoàn Thiên Lang giữa cao điểm mùa mưa lũ trắng đồng, vừa giữ mạch tiếp vận chiến dịch vừa bảo vệ các cụm dân cư vùng ngập."
+          }
+        }
+      ],
+      "next": "ch5_ep3_02_dispatch_bo_nhiem_lu_doan"
+    },
+    {
+      "id": "ch5_ep3_02_dispatch_bo_nhiem_lu_doan",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu Nổi — Lữ Đoàn Thiên Lang",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN HỎA TỐC — BỘ TƯ LỆNH MẶT TRẬN]\n\n'Bổ nhiệm đồng chí Đại Tá giữ chức Lữ đoàn trưởng Lữ Đoàn Thiên Lang kể từ 14 giờ 00 hôm nay. Mực nước sông Đáy Lang vượt báo động ba, mười bốn xã hạ lưu bị chia cắt hoàn toàn, hai đập tràn trọng yếu đang chịu áp lực cực đại.'\n\n'Cảnh báo cấp một: Trinh sát phát hiện biệt đội thám báo và xuồng cao su của Khối Thiết Phong lợi dụng mưa lớn thâm nhập sườn tây Thiên Lang nhằm đánh sập cửa xả chính, đồng thời cắt đứt tuyến đường độc đạo tiếp đạn lên Trung đoàn Bạch Vũ.'",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } }
+            ]
+          },
+          "next": "ch5_ep3_03a_khang_don_o_ben_xuong"
+        },
+        {
+          "condition": {
+            "charState": { "char": "khang", "state": "injured" }
+          },
+          "next": "ch5_ep3_03b_thu_khang_ben_lu"
+        }
+      ],
+      "next": "ch5_ep3_03c_dong_ho_nut_duoi_mua"
+    },
+    {
+      "id": "ch5_ep3_03a_khang_don_o_ben_xuong",
+      "type": "dialogue",
+      "location": "Cầu gỗ kho gạo nổi — Căn cứ Thiên Lang",
+      "speaker": "khang",
+      "speakerTitle": "Trung tá Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } }
+        ]
+      },
+      "text": "Trời ơi, Đại Tá Lữ đoàn trưởng tới rồi hả! Tui đứng dầm mưa ngoài cọc neo từ hồi nghe tiếng máy xuồng đầu vàm tới giờ, nước ngập ngang ống đồng mà thấy ba ngôi sao mới tinh trên vai ông tự nhiên hết lạnh luôn.\n\nVô mái tôn tránh nước cái đã ông bạn giường tầng. Cho tui gõ hai cái lên vai coi cái lưng gánh cả lữ đoàn có bị sụm xuống không nào — còn nghe nhau là còn đội hình! Tiểu đoàn cơ động của tui mới rút từ cụm chốt ven đê về đây hồi khuya, lính tráng đứa nào chân cũng trắng bệch như ngâm nước mắm hết trơn.\n\nTui bật nắp bật lửa kêu tách một cái lấy hên thôi chứ không dám hút đâu, mùi dầu xuồng nồng lắm. Mà nhận cái bàn đồ Thiên Lang này ông nhớ lời tui dặn hoài nha: coi chừng cái bản đồ nó lừa mắt mình đó nha, trên giấy vẽ nguyên mảng xanh lơ phẳng lì chứ lội xuống là hố bom cũ với bờ đê vỡ ngập tới cổ đó.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_04_ha_va_ban_do_but_chi"
+    },
+    {
+      "id": "ch5_ep3_03b_thu_khang_ben_lu",
+      "type": "narration",
+      "location": "Cầu gỗ kho gạo nổi — Căn cứ Thiên Lang",
+      "mood": "somber",
+      "condition": {
+        "charState": { "char": "khang", "state": "injured" }
+      },
+      "text": "Giữa lúc sào tre đang chống xuồng cập bến kho nổi, chiến sĩ liên lạc đưa vội cho tôi một phong thư bọc hai lớp ni-lông chống nước từ viện điều dưỡng tuyến sau. Nét chữ nghiêng nghiêng viết bằng tay trái của Lê Minh Khang vẫn giữ nguyên cái giọng phóng khoáng năm nào.\n\nTrong thư, Khang kể mình đã tập đi lại không cần nạng trong sân viện, ngày nào cũng nghe đài dự báo thời tiết nhắc tới vùng trũng Thiên Lang mà nóng ruột đến mất ngủ. Cậu bạn giường tầng dặn tôi rằng mùa lũ ở đồng bằng không giống đồi cao Bạch Vũ, nước đục sẽ che kín những hố sâu mà sa bàn tham mưu không bao giờ vẽ nổi.\n\nNgón tay tôi miết nhẹ lên mặt kính nứt của chiếc đồng hồ cũ trong túi áo ngực. Nhớ hai cái vỗ vai quen thuộc của Khang, tôi tự nhủ tuyệt đối không để bất kỳ ngôi làng nào biến thành con số trắng trên bàn chỉ huy.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch5_ep3_04_ha_va_ban_do_but_chi"
+    },
+    {
+      "id": "ch5_ep3_03c_dong_ho_nut_duoi_mua",
+      "type": "narration",
+      "location": "Cầu gỗ kho gạo nổi — Căn cứ Thiên Lang",
+      "mood": "somber",
+      "text": "Mưa rào quất rát mặt khi chiếc xuồng máy ghé sát cầu gỗ tạm bắc vào kho gạo nổi Thiên Lang. Đứng đón tôi chỉ có mấy chiến sĩ cảnh vệ ướt sũng áo mưa cánh dơi và tiếng nước lũ cuồn cuộn vỗ vào hàng cọc tre.\n\nTrong túi áo ngực trái, mặt kim loại lạnh của chiếc bật lửa cũ cấn nhẹ bên cạnh chiếc đồng hồ mặt kính nứt từ trận Cầu Xích Thủy. Tôi đưa tay phải tự gõ khẽ hai nhịp lên vai trái mình, nghe tiếng vải ướt sột soạt như cố gọi lại chút hơi ấm của người bạn đồng khóa đã nằm lại ven sông.\n\nNếu Lê Minh Khang còn đứng ở bến xuồng này, hẳn nó đã cười khà bảo đừng bao giờ tin vào những mảng màu xanh phẳng lì trên bản đồ tham mưu. Tôi bước lên cầu gỗ, giữ chặt xắc cốt bước vào phòng tác chiến.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch5_ep3_04_ha_va_ban_do_but_chi"
+    },
+    {
+      "id": "ch5_ep3_04_ha_va_ban_do_but_chi",
+      "type": "dialogue",
+      "location": "Sở Chỉ Huy Dã Chiến — Kho Lương Thực Nổi Thiên Lang",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "tense",
+      "text": "Chào Thủ trưởng mới về nhận Lữ đoàn Thiên Lang. Xin lỗi vì tôi không trải kịp sơ đồ tác chiến sạch sẽ, cả bàn chỉ huy chỉ còn đủ chỗ cho tấm bản đồ gấp tay cỡ nhỏ này thôi — phần rìa dưới đã ngấm nước mưa từ đêm qua.\n\nTôi vừa rút chiếc bút chì 2B trên vành mũ xuống chấm lại bảy điểm đen đây: ba trạm xá xã đã tắt máy phát điện từ bốn giờ sáng vì hết dầu chạy máy, còn bốn điểm trường học trên gò cao đang kẹt hơn ba trăm cụ già với trẻ nhỏ chưa có xuồng tiếp cận. Thủ trưởng nhìn kỹ mấy nét chì đậm này đi, mực nước chỉ cần dâng thêm bốn tấc nữa là ngập tới bệ cửa sổ lớp học.\n\nNgười ta cứ quen nhìn những đường đỏ mũi tên tiến công mà quên mất những chấm tròn nhỏ xíu đánh dấu đường đi học của tụi nhỏ và buồng sinh của các sản phụ vùng trũng. Nếu không giữ nổi mấy mái nhà ấy qua mùa lũ này, mai kia có thắng lớn trên bản đồ thì hậu phương cũng trống hoác mất thôi.\n\nTôi mang theo bản đồ này sang đây không phải để xin thêm lời hứa chung chung đâu Thủ trưởng. Quân y chúng tôi cần tuyến xuồng và thuốc kháng sinh ngay trong chiều nay, chứ không thể chờ bộ máy giấy tờ duyệt xong báo cáo thiệt hại.",
+      "effects": [
+        { "unlockRelic": "ban_do_thien_lang" },
+        { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+        { "addRel": { "char": "ha", "delta": 1 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_ban_do_thien_lang",
+            "title": "Tấm Bản Đồ Nhỏ Thiên Lang",
+            "entry": "Nhận từ Y sĩ Nguyễn Thu Hà tấm bản đồ gấp tay có các dấu bút chì 2B đánh dấu trạm xá thiếu điện và điểm trường vùng ngập đang chờ sơ tán."
+          }
+        }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "son" },
+          "next": "ch5_ep3_05a_son_lu_doan_thien_lang"
+        }
+      ],
+      "next": "ch5_ep3_05b_so_quan_so_lu_doan"
+    },
+    {
+      "id": "ch5_ep3_05a_son_lu_doan_thien_lang",
+      "type": "dialogue",
+      "location": "Bàn Giao Quân Số — Sở Chỉ Huy Thiên Lang",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": { "charAlive": "son" },
+      "text": "Chào Đại Tá. Bạch Vũ giữ vững rồi. Sổ quân số Thiên Lang đây.\n\nNước dâng quá đầu gối rồi. Địch đang rình sườn tây. Đừng tin báo cáo đẹp.\n\nThuộc tên cán bộ chốt chưa? Ngắn thôi. Lính của tôi, tôi chịu.",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 2 } },
+        { "addRel": { "char": "son", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_06_thao_dau_moi_noi_gian"
+    },
+    {
+      "id": "ch5_ep3_05b_so_quan_so_lu_doan",
+      "type": "narration",
+      "location": "Bàn Giao Quân Số — Sở Chỉ Huy Thiên Lang",
+      "mood": "calm",
+      "text": "Phó tham mưu trưởng lữ đoàn đặt lên bàn cuốn sổ quân số bọc bìa dầu bóng loáng nước mưa. Từng trang giấy ghi chép tên tuổi các đại đội công binh cầu phà, vận tải thủy và tiểu đoàn giữ đê được đánh dấu bằng mực tím cẩn thận.\n\nTôi lật chậm từng trang bằng ngón tay cái, đọc thầm tên từng trung đội trưởng đang bám trụ trên các gò đất nổi giữa cánh đồng ngập trắng. Ở cấp Lữ đoàn, chỉ một dòng lệnh ký nhầm trên bản đồ cũng đủ đẩy cả trăm con người vào vòng xoáy nước lũ.\n\nBên góc phải gian kho ẩm thấp, ngọn đèn bão hắt ánh sáng vàng vọt lên dáng người thanh mảnh đang lật giở xấp hồ sơ mật.",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "next": "ch5_ep3_06_thao_dau_moi_noi_gian"
+    },
+    {
+      "id": "ch5_ep3_06_thao_dau_moi_noi_gian",
+      "type": "dialogue",
+      "location": "Góc Lưu Trữ Mật — Kho Nổi Thiên Lang",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Thưa Thủ trưởng, tôi vừa từ cụm kho Cửa Đông lội nước quay về sở chỉ huy cách đây mười phút. Nhìn hai nếp gấp đôi trên góc tờ hồ sơ mật này đi — toàn bộ phiếu xuất dầu và lịch trình sà lan đêm qua đều có hai chữ ký trùng nét một cách bất thường.\n\nGiấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được. Trong đội ngũ điều phối hậu cần ở Thiên Lang đang có một đầu mối nội gián chuyển tọa độ bến neo sà lan đạn và lượng dự trữ nhiên liệu ra ngoài trước mỗi đợt pháo kích.\n\nNếu chúng ta không khoanh vùng khóa chặt đường dây này trước nửa đêm, đòn đánh vu hồi của Thiết Phong qua đồng ngập sẽ chọc thẳng vào đúng kho đạn mỏng nhất của Lữ đoàn.",
+      "branches": [
+        {
+          "condition": { "charAlive": "linh" },
+          "next": "ch5_ep3_07a_linh_giai_ma_nhieu_song"
+        }
+      ],
+      "next": "ch5_ep3_07b_dai_vo_tuyen_mua_lu"
+    },
+    {
+      "id": "ch5_ep3_07a_linh_giai_ma_nhieu_song",
+      "type": "dialogue",
+      "location": "Bàn Vô Tuyến Dã Chiến — Kho Nổi Thiên Lang",
+      "speaker": "linh",
+      "speakerTitle": "Đại úy Trần Mỹ Linh",
+      "mood": "tense",
+      "condition": { "charAlive": "linh" },
+      "text": "Báo cáo Thủ trưởng, em vừa đối chiếu xong băng ghi tần số 42.6 MHz với tập hồ sơ của chị Thảo. Giữa lúc giông sét đánh rát ngoài đồng ngập, toàn bộ các kênh khác đều rè đặc nhiễu khí quyển, chỉ riêng hai quãng phát lúc 01 giờ 15 và 03 giờ 40 lại trong vắt lạ thường.\n\nSóng sạch quá mới là sóng có bẫy. Ngón tay em đo được độ trễ phản hồi chỉ khoảng ba trăm mili-giây — chứng tỏ đài thu phát của đối phương đặt ngay trong vòng bán kính mười cây số quanh cụm kho Cửa Đông chứ không phải từ bên kia sông.\n\nChỉ cần Thủ trưởng gật đầu cho phép đóng tạm hai luồng sà lan giả để thử phản ứng, em và tổ giải mã có thể khóa tọa độ máy phát lén đó trong vòng bốn mươi phút.",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_08_choice_chan_noi_gian_thien_lang"
+    },
+    {
+      "id": "ch5_ep3_07b_dai_vo_tuyen_mua_lu",
+      "type": "narration",
+      "location": "Bàn Vô Tuyến Dã Chiến — Kho Nổi Thiên Lang",
+      "mood": "tense",
+      "text": "Chiến sĩ trực đài vô tuyến tháo tai nghe, chỉ tay lên dải sóng 42.6 MHz đang hiện hai vạch xanh phẳng lì giữa cơn bão điện từ dày đặc. Mọi kênh dự phòng khác của Lữ đoàn đều rè đặc tiếng sấm, ngoại trừ hai xung ngắn sạch bóng nhiễu phát ra từ phía cụm kho Cửa Đông.\n\nThảo thu hồi bảng đo góc phương vị, khẳng định kẻ nội gián chỉ đứng cách hầm chỉ huy không quá một tầm pháo cối hạng trung. Nhưng nếu phong tỏa cụm kho ngay lúc này để giăng bẫy, hai chuyến sà lan đạn đầu tối sẽ buộc phải chậm nhịp ít nhất ba giờ.\n\nNgoài vách tôn, tiếng mưa dội xuống mái mỗi lúc một dữ dội, hối thúc tôi phải đưa ra mệnh lệnh dứt khoát trước khi trời tối sập.",
+      "next": "ch5_ep3_08_choice_chan_noi_gian_thien_lang"
+    },
+    {
+      "id": "ch5_ep3_08_choice_chan_noi_gian_thien_lang",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "text": "Đầu mối nội gián tại Cửa Đông đang rình rập tuồn lịch tiếp vận cho pháo binh Thiết Phong, trong khi tiền phương Bạch Vũ và các chốt ven đê đều đòi xuất sà lan đạn ngay trước nửa đêm. Bạn xử lý ra sao?",
+      "choices": [
+        {
+          "id": "c15_lap_tram_gia_bay_noi_gian",
+          "label": "Phối hợp Thảo và đài vô tuyến phát lịch sà lan giả để nhử kẻ nội gián lộ máy phát, chấp nhận lùi chuyến đạn đêm ba giờ",
+          "effects": [
+            { "setFlag": "chan_noi_gian_thien_lang" },
+            { "setFlag": "thao_tin_tuong_tuyet_doi" },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addRel": { "char": "thao", "delta": 2 } },
+            { "addRel": { "char": "linh", "delta": 1 } }
+          ],
+          "next": "ch5_ep3_09a_bat_gon_noi_gian"
+        },
+        {
+          "id": "c15_khoa_kho_tra_so_tuyen",
+          "label": "Đóng kín toàn bộ cụm kho Cửa Đông ngay lập tức, điều vệ binh kiểm tra từng hòm lương khô và chữ ký giao nhận",
+          "effects": [
+            { "setFlag": "chan_noi_gian_thien_lang" },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -6 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            { "addRel": { "char": "thao", "delta": 1 } }
+          ],
+          "next": "ch5_ep3_09a_bat_gon_noi_gian"
+        },
+        {
+          "id": "c15_bo_qua_de_chuyen_dan_gap",
+          "label": "Giữ nguyên tốc độ xuất kho chuyển đạn và thuốc men lên tuyến trước ngay trong đêm, tạm gác cuộc rà soát sang sáng mai",
+          "effects": [
+            { "setFlag": "bo_lot_noi_gian_thien_lang" },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": -4 } },
+            { "addRel": { "char": "thao", "delta": -2 } }
+          ],
+          "next": "ch5_ep3_09b_lo_toa_do_tien_tram"
+        },
+        {
+          "id": "c15_giao_to_trinh_sat_kiem_tra",
+          "label": "Chia nửa lượng sà lan đi trước, chỉ cắt một tiểu tổ trinh sát đi tuần lén ngoài bến bãi mà không chạm vào sổ sách văn thư",
+          "effects": [
+            { "setFlag": "bo_lot_noi_gian_thien_lang" },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "thao", "delta": -1 } }
+          ],
+          "next": "ch5_ep3_09b_lo_toa_do_tien_tram"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_09a_bat_gon_noi_gian",
+      "type": "narration",
+      "location": "Bến Kho Cửa Đông — Lữ Đoàn Thiên Lang",
+      "mood": "calm",
+      "text": "Chưa đầy năm mươi phút sau khi mệnh lệnh siết chặt được ban xuống, ánh đèn pin của tổ phản gián và vệ binh đã quét trúng một chiếc xuồng vỏ lãi neo khuất sau rặng dừa nước cuối bãi Cửa Đông. Dưới lớp đáy giả giấu dưới các thùng dầu nhờn là bộ phát xung nén tốc độ cao vẫn còn nóng ran thân máy.\n\nTrong khoang xuồng còn có ba bộ quần áo rằn ri chưa kịp hủy và tập bản đồ sao chép lộ trình sà lan tiếp tế lên Bạch Vũ. Nhờ giữ kín tần số dự phòng và không đánh động trước, tổ trinh sát đã khóa gọn cả điểm hẹn giao nhận mật mã bên rìa kênh phụ.\n\nTên nhân viên áp tải hàng giả danh lặng lẽ cúi đầu tra tay vào còng số tám, chấm dứt chuỗi rò rỉ tọa độ kéo dài suốt từ chiến dịch Bạch Vũ. Thảo lặng lẽ gấp đôi góc tờ biên bản bắt giữ, gật đầu nhìn tôi một cái đầy tin cậy trước khi đưa nghi phạm về hầm thẩm vấn.\n\nDù nhịp xuất hàng đêm phải lùi lại vài tiếng để sắp xếp lại tuyến sà lan an toàn, toàn bộ khu neo đậu chính vẫn bình yên vô sự giữa màn mưa đặc quánh.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_chan_noi_gian",
+            "title": "Chặn đứng đầu mối nội gián Thiên Lang",
+            "entry": "Phối hợp phản gián và vô tuyến bóc gỡ bộ phát xung lén tại bến kho Cửa Đông, bảo toàn bí mật tuyến đường thủy tiếp vận trước đợt công kích của Thiết Phong."
+          }
+        }
+      ],
+      "next": "ch5_ep3_10_dispatch_hac_ung_tan_cong"
+    },
+    {
+      "id": "ch5_ep3_09b_lo_toa_do_tien_tram",
+      "type": "narration",
+      "location": "Bến Kho Cửa Đông — Lữ Đoàn Thiên Lang",
+      "mood": "urgent",
+      "text": "Hai giờ sáng, giữa lúc đoàn sà lan đầu tiên đang hối hả kéo bạt rời bến Cửa Đông, ba loạt đạn cối 120 ly từ phía tây bất ngờ giã trúng xác vào cụm cọc neo và nhà tôn chứa vật tư dự phòng. Lửa bùng lên đỏ rực cả góc trời mưa lũ, tiếng nổ phụ của các thùng dầu phụ tùng làm rung chuyển sàn gỗ sở chỉ huy.\n\nNước lũ tràn vào hố đạn còn bốc khói xèo xèo tạo thành những cột hơi nước trắng đục bốc mù mịt khắp cầu gỗ. Mấy chiến sĩ giữ kho mặt mũi đen nhẻm khói dầu phải lặn xuống dòng nước ngang cổ mò lại từng cuộn dây tời nặng trịch chưa kịp bị sóng cuốn trôi.\n\nTổ công binh phải lao xuống dòng nước cuộn xoáy cắt dây neo để cứu hai chiếc sà lan chở đạn khỏi cháy lan, nhưng một phần lớn áo phao, dây tời thép và xuồng máy dự bị đã bị mảnh pháo xé nát. Ngoài rìa rừng tràm phía đông, chiếc xuồng vỏ lãi lạ mất hút vào bóng đêm trước khi vệ binh kịp đóng chốt chặn.\n\nThảo đứng lặng bên cửa sổ nhìn đám cháy đang tắt dần dưới mưa, không nói một lời trách móc nào, nhưng tôi hiểu lỗ hổng đêm nay sẽ trả giá rất đắt khi cơn lũ đạt đỉnh vào rạng sáng.",
+      "effects": [
+        { "addStat": { "stat": "TiepTe", "delta": -5 } },
+        { "addStat": { "stat": "SiKhi", "delta": -3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_lo_noi_gian",
+            "title": "Bến kho Cửa Đông trúng pháo đêm",
+            "entry": "Vì ưu tiên xuất hàng gấp hoặc rà soát chưa tới gốc, đầu mối nội gián đã chuyển tọa độ bến neo Cửa Đông cho Thiết Phong pháo kích gây thiệt hại đáng kể phương tiện vượt lũ."
+          }
+        }
+      ],
+      "next": "ch5_ep3_10_dispatch_hac_ung_tan_cong"
+    },
+    {
+      "id": "ch5_ep3_10_dispatch_hac_ung_tan_cong",
+      "type": "dispatch",
+      "location": "Phòng Tác Chiến — Lữ Đoàn Thiên Lang",
+      "mood": "urgent",
+      "text": "[CẢNH BÁO TÁC CHIẾN LIÊN HOÀN — TRINH SÁT TIỀN PHƯƠNG]\n\n'04 giờ 15: Lữ đoàn đổ bộ đường sông của Khối Thiết Phong lợi dụng nước lũ tràn đồng mở mũi tiến công bọc sườn từ phía tây nam, kết hợp pháo tầm xa khóa chặt trục lộ cao nối Thiên Lang với Bạch Vũ.'\n\n'Đồng thời, một kênh vô tuyến không mã hóa từ Bộ Chỉ Huy tiền phương đối phương phát liên tục trên băng tần chung của Lữ đoàn yêu cầu trực tiếp gặp Đại Tá Lữ đoàn trưởng.'",
+      "next": "ch5_ep3_11_hac_ung_vo_tuyen"
+    },
+    {
+      "id": "ch5_ep3_11_hac_ung_vo_tuyen",
+      "type": "dialogue",
+      "location": "Máy Vô Tuyến Chỉ Huy — Lữ Đoàn Thiên Lang",
+      "speaker": "hac_ung",
+      "speakerTitle": "Tư lệnh Hắc Ưng (Khối Thiết Phong)",
+      "mood": "tense",
+      "text": "Chúc mừng tân Đại Tá của Lữ Đoàn Thiên Lang. Trên bàn đồ của tôi, mực nước vùng trũng của ông đang dâng đều bốn phân mỗi giờ — một biến số tự nhiên lý tưởng hơn bất kỳ đợt không kích nào.\n\nĐừng vội ngắt sóng. Tôi chỉ muốn nêu một phép tính xác suất đơn giản: với lượng xuồng máy và nhiên liệu hiện có, ông chỉ đủ sức giữ tuyến pháo chi viện Bạch Vũ hoặc đi vớt mấy trăm dân thường trên gò đất ngập nước. Chọn cả hai nghĩa là tổng lực lượng kéo giãn vượt ngưỡng gãy, tỷ lệ sụp đổ sườn tây lên tới bảy mươi tám phần trăm.\n\nKhi mực nước vượt ngưỡng ba mét hai, mỗi tấn hàng ông chuyển cho dân thường là một phần trăm xác suất mất trắng lữ đoàn. Chúng ta sẽ sớm kiểm chứng xem trái tim người chỉ huy hay phép tính hậu cần trụ lại lâu hơn trên mặt đê.",
+      "next": "ch5_ep3_12_hung_ep_so_lieu"
+    },
+    {
+      "id": "ch5_ep3_12_hung_ep_so_lieu",
+      "type": "dialogue",
+      "location": "Buồng Điện Thoại Mật — Sở Chỉ Huy Thiên Lang",
+      "speaker": "hung",
+      "speakerTitle": "Đại tá Phạm Quang Hùng — Cục Tác Chiến",
+      "mood": "tense",
+      "text": "Nghe tôi nói kỹ qua đường dây mật này nhé cậu em: tôi vừa xem qua báo cáo sơ bộ mực nước và đòn bọc sườn của Hắc Ưng ở Thiên Lang rồi. Trên Bộ Tư Lệnh đang đánh giá rất cao bản lĩnh của cậu từ Xích Thủy tới Bạch Vũ, danh sách đề bạt cấp Thiếu Tướng cho chiến dịch mùa khô đã gõ tên cậu ở dòng đầu.\n\nNhưng muốn giữ sạch ghế chỉ huy Sư đoàn sắp tới, cậu phải biết xử lý dứt điểm mớ bòng bong dân sự ngay sáng nay. Toàn bộ dầu diesel dự phòng và xuồng máy phải dồn hết cho pháo binh và xe đạn, còn mấy trạm xá hay lớp học ngập nước thì cứ ghi vào mục 'sơ tán địa phương tự túc'. Bản tổng hợp quân số và hao hụt đêm qua tôi đã cho văn thư làm tròn lại cho đẹp rồi, cậu chỉ cần ký nháy xác nhận là xong.\n\nTrên bàn hội đồng người ta chỉ nhìn kết quả cuối, không ai đếm từng vỏ đạn đâu. Đôi khi phải biết cắt bỏ một ngón tay để giữ cả bàn tay — ký đi rồi tôi đẩy thẳng hai tiểu đoàn pháo dự bị xuống cứu mặt đê cho cậu.",
+      "branches": [
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch5_ep3_13a_vinh_nhac_qua_duong_day"
+        }
+      ],
+      "next": "ch5_ep3_13b_trang_so_xanh_im_lang"
+    },
+    {
+      "id": "ch5_ep3_13a_vinh_nhac_qua_duong_day",
+      "type": "dialogue",
+      "location": "Đầu Dây Hữu Tuyến Riêng — Lữ Đoàn Thiên Lang",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh",
+      "mood": "calm",
+      "condition": { "charAlive": "vinh" },
+      "text": "Phạm Quang Hùng vừa gọi xuống Thiên Lang đúng không? Tôi nghe phong thanh bên Cục Tác Chiến đang soạn sẵn mẫu báo cáo tổng hợp 'không tổn thất dân sự' để trình lên hội đồng tuần sau đấy.\n\nỞ đầu dây này chỉ có thầy trò mình nói chuyện với nhau thôi. Chậm ba nhịp là mất nửa đội hình rồi đấy, nhưng nhanh một nhịp bằng cách xóa sạch dấu vết đau đớn của lính và dân khỏi sổ sách thì sau này cậu sẽ chẳng còn biết mình đang chỉ huy vì điều gì nữa.\n\nCậu nhìn lại cuốn sổ bìa xanh trong túi áo đi. Đừng viết điều mình chưa làm được — và càng đừng bao giờ ký lên con số dối trá để đổi lấy một ngôi sao trên vai áo.",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_14_choice_hung_ho_so"
+    },
+    {
+      "id": "ch5_ep3_13b_trang_so_xanh_im_lang",
+      "type": "narration",
+      "location": "Phòng Chỉ Huy Nhỏ — Lữ Đoàn Thiên Lang",
+      "mood": "tense",
+      "text": "Đặt ống nghe xuống mặt bàn gỗ ẩm hơi nước, tôi mở cuốn sổ bìa xanh đặt ngay cạnh bản danh sách điều động mà văn thư của Phạm Quang Hùng vừa gửi qua máy fax mật. Từng hàng số liệu được in ngay ngắn, sạch bóng mọi vết bùn của vùng lũ trắng.\n\nNếu đặt bút ký vào tờ phụ lục làm tròn ấy, toàn bộ trách nhiệm thiếu hụt phương tiện cứu trợ và tổn thất kho Cửa Đông sẽ biến mất khỏi hồ sơ cá nhân, mở toang cánh cửa lên quân hàm cấp Tướng ngay cuối chiến dịch. Ngược lại, từ chối Hùng nghĩa là tôi phải tự gồng mình xoay xở giữa thiếu thốn nhiên liệu và áp lực kỷ luật từ cấp trên.\n\nTiếng gõ đuôi bút khe khẽ trong ký ức từ giảng đường Quang Trung năm nào lại vang lên bên tai: đừng bao giờ viết vào sổ điều mình chưa làm được.",
+      "next": "ch5_ep3_14_choice_hung_ho_so"
+    },
+    {
+      "id": "ch5_ep3_14_choice_hung_ho_so",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "text": "Bản công điện làm tròn số liệu của Phạm Quang Hùng nằm trước mặt, còn bản đồ bút chì 2B của Thu Hà nằm ngay bên trái. Bạn quyết định thế nào?",
+      "choices": [
+        {
+          "id": "c15_giu_cong_dien_goc_hung",
+          "label": "Từ chối ký phụ lục làm đẹp số liệu, niêm phong giữ lại bản công điện gốc của Hùng trong túi hồ sơ cá nhân làm bằng chứng",
+          "effects": [
+            { "setFlag": "giu_bang_chung_pham_quang_hung" },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addRel": { "char": "vinh", "delta": 2 } },
+            { "addRel": { "char": "hung", "delta": -2 } }
+          ],
+          "next": "ch5_ep3_15a_giu_cong_dien_chong_hung"
+        },
+        {
+          "id": "c15_trao_ho_so_cho_thao",
+          "label": "Từ chối thẳng thừng và sao gửi ngay bản công điện ép số liệu của Hùng sang hồ sơ mật gấp góc của phản gián Lê Phương Thảo",
+          "effects": [
+            { "setFlag": "giu_bang_chung_pham_quang_hung" },
+            { "setFlag": "nhan_ho_so_mat_thao" },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -5 } },
+            { "addRel": { "char": "thao", "delta": 2 } },
+            { "addRel": { "char": "hung", "delta": -3 } }
+          ],
+          "next": "ch5_ep3_15a_giu_cong_dien_chong_hung"
+        },
+        {
+          "id": "c15_thoa_hiep_ky_nhay_hung",
+          "label": "Ký nháy hợp thức hóa sổ sách theo đề nghị của Hùng để nhận ngay lượng dầu pháo dự bị và giữ đường thăng tiến cấp Tướng",
+          "effects": [
+            { "setFlag": "thoa_hiep_hung_de_thang_chuc" },
+            { "addStat": { "stat": "TiepTe", "delta": 6 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            { "addRel": { "char": "hung", "delta": 3 } },
+            { "addRel": { "char": "vinh", "delta": -2 } }
+          ],
+          "next": "ch5_ep3_15b_thoa_hiep_ky_nhay_hung"
+        },
+        {
+          "id": "c15_tri_hoan_khong_ky",
+          "label": "Trì hoãn không ký cả hai văn bản, tự cắt giảm khẩu phần dầu nội bộ sở chỉ huy để giữ nguyên cứu trợ dân sự mà không đối đầu trực diện",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "hung", "delta": -1 } }
+          ],
+          "next": "ch5_ep3_15a_giu_cong_dien_chong_hung"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_15a_giu_cong_dien_chong_hung",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "mood": "tense",
+      "text": "Tôi gập đôi bản công điện ép làm tròn số liệu của Phạm Quang Hùng, tuyệt đối không đặt bút ký nhận những dòng báo cáo tẩy sạch dấu vết dân thường, rồi gửi điện phúc đáp yêu cầu giữ nguyên số liệu thực tế tại Lữ đoàn Thiên Lang.\n\nĐúng như dự liệu, chưa đầy nửa tiếng sau, Cục Tác Chiến gửi điện hoãn vô thời hạn đợt tăng viện dầu diesel với lý do 'chờ thẩm định lại thực lực tiếp nhận'. Bên bàn phản gián, Thảo lặng lẽ khóa tập hồ sơ mật gấp góc vào hộp thiếc chống ẩm, ánh mắt lóe lên sự đồng thuận hiếm hoi.\n\nToàn bộ máy phát điện chiếu sáng trong kho nổi lập tức bị tắt bớt một nửa để dồn từng lít dầu cho xuồng máy và xe tải. Hành lang sở chỉ huy chìm vào thứ ánh sáng vàng vọt của hai cây đèn bão treo cao, báo hiệu Lữ đoàn phải tự xoay xở bằng chính những gì đang còn nổi trên mặt lũ.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_giu_bang_chung_hung",
+            "title": "Từ chối làm giả sổ sách Thiên Lang",
+            "entry": "Không ký hợp thức hóa báo cáo giảm nhẹ thiệt hại dân sự theo sức ép của Phạm Quang Hùng, chấp nhận bị trì hoãn chi viện nhiên liệu giữa đỉnh lũ."
+          }
+        }
+      ],
+      "next": "ch5_ep3_16_khung_hoang_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_15b_thoa_hiep_ky_nhay_hung",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "mood": "somber",
+      "text": "Đầu bút bi lướt nhanh qua ô chữ ký góc phải tờ phụ lục sạch sẽ. Chỉ một nét mực xanh, hàng trăm mét khối bùn nước cùng danh sách các trạm xá cạn dầu của Thu Hà được gộp gọn vào dòng chữ 'địa phương tự đảm bảo'.\n\nChưa đầy hai mươi phút sau, hai xe bồn nhiên liệu dự phòng của Cục được lệnh quay đầu đổ thẳng xuống bến nạp cho trận địa pháo cối Thiên Lang. Những người lính pháo thủ reo lên mừng rỡ khi nghe tiếng máy bơm dầu chạy rền vang ngoài bãi, còn tôi lại tránh không dám nhìn thẳng vào trang giấy trống trong cuốn sổ bìa xanh.\n\nTừ khoảnh khắc nét chữ ký ấy khô mực, một vết rạn vô hình bắt đầu lan ra giữa sở chỉ huy nổi này và những người vẫn tin vào chữ nghĩa thật của tôi.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_thoa_hiep_hung",
+            "title": "Thỏa hiệp trên giấy tại Thiên Lang",
+            "entry": "Đồng ý ký hợp thức hóa báo cáo giảm nhẹ thiệt hại dân sự cho Phạm Quang Hùng để đổi lấy lượng dầu pháo dự bị cho phòng tuyến."
+          }
+        }
+      ],
+      "next": "ch5_ep3_16_khung_hoang_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_16_khung_hoang_dap_tran",
+      "type": "narration",
+      "location": "Đài Quan Sát Mái Tôn — Lữ Đoàn Thiên Lang",
+      "mood": "urgent",
+      "text": "Bảy giờ sáng, cơn mưa nguồn dồn xuống khiến mực nước sông Đáy Lang vượt mức lịch sử, tràn qua mặt bê tông của Đập Tràn Thiên Lang gần nửa mét. Nước đục ngầu cuồn cuộn gầm réo như muốn bứng cả những hàng cọc tiêu bằng sắt ra khỏi chân đập.\n\nTừng đám lục bình, cành tre gãy và váng dầu đục ngầu xoáy tít qua các trụ cầu tràn, kéo theo tiếng rền ầm ầm từ sâu dưới lòng sông. Trên mái tôn đài quan sát, mỗi hạt mưa quất xuống nghe nặng như sỏi ném khiến những người lính trực ban phải hét thật to mới nghe rõ khẩu lệnh của nhau.\n\nCùng một lúc, hai tín hiệu cấp cứu đỏ rực bật sáng trên bảng điều phối chiến trường. Tại đầu đập tràn ngập nước, đoàn xe tải hai cầu chở huyết thanh, kháng sinh và ngòi nổ cối của bác tài Phan Văn Bảy đang bị kẹt cứng giữa dòng chảy xiết dưới làn pháo cầm canh của địch.\n\nCách đó ba cây số về phía hạ lưu, trên biển nước trắng xóa mênh mông, đội xuồng tôn của anh nuôi Trần Văn Tám đang chật vật chở cơm nóng và bốc dỡ các cụ già, em nhỏ khỏi mái trường cấp một sắp sập bờ kè.",
+      "next": "ch5_ep3_17_bay_o_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_17_bay_o_dap_tran",
+      "type": "dialogue",
+      "location": "Đầu Đập Tràn Thiên Lang (qua vô tuyến)",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "urgent",
+      "text": "Alô Thủ trưởng nghe rõ tui không? Xe đi đầu của tui tới đúng giữa mặt đập tràn rồi thì nước lũ đổ ào qua gầm cầu số một, bùn sạt trôi mất nửa mép đường bên phải rồi chú em ơi!\n\nSau lưng tui là nguyên thùng thuốc cấp cứu của cô Hà với ba tấn ngòi đạn cho tụi thằng Khang bên cánh tây. Tui ngậm viên kẹo gừng trong hộc táp-lô nãy giờ cho đỡ lạnh rồi — đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người, nhưng giờ cối địch bắt đầu rớt sát bờ đập quá, không có xe kéo với công binh dắt dây thì đầu xe trôi tuột xuống vực nước liền!\n\nChú em điều gấp một tổ xe kéo ra móc cáp đi, chứ để tụi tui đứng chôn chân giữa mặt đập thêm mười phút nữa là nước cuốn sạch cả xe lẫn thuốc à!",
+      "next": "ch5_ep3_18_tam_ben_bep_xuong"
+    },
+    {
+      "id": "ch5_ep3_18_tam_ben_bep_xuong",
+      "type": "dialogue",
+      "location": "Điểm Trường Ngập Lũ — Vùng Lũ Trắng (qua sóng ngắn)",
+      "speaker": "tam",
+      "speakerTitle": "Anh nuôi Trần Văn Tám",
+      "mood": "urgent",
+      "text": "Thủ trưởng ơi! Tui là Tám bếp đây, máy bộ đàm ướt nước nghe hơi rè chút mà chú em ráng nghe kỹ giùm tui nha! Hai chiếc xuồng chèo tay của tụi tui vừa cập được vách tường trường học xóm Gò Tràm rồi, nhưng nước xoáy mạnh quá xá mạnh!\n\nTrong lớp còn tới bốn mươi lăm đứa nhỏ với mấy bà cụ run cầm cập từ hôm qua tới giờ, nồi cơm tui ủ bao bố giữ nhiệt còn nóng hổi mà xuồng nhỏ quá chở không hết một lượt được. Tường gạch phía sau trường mới nứt toác một đường bằng bắp tay, sập xuống lúc nào không hay đâu chú em ơi!\n\nMùi khói bếp dính áo tui ướt nhẹp hết rồi, hộp kim chỉ trong túi ngực cũng ngập nước luôn, nhưng dân mình đang bám mép cửa sổ ngóng từng chiếc xuồng máy tới đón. Chú em coi còn xuồng bọc thép nào đẩy xuống Gò Tràm phụ tui bốc hết tụi nhỏ ra bờ cao với!",
+      "next": "ch5_ep3_19_ha_giuc_cuu_dan"
+    },
+    {
+      "id": "ch5_ep3_19_ha_giuc_cuu_dan",
+      "type": "dialogue",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "urgent",
+      "text": "Thủ trưởng nhìn lên tấm bản đồ nhỏ này đi! Điểm trường Gò Tràm mà anh nuôi Tám đang giữ nằm đúng chỗ tôi khoanh hai vòng bút chì 2B đậm nhất — đó là vùng trũng tử địa khi nước sông Đáy Lang vượt ba mét hai!\n\nCòn trên xe bác tài Bảy lại là toàn bộ cơ số thuốc chống uốn ván, huyết thanh và pin máy thở cho ba trạm xá vừa mất điện sáng nay. Mất xe thuốc đó, hàng chục thương binh và sản phụ ở tuyến sau sẽ không cầm cự nổi qua đêm nay.\n\nTrong sân chỉ còn duy nhất một trung đội công binh cứu hộ và một phân đội xuồng máy bọc thép còn nổ máy được. Thủ trưởng chọn cách nào bây giờ?",
+      "branches": [
+        {
+          "condition": { "charAlive": "gia_lang" },
+          "next": "ch5_ep3_19b_gia_lang_canh_bao_lu"
+        }
+      ],
+      "next": "ch5_ep3_20_choice_khung_hoang_tiep_te_timed"
+    },
+    {
+      "id": "ch5_ep3_19b_gia_lang_canh_bao_lu",
+      "type": "dialogue",
+      "location": "Hành Lang Kho Nổi Thiên Lang",
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Đoàn dân công dẫn đường)",
+      "mood": "tense",
+      "condition": { "charAlive": "gia_lang" },
+      "text": "Anh chỉ huy ơi, già theo đoàn thuyền dân công từ thượng nguồn xuống tiếp tế cho bộ đội mà gặp đúng cơn nước dữ này. Già chống cây gậy trúc gõ xuống ván gỗ cho anh nghe rõ: rừng không giấu dấu chân người vội, mà dòng lũ trắng cũng chẳng nương tay kẻ chần chừ.\n\nCon nước đang đổ xiết xuống Gò Tràm theo đường khe trũng cũ rồi đấy. Nếu cắt quân đi cứu cả hai ngả mà kho không đủ dây cáp với người gác bến, nước xoáy nó nuốt luôn cả xuồng lẫn xe đó mấy chú bộ đội ơi!",
+      "next": "ch5_ep3_20_choice_khung_hoang_tiep_te_timed"
+    },
+    {
+      "id": "ch5_ep3_20_choice_khung_hoang_tiep_te_timed",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang — Phút Sinh Tử",
+      "timedSeconds": 12,
+      "timeoutChoiceId": "c15_uu_tien_xe_dan_bay",
+      "text": "Tiếng pháo cối địch dội sát mặt đập tràn cùng lúc tiếng mái tôn trường Gò Tràm rạn nứt vang qua bộ đàm. Đồng hồ đếm ngược 12 giây chớp đỏ — bạn điều động lực lượng cứu hộ duy nhất hiện có theo hướng nào?",
+      "choices": [
+        {
+          "id": "c15_cuu_dan_va_ca_hai_tuyen",
+          "label": "Rút sạch hai tiểu đội công binh gác kho dự bị, chia đôi lực lượng lao tới cả Đập Tràn cứu xe Bảy lẫn Gò Tràm cùng xuồng anh Tám",
+          "effects": [
+            { "setFlag": "cuu_dan_vung_lu_thien_lang" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": -8 } },
+            { "addRel": { "char": "bay", "delta": 2 } },
+            { "addRel": { "char": "tam", "delta": 2 } },
+            { "addRel": { "char": "ha", "delta": 2 } }
+          ],
+          "next": "ch5_ep3_21_kiem_tra_tuyen_cuu_ca_hai"
+        },
+        {
+          "id": "c15_uu_tien_xuong_cuu_dan_tam",
+          "label": "Dồn toàn bộ xuồng máy bọc thép xuống Gò Tràm hỗ trợ anh Tám sơ tán dân và trẻ nhỏ, lệnh cho xe bác Bảy tự tìm cách bám bờ đập",
+          "effects": [
+            { "setFlag": "cuu_dan_vung_lu_thien_lang" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 7 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -7 } },
+            { "addRel": { "char": "tam", "delta": 2 } },
+            { "addRel": { "char": "ha", "delta": 2 } }
+          ],
+          "next": "ch5_ep3_22c_kiem_tra_bay_qua_dap"
+        },
+        {
+          "id": "c15_uu_tien_xe_dan_bay",
+          "label": "Tung xe kéo công binh ra Đập Tràn cứu ngay xe thuốc và đạn pháo của bác Bảy, để đội xuồng chèo của anh Tám tự xoay xở bên trường học",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 6 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -5 } },
+            { "addRel": { "char": "bay", "delta": 2 } },
+            { "addRel": { "char": "ha", "delta": -2 } }
+          ],
+          "next": "ch5_ep3_22e_tam_hi_sinh_vung_lu_trang"
+        },
+        {
+          "id": "c15_giu_doi_hinh_cat_cuu_tro",
+          "label": "Giữ nguyên đội hình công binh ở bờ cao bảo vệ trận địa pháo phòng thủ, lệnh cả Bảy và Tám tự hủy hàng hoặc bỏ phương tiện rút lui",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 8 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -9 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -8 } },
+            { "addRel": { "char": "ha", "delta": -3 } },
+            { "addRel": { "char": "khang", "delta": -3 } }
+          ],
+          "next": "ch5_ep3_22f_mat_ca_tam_lan_bay"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_21_kiem_tra_tuyen_cuu_ca_hai",
+      "type": "narration",
+      "location": "Bến Xuất Kích — Lữ Đoàn Thiên Lang",
+      "mood": "urgent",
+      "text": "Không còn thời gian tính toán an toàn trên sa bàn nữa. Tôi gập cuốn sổ bìa xanh nhét lại vào túi áo ngực, ra lệnh cho toàn bộ vệ binh và hai tiểu đội gác kho mang cuộn cáp thép cuối cùng chạy ù xuống bến nổ máy.\n\nMột mũi xe kéo bọc thép phóng thẳng lên mặt Đập Tràn đón đoàn xe của bác tài Bảy, còn ba chiếc xuồng máy hạng nặng rẽ sóng trắng lao xuống vùng trũng Gò Tràm tiếp ứng cho anh nuôi Tám. Cả Lữ đoàn đánh cược toàn bộ phần dự bị hậu cần vào hai sợi dây cứu mạng cùng một lúc.\n\nChỉ cần bến bãi không bị đánh úp hoặc dây cáp không đứt giữa dòng xoáy, chúng tôi có thể mang tất cả trở về trước khi cơn lũ đạt đỉnh.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "chan_noi_gian_thien_lang" },
+              { "statMin": { "stat": "TiepTe", "value": 36 } }
+            ]
+          },
+          "next": "ch5_ep3_22a_cuu_tron_bay_tam_va_dan"
+        }
+      ],
+      "next": "ch5_ep3_22b_bay_hi_sinh_giu_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_22a_cuu_tron_bay_tam_va_dan",
+      "type": "narration",
+      "location": "Điểm Trường Gò Tràm & Đập Tràn Thiên Lang",
+      "mood": "warm",
+      "text": "Nhờ bắt gọn đầu mối nội gián đêm qua, pháo binh Thiết Phong hoàn toàn mất dấu tọa độ di chuyển của hai đội cứu hộ giữa màn mưa mù đặc. Sáu mươi phút nghẹt thở trôi qua khi nước lũ liếm sát mái tôn trường tiểu học, ba chiếc xuồng máy bọc thép đã kịp cập vách tường nứt, đón đủ bốn mươi lăm em nhỏ và các cụ già sang gò đất cao.\n\nTrên khoang xuồng cuối cùng, anh nuôi Trần Văn Tám người ướt như chuột lột vẫn ôm chặt nồi cơm giữ nhiệt còn bốc khói nghi ngút chia từng nắm cơm nóng cho lũ trẻ run lập cập. Cùng lúc đó trên mặt Đập Tràn, xe kéo công binh móc cáp thành công, lôi chiếc xe tải hai cầu của bác tài Phan Văn Bảy thoát khỏi mép nước xoáy cùng nguyên vẹn thùng thuốc và đạn pháo.\n\nDù kho dự bị cạn sạch dây cáp và nhiên liệu dự trữ, cả Lữ đoàn thở phào nhẹ nhõm khi không một chiếc xuồng dân sự hay người lính vận tải nào bị dòng lũ trắng nuốt chửng.",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 5 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_cuu_dan_thien_lang",
+            "title": "Giữ trọn dân Gò Tràm và tuyến xe Thiên Lang",
+            "entry": "Dốc toàn lực công binh và xuồng máy giải cứu thành công điểm trường Gò Tràm cùng anh nuôi Tám, đồng thời kéo an toàn đoàn xe thuốc của bác tài Bảy qua đập tràn."
+          }
+        }
+      ],
+      "next": "ch5_ep3_24a_ha_cam_on_ben_tram_xa"
+    },
+    {
+      "id": "ch5_ep3_22b_bay_hi_sinh_giu_dap_tran",
+      "type": "narration",
+      "location": "Đập Tràn Thiên Lang",
+      "mood": "somber",
+      "text": "Tại Gò Tràm, đội xuồng máy vẫn kịp chen vào trước khi bức tường lớp học đổ ụp xuống dòng nước xoáy, cứu sống toàn bộ bốn mươi lăm em nhỏ, các cụ già và anh nuôi Trần Văn Tám. Nhưng ở phía Đập Tràn, thiếu phương tiện dự phòng hoặc bị pháo địch chỉ điểm chính xác, hai dây cáp kéo đầu tiên đứt phăng ngay giữa dòng chảy xiết.\n\nThấy nửa sau thùng xe chở đạn cối sắp trượt ngang đẩy cả tổ công binh xuống vực nước, bác tài Phan Văn Bảy hét vang qua cửa kính vỡ bảo anh em cắt ngay móc xích an toàn. Ông ghìm chặt vô lăng, nhấn ga hết cỡ cho chiếc xe đầu kéo bốc cháy lao ghì sang rìa bờ kè đá để làm điểm tựa giữ lại chiếc xe chở thuốc phía sau.\n\nMột tiếng nổ chát chúa trộn lẫn ánh lửa cam lóe lên giữa màn mưa xối xả. Khẩu đội cối và tổ quân y cứu được thùng huyết thanh cùng xe thuốc nguyên vẹn sang bờ nam, nhưng trong cabin méo mó ngập nửa nước chỉ còn lại hộp thiếc đựng kẹo gừng nổi bồng bềnh bên mặt vô lăng.",
+      "effects": [
+        { "setFlag": "bay_hi_sinh_thien_lang" },
+        { "setCharState": { "char": "bay", "state": "dead" } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+        { "addStat": { "stat": "SiKhi", "delta": -2 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_bay_hi_sinh",
+            "title": "Bác tài Phan Văn Bảy ngã xuống trên Đập Tràn",
+            "entry": "Giữa dòng lũ tràn bờ và pháo kích, Phan Văn Bảy đã lái chiếc xe đầu kéo giữ nhịp chắn bờ để cứu thùng thuốc cấp cứu, anh dũng hi sinh trên Đập Tràn Thiên Lang."
+          }
+        }
+      ],
+      "next": "ch5_ep3_24a_ha_cam_on_ben_tram_xa"
+    },
+    {
+      "id": "ch5_ep3_22c_kiem_tra_bay_qua_dap",
+      "type": "narration",
+      "location": "Đường Thủy Hạ Lưu Gò Tràm",
+      "mood": "urgent",
+      "text": "Ba chiếc xuồng bọc thép mở hết công suất lao thẳng về phía điểm trường Gò Tràm đang rung lắc trong làn nước đục. Khi ánh đèn pha xuyên qua màn mưa bắt gặp chiếc xuồng tôn nhỏ bé của anh nuôi Tám đang ghìm mũi chống chọi giữa dòng xoáy, cả đội cứu hộ lập tức ném phao dây bắc cầu người đưa bốn mươi lăm em nhỏ và các cụ già lên khoang.\n\nNhưng từ đầu dây Đập Tràn Thiên Lang vọng lại tiếng còi xe tải hú dài lẫn trong tiếng pháo nổ rền. Không có xe kéo công binh tiếp sức, bác tài Phan Văn Bảy phải tự mình đánh vật với từng thước đường bê tông đang sạt lở dưới gầm bánh.\n\nTất cả chúng tôi ở sở chỉ huy đều nín thở nhìn về phía cột khói xám bốc lên ở hướng bắc.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "chan_noi_gian_thien_lang" },
+              { "statMin": { "stat": "TiepTe", "value": 42 } }
+            ]
+          },
+          "next": "ch5_ep3_22d_tam_cuu_dan_bay_thoat_hiem"
+        }
+      ],
+      "next": "ch5_ep3_22b_bay_hi_sinh_giu_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_22d_tam_cuu_dan_bay_thoat_hiem",
+      "type": "narration",
+      "location": "Bờ Nam Đập Tràn Thiên Lang",
+      "mood": "warm",
+      "text": "Nhờ bến kho Cửa Đông còn đủ dây tời và tuyến đường không bị pháo chỉ điểm chính xác, hai chiến sĩ áp tải đi cùng bác tài Bảy đã kịp nhảy xuống dòng nước ngang ngực neo xích vào trụ bê tông đầu cầu. Bác Bảy cài số phụ, rồ máy gầm vang lôi phăng cả chiếc xe chở thuốc lẫn xe ngòi đạn bò qua đoạn sạt lở đúng ba mươi giây trước khi mép đường sụp xuống lòng sông.\n\nVề tới bãi tập kết bờ nam với bùn đất bê bết từ đầu tới chân, bác Bảy run tay mở hộp kẹo gừng trong táp-lô cười khà với đám lính trẻ: 'Còn dầu với còn người là xe nó còn bò về được tới nhà mấy chú ơi!'\n\nCùng lúc đó, đội xuồng từ Gò Tràm cũng cập bến an toàn với anh nuôi Tám và toàn bộ dân làng, không thiếu một mái đầu nhỏ nào.",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_cuu_dan_thoat_hiem",
+            "title": "Cứu dân Gò Tràm và vượt đập trong gang tấc",
+            "entry": "Toàn bộ dân vùng ngập Gò Tràm cùng anh nuôi Tám được xuồng bọc thép đưa về an toàn; bác tài Bảy cũng kịp tự lực vượt qua Đập Tràn Thiên Lang trước giờ sạt lở."
+          }
+        }
+      ],
+      "next": "ch5_ep3_24a_ha_cam_on_ben_tram_xa"
+    },
+    {
+      "id": "ch5_ep3_22e_tam_hi_sinh_vung_lu_trang",
+      "type": "narration",
+      "location": "Điểm Trường Gò Tràm — Vùng Lũ Trắng",
+      "mood": "somber",
+      "text": "Nhận được sức kéo của đội công binh, đoàn xe thuốc và đạn pháo của bác tài Phan Văn Bảy nhanh chóng thoát khỏi mặt Đập Tràn an toàn trước khi mưa pháo địch cày nát bờ kè. Hậu cần mặt trận được giữ vững, nhưng cái giá phải trả lại trút thẳng xuống biển nước trắng xóa ở Gò Tràm.\n\nKhi bức tường gạch phía sau điểm trường đổ sập, chiếc xuồng tôn chòng chành chở quá tải của anh nuôi Trần Văn Tám bị một mảng mái tôn văng trúng mạn, lật nghiêng giữa dòng xoáy. Mấy ngư dân chèo thuyền thúng kịp tới chỉ vớt được những đứa nhỏ bám trên chiếc phao cứu sinh duy nhất mà anh Tám đã buộc sẵn bằng dây dù.\n\nKhi nước rút bớt nửa ngày sau, anh em tìm thấy chiếc áo lính bạc màu mắc lại bên rặng tre ngập đầu — trong túi áo ngực vẫn còn nguyên hộp kim chỉ nhỏ anh từng dùng vá cờ đại đội ở Huyền Ưng năm nào.",
+      "effects": [
+        { "setFlag": "tam_hi_sinh_thien_lang" },
+        { "setCharState": { "char": "tam", "state": "dead" } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": -6 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": -4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_tam_hi_sinh",
+            "title": "Anh nuôi Trần Văn Tám ngã xuống ở Gò Tràm",
+            "entry": "Ưu tiên cứu xe đạn và thuốc trên Đập Tràn khiến xuồng tiếp tế của anh nuôi Trần Văn Tám đơn độc giữa dòng lũ dữ; anh Tám đã hi sinh khi nhường phao và giữ an toàn cho trẻ nhỏ vùng ngập."
+          }
+        }
+      ],
+      "next": "ch5_ep3_24b_ha_trach_moc_duoi_mua"
+    },
+    {
+      "id": "ch5_ep3_22f_mat_ca_tam_lan_bay",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Lữ Đoàn Thiên Lang",
+      "mood": "somber",
+      "text": "Lệnh án binh bất động giữ nguyên lực lượng dự bị ở bờ cao rơi xuống phòng vô tuyến nặng như tảng đá lạnh. Cả hai đầu dây đều im bặt trong vài giây trước khi bác tài Bảy trả lời khẽ một tiếng 'Rõ' còn anh nuôi Tám không hề tắt máy mà lao thẳng xuồng vào bức tường sắp đổ.\n\nMột giờ sau, đội trinh sát bờ cao báo về cả hai thảm kịch liên tiếp. Tại Gò Tràm, anh nuôi Trần Văn Tám mất tích giữa dòng nước xiết sau khi đẩy được mẻ trẻ nhỏ cuối cùng sang gò tre nổi; còn trên mặt Đập Tràn, bác tài Phan Văn Bảy hi sinh ngay trong cabin khi cố lùi chiếc xe thuốc tránh đạn pháo mà không có công binh dắt đường.\n\nCả căn kho nổi lặng ngắt đến mức chỉ còn nghe tiếng mưa đập lộp bộp xuống vách tôn. Đôi tay tôi siết chặt mép bàn đến bật máu khi nhìn hai cái tên quen thuộc từ những ngày đầu quân ngũ vừa tắt ngấm trên bảng quân số.",
+      "effects": [
+        { "setFlag": "tam_hi_sinh_thien_lang" },
+        { "setFlag": "bay_hi_sinh_thien_lang" },
+        { "setCharState": { "char": "tam", "state": "dead" } },
+        { "setCharState": { "char": "bay", "state": "dead" } },
+        { "addStat": { "stat": "SiKhi", "delta": -4 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_mat_tam_bay",
+            "title": "Ngày đen tối trên Vùng Lũ Trắng",
+            "entry": "Giữ toàn bộ lực lượng dự bị bảo vệ trận địa chính; cả bác tài Phan Văn Bảy lẫn anh nuôi Trần Văn Tám đều anh dũng hi sinh trên mặt Đập Tràn và vùng ngập Gò Tràm."
+          }
+        }
+      ],
+      "next": "ch5_ep3_24b_ha_trach_moc_duoi_mua"
+    },
+    {
+      "id": "ch5_ep3_24a_ha_cam_on_ben_tram_xa",
+      "type": "dialogue",
+      "location": "Trạm Quân Y Dã Chiến — Lữ Đoàn Thiên Lang",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "text": "Thủ trưởng tới đúng lúc lắm. Dưới mái bạt quân y nồng mùi thuốc sát trùng và bùn non này, hơn bốn mươi đứa nhỏ xóm Gò Tràm đang nằm ngủ dưới dãy sạp tre bên kia rồi — tuy mấy đứa còn ho vì lạnh nước lũ nhưng không đứa nào bị kẹt lại dưới mái trường sập cả.\n\nTôi vừa rút chiếc bút chì 2B trên vành mũ xuống khoanh tròn chữ 'đã an toàn' quanh điểm Gò Tràm trên tấm bản đồ nhỏ Thiên Lang. Cảm ơn Thủ trưởng đã không coi những nét chì mảnh mai này là chuyện ngoài lề của bàn tác chiến.\n\nNhưng cái giá phải trả ngoài đập tràn và phía cửa xả chính vẫn còn nặng lắm, bầu trời chiều nay đã chuyển màu chì xám xịt báo hiệu đợt lũ thứ hai sắp đổ về. Chúng tôi sẽ giữ vững trạm xá này để Thủ trưởng rảnh tay giữ lấy bờ đập đêm nay.",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": 2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              {
+                "any": [
+                  { "flag": "thoa_hiep_hung_de_thang_chuc" },
+                  { "flag": "tam_hi_sinh_thien_lang" },
+                  { "flag": "bay_hi_sinh_thien_lang" },
+                  { "statMax": { "stat": "NhanTamDan", "value": 48 } }
+                ]
+              }
+            ]
+          },
+          "next": "ch5_ep3_26a_khang_doi_chat_cang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } }
+            ]
+          },
+          "next": "ch5_ep3_26b_khang_chia_tra_duoi_mua"
+        }
+      ],
+      "next": "ch5_ep3_26c_phong_chi_huy_vang_khang"
+    },
+    {
+      "id": "ch5_ep3_24b_ha_trach_moc_duoi_mua",
+      "type": "dialogue",
+      "location": "Trạm Quân Y Dã Chiến — Lữ Đoàn Thiên Lang",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "somber",
+      "text": "Thủ trưởng còn xuống mái bạt nồng mùi thuốc sát trùng này nhìn tấm bản đồ nhỏ làm gì nữa? Dấu bút chì 2B ở Gò Tràm nhòe hết nước mưa rồi, giống như chiếc xuồng của anh nuôi Tám bị dòng lũ đánh tan sáng nay vậy.\n\nTôi biết Thủ trưởng phải giữ đạn pháo cho mặt trận chính, biết phép tính hiệu suất của cấp trên đặt sinh mạng phòng tuyến lên trước vài chục nóc nhà vùng trũng. Nhưng ở phòng mổ dã chiến này, mỗi người dân bị bỏ lại và mỗi người anh nuôi ngã xuống đều có tên tuổi và tiếng khóc thật chứ không phải gạch đầu dòng trên báo cáo.\n\nChập tối rồi, ngoài kia sóng lũ lại vỗ ầm ầm vào chân cọc tre. Tôi vẫn tiếp tục cứu chữa thương binh theo đúng quân y điều lệnh, nhưng từ giờ đừng hỏi tôi vì sao những nét chì trên bản đồ này cứ nhạt dần đi nữa Thủ trưởng ạ.",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": -2 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              {
+                "any": [
+                  { "flag": "thoa_hiep_hung_de_thang_chuc" },
+                  { "flag": "tam_hi_sinh_thien_lang" },
+                  { "flag": "bay_hi_sinh_thien_lang" },
+                  { "statMax": { "stat": "NhanTamDan", "value": 48 } }
+                ]
+              }
+            ]
+          },
+          "next": "ch5_ep3_26a_khang_doi_chat_cang"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } }
+            ]
+          },
+          "next": "ch5_ep3_26b_khang_chia_tra_duoi_mua"
+        }
+      ],
+      "next": "ch5_ep3_26c_phong_chi_huy_vang_khang"
+    },
+    {
+      "id": "ch5_ep3_26a_khang_doi_chat_cang",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "speaker": "khang",
+      "speakerTitle": "Trung tá Lê Minh Khang",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } }
+        ]
+      },
+      "text": "Tui đóng cửa lại rồi, ở đây chỉ còn hai thằng mình thôi nên bỏ hết quân hàm sang một bên đi ông. Nhìn tay tui nè — bật nắp bật lửa kêu tách một cái rồi đóng lại mà thấy lạnh buốt hết cả ngón tay.\n\nĐừng có nói chuyện kiểu trên giấy với tui! Tui vừa đi dọc bờ kè phía Nam về, thấy người dân xúm quanh mấy bộ quần áo ướt vớt được từ vùng ngập, thấy vết lốp xe cháy đen ngoài đập tràn, còn trên bàn chỉ huy lại có công điện khen ngợi 'tỷ lệ bảo toàn pháo binh đạt chuẩn' từ tay ông Phạm Quang Hùng gửi xuống!\n\nHồi ở Quang Trung hai thằng mình thề sống chết giữ lưng cho nhau, rồi ra tới Thiên Minh còn chia từng miếng lương khô. Bây giờ lên tới Đại Tá rồi, ông định cắt bớt máu lính với mái nhà dân để bước lên ghế Tướng cho êm chân thật hả?",
+      "next": "ch5_ep3_27_choice_phan_hoi_khang"
+    },
+    {
+      "id": "ch5_ep3_26b_khang_chia_tra_duoi_mua",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "speaker": "khang",
+      "speakerTitle": "Trung tá Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } }
+        ]
+      },
+      "text": "Uống ngụm trà gừng nóng đi ông bạn giường tầng, tui mới xin bên bếp dã chiến được bình giữ nhiệt còn bốc khói đây. Hồi trưa thấy tụi nhỏ xóm Gò Tràm được kéo lên bờ cao mà cả tiểu đoàn tui ai cũng mừng muốn rớt nước mắt.\n\nTui biết ông từ chối ký phụ lục làm tròn số liệu cho ông Hùng là tự chuốc rắc rối lớn vô thân mình rồi. Nhưng tui gõ hai cái lên vai ông nè — còn nghe nhau là còn đội hình! Dù trên Cục Tác Chiến có cắt mất một nửa dầu dự trữ, anh em dưới tiểu đoàn cũng sẵn sàng lội bùn đẩy pháo phụ ông tới cùng.\n\nNgồi nghỉ năm phút rồi chuẩn bị ra cửa xả chính đi ông. Đêm nay tụi Thiết Phong kiểu gì cũng đánh đòn cuối vào chân đập đó.",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+        { "addRel": { "char": "khang", "delta": 2 } }
+      ],
+      "next": "ch5_ep3_29_bao_dong_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_26c_phong_chi_huy_vang_khang",
+      "type": "narration",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "mood": "somber",
+      "text": "Đêm khuya, ánh đèn bão hắt bóng chiếc ghế trống đối diện bàn bản đồ lên vách tôn ẩm ướt. Bên cạnh tập danh sách thương vong vùng lũ đặt ngay giữa mặt bàn là mặt kính nứt của chiếc đồng hồ cũ và phong thư tay thấm hơi ẩm gửi từ hậu phương.\n\nNếu Lê Minh Khang còn đứng cạnh tôi trong căn phòng gỗ này, hẳn cậu ấy đã bật nắp chiếc bật lửa kêu tách một tiếng gọn lỏn rồi thẳng thừng vặn hỏi tôi về từng sinh mạng đã mất hoặc được cứu giữa vùng lũ trắng hôm nay. Không còn ai ở đây để cãi lý hay vỗ hai cái lên vai tôi nữa — chỉ còn chính lương tâm của người cầm quân đối diện với cuốn sổ bìa xanh.\n\nNỗi cô độc trên chiếc ghế Đại Tá trở nên sắc buốt hơn bao giờ hết giữa tiếng sóng lũ vỗ oàm oạp vào cọc tre dưới sàn. Tôi cài lại khuy cổ áo dã chiến, bước ra hiên gỗ nghe tiếng còi báo động vừa hú lên từ hướng Đập Tràn.",
+      "next": "ch5_ep3_29_bao_dong_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_27_choice_phan_hoi_khang",
+      "type": "choice",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "text": "Lê Minh Khang đứng chắn trước bản đồ Thiên Lang với ánh mắt đầy phẫn nộ lẫn thất vọng, chờ câu trả lời thật lòng của bạn về những mất mát vừa xảy ra.",
+      "choices": [
+        {
+          "id": "c15_nhan_loi_va_sua_sai",
+          "label": "Thừa nhận sai sót và sức ép hậu cần đã làm mất người mất của, mở sổ bìa xanh ghi tên người ngã xuống và cam kết tự mình giữ cửa đập cứu dân",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch5_ep3_28a_lam_hoa_voi_khang"
+        },
+        {
+          "id": "c15_bao_ve_ly_le_hieu_suat",
+          "label": "Nói thẳng với Khang rằng chỉ huy cấp Lữ đoàn buộc phải cân bằng hiệu suất toàn mặt trận chứ không thể điều hành bằng cảm tính cá nhân",
+          "effects": [
+            { "setFlag": "khang_bat_dong_thien_lang" },
+            { "setCharState": { "char": "khang", "state": "estranged" } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addRel": { "char": "khang", "delta": -4 } }
+          ],
+          "next": "ch5_ep3_28b_khang_cat_dut_ra_di"
+        },
+        {
+          "id": "c15_im_lang_ghi_so_xanh",
+          "label": "Im lặng viết nốt tên những đồng đội vừa hi sinh vào trang sổ xanh rồi đẩy xấp công điện gốc trên bàn sang cho Khang tự đọc",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch5_ep3_28c_kiem_tra_thoa_hiep_khang"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_28a_lam_hoa_voi_khang",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "speaker": "khang",
+      "speakerTitle": "Trung tá Lê Minh Khang",
+      "mood": "somber",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } }
+        ]
+      },
+      "text": "Tui không cần ông quỵ lụy xin lỗi tui đâu. Người mình cần cúi đầu nhớ tên là những người không còn bước lên bờ cao được nữa kia.\n\nNhưng ít ra ông còn dám nhận cái sai đó thuộc về chữ ký của mình, chứ không trốn sau mấy con số sạch bong của Cục Tác Chiến. Đừng để cái sai hôm nay lặp lại ở cửa xả chính đêm nay nữa nghe chưa.\n\nThôi, ra trận địa đi. Tui vẫn giữ sườn tây cho ông — miễn ông đừng quên phía sau lưng mình là ai.",
+      "next": "ch5_ep3_29_bao_dong_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_28b_khang_cat_dut_ra_di",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "speaker": "khang",
+      "speakerTitle": "Trung tá Lê Minh Khang",
+      "mood": "somber",
+      "condition": {
+        "charAlive": "khang"
+      },
+      "text": "Hiệu suất... Nghe quen quá ha. Cái chữ đó hồi ở Quang Trung thằng Quang nó nói hoài mà hai thằng mình còn cười trừ được, tới hôm nay lại thốt ra từ chính miệng ông.\n\nTui hiểu rồi. Ông không còn là thằng bạn chia nhau nửa bi-đông nước trên vọng gác Thiên Minh nữa, trên vai ông bây giờ chỉ còn mấy ngôi sao với bàn cân lạnh ngắt thôi. Tui không đánh đổi thêm mạng lính tiểu đoàn tui cho cái bảng thành tích đó đâu.\n\nBáo cáo Lữ đoàn trưởng: Tiểu đoàn cơ động sẽ chấp hành đúng điều lệnh chiến trường tới hết đêm nay. Còn chuyện 'còn nghe nhau là còn đội hình' coi như dứt ở Thiên Lang này đi — đừng gọi tui gõ hai cái lên vai nữa!",
+      "effects": [
+        { "setFlag": "khang_bat_dong_thien_lang" },
+        { "setCharState": { "char": "khang", "state": "estranged" } },
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_khang_bat_dong",
+            "title": "Đổ vỡ tình đồng đội với Lê Minh Khang",
+            "entry": "Bất đồng sâu sắc về cách đánh đổi hậu cần dân sinh và lối thỏa hiệp thành tích khiến Lê Minh Khang chính thức cắt đứt tình bạn từ trận Thiên Lang."
+          }
+        }
+      ],
+      "next": "ch5_ep3_29_bao_dong_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_28c_kiem_tra_thoa_hiep_khang",
+      "type": "narration",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "mood": "somber",
+      "text": "Khang cầm xấp giấy trên bàn soi sát dưới ánh đèn bão, từng ngón tay gân guốc lật chậm qua từng dòng chữ ký. Căn phòng gỗ im phăng phắc chỉ còn tiếng mưa gõ nhịp đều trên mái tôn cũ kỹ.\n\nKhi ánh mắt Khang dừng lại ở góc phải tờ báo cáo, hơi thở của cậu bạn đồng khóa nặng trĩu hẳn xuống.",
+      "branches": [
+        {
+          "condition": { "flag": "thoa_hiep_hung_de_thang_chuc" },
+          "next": "ch5_ep3_28b_khang_cat_dut_ra_di"
+        }
+      ],
+      "next": "ch5_ep3_28a_lam_hoa_voi_khang"
+    },
+    {
+      "id": "ch5_ep3_29_bao_dong_dap_tran",
+      "type": "dispatch",
+      "location": "Đài Chỉ Huy Tiền Phương — Đập Tràn Thiên Lang",
+      "mood": "urgent",
+      "text": "[BÁO ĐỘNG ĐỎ TOÀN LỮ ĐOÀN — 23 GIỜ 50]\n\n'Địch tung đại đội đặc công nước kết hợp xuồng cao tốc có giáp nhẹ áp sát chân Đập Tràn Chính Thiên Lang. Phát hiện nhóm phá hoại đang tìm cách gài lượng nổ định hướng vào hệ thống tời thủy lực của Cửa Xả Số 2.'\n\n'Nếu Cửa Xả Số 2 vỡ tung lúc triều cường dâng ngược, toàn bộ hành lang rút quân phía Nam và ba xã hạ lưu đang tạm trú trên đê bao sẽ bị dòng lũ quét sạch trong vòng mười lăm phút.'",
+      "branches": [
+        {
+          "condition": { "charState": { "char": "quang", "state": "alive" } },
+          "next": "ch5_ep3_30a_quang_tinh_xac_suat"
+        }
+      ],
+      "next": "ch5_ep3_30b_dien_tin_tham_muu_quang"
+    },
+    {
+      "id": "ch5_ep3_30a_quang_tinh_xac_suat",
+      "type": "dialogue",
+      "location": "Bản Đồ Tọa Độ — Chốt Đập Tràn Thiên Lang",
+      "speaker": "quang",
+      "speakerTitle": "Trung tá Vũ Minh Quang (Ban Tác Chiến Sư Đoàn)",
+      "mood": "tense",
+      "condition": { "charState": { "char": "quang", "state": "alive" } },
+      "text": "Tôi vừa đáp xuồng trinh sát xuống tăng cường cho ban tham mưu Lữ đoàn đây. Nghe tôi nói nhanh phần số liệu trước khi pháo dội tiếp — tôi xoay nắp bút máy ba vòng chốt lại phép đo rồi.\n\nCảm tính không giữ nổi chốt đâu, tính bằng xác suất đi: lưu tốc dòng nước qua cửa xả đang đạt bốn mét hai một giây, nếu mìn địch phá sập trụ đỡ giữa thì bờ đê đất phía đông sẽ vỡ dây chuyền sau chín phút. Toàn bộ cối 82 của chúng ta chỉ còn đủ cơ số cho ba đợt bắn chùm.\n\nTôi đã chia sẵn ba góc phương vị cản phá ở bãi bồi thượng lưu. Thủ trưởng ra quyết định triển khai lực lượng ngay đi để tôi đẩy phần tử bắn xuống cho các khẩu đội.",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch5_ep3_31a_loc_buoc_day_cua_xa"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch5_ep3_31b_dung_trinh_sat_bo_tay"
+        }
+      ],
+      "next": "ch5_ep3_32_choice_chien_thuat_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_30b_dien_tin_tham_muu_quang",
+      "type": "narration",
+      "location": "Chốt Điều Hành Đập Tràn Thiên Lang",
+      "mood": "tense",
+      "text": "Bức điện hỏa tốc từ Ban Tác chiến Sư đoàn do Vũ Minh Quang ký nháy chỉ gửi xuống những con số lạnh tanh về lưu lượng nước và cảnh báo nếu để vỡ cửa xả chính, Lữ đoàn trưởng sẽ phải chịu hoàn toàn trách nhiệm trước hội đồng quân sự.\n\nKhông có bất kỳ lời hỏi thăm hay chia sẻ quân dự bị nào kèm theo trong điện. Tôi ném tờ điện báo xuống góc bàn, tự mình cầm thước đo cự ly trên tấm bản đồ nhỏ Thiên Lang để vạch lại phương án chặn đứng đặc công nước của Hắc Ưng.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch5_ep3_31a_loc_buoc_day_cua_xa"
+        },
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch5_ep3_31b_dung_trinh_sat_bo_tay"
+        }
+      ],
+      "next": "ch5_ep3_32_choice_chien_thuat_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_31a_loc_buoc_day_cua_xa",
+      "type": "dialogue",
+      "location": "Trụ Bê Tông Cửa Xả Số 2 — Đập Tràn Thiên Lang",
+      "speaker": "loc",
+      "speakerTitle": "Trung úy Bùi Văn Lộc",
+      "mood": "tense",
+      "condition": { "charAlive": "loc" },
+      "text": "Báo cáo Thủ trưởng! Tổ công binh của em vừa kéo xong hai sợi cáp thép phụ neo thẳng khung cửa xả số hai vô trụ đá gốc rồi ạ!\n\nMấy cậu lính mới lúc nãy thấy nước xoáy cuộn qua chân đập run tay cột lộn đầu dây, em bắt làm lại hai lần cho chắc ăn hết trơn. Từng nút thắt giữ xích đều khóa chốt đôi y chang hồi xưa anh dạy em ngoài thao trường Quang Trung hết đó.\n\nAnh yên tâm chỉ huy ở trên đi ạ. Chỗ dây này em cột chặt rồi, không để tụi đặc công nước giật tung nổi dễ dàng đâu!",
+      "effects": [
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_32_choice_chien_thuat_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_31b_dung_trinh_sat_bo_tay",
+      "type": "dialogue",
+      "location": "Ụ Súng Bờ Tây — Đập Tràn Thiên Lang",
+      "speaker": "dung",
+      "speakerTitle": "Đại úy Hoàng Tiến Dũng",
+      "mood": "urgent",
+      "condition": { "charAlive": "dung" },
+      "text": "Báo cáo Thủ trưởng! Hai xuồng trinh sát của tao mới áp sát bãi lau bờ tây phát hiện tụi đặc công Thiết Phong đang buộc phao đen bơi theo luồng nước xoáy vào chân cửa xả!\n\nTao vuốt chặt quai mũ sắt sẵn sàng hết rồi, anh em tiểu liên cũng đã lên đạn đầy băng! Chờ tới sáng là tụi nó rút sạch rồi — à không, chờ thêm năm phút nữa là tụi nó ấn nút kích nổ tung cả cái cửa xả này mất!\n\nThủ trưởng cho lệnh nổ súng thả pháo sáng mặt nước đi, để tụi tao quét sạch tụi thợ lặn dưới chân trụ bê tông!",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 2 } },
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "next": "ch5_ep3_32_choice_chien_thuat_dap_tran"
+    },
+    {
+      "id": "ch5_ep3_32_choice_chien_thuat_dap_tran",
+      "type": "choice",
+      "location": "Chốt Điều Hành Đập Tràn Thiên Lang",
+      "text": "Đèn pha chiến trường quét sáng lòa trên mặt nước réo ầm ầm. Xuồng bọc thép của Thiết Phong đang ép sát chân Đập Tràn từ phía tây, trong khi dân sơ tán vẫn nối hàng dài trên con đường đê phía nam. Bạn triển khai thế trận chặn địch ra sao?",
+      "choices": [
+        {
+          "id": "c15_rut_het_kho_chan_dap",
+          "label": "Dốc sạch toàn bộ bao cát, dây cáp và đạn dự trữ cuối cùng trong kho nổi lập bức tường chắn bảo vệ trực tiếp hành lang rút lui của dân và bộ đội",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 7 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch5_ep3_33_vo_cua_xa_khung_khiep"
+        },
+        {
+          "id": "c15_phan_phao_chan_duong_bo",
+          "label": "Tập trung toàn bộ cối 82 ly và trung liên bắn chặn theo ô bàn cờ vào tuyến xuồng tiếp cận của địch ngoài bãi lau sậy",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } }
+          ],
+          "next": "ch5_ep3_33_vo_cua_xa_khung_khiep"
+        },
+        {
+          "id": "c15_mo_van_phu_giam_ap",
+          "label": "Ra lệnh mở trước van xả phụ phía đông để hạ bớt áp lực nước lên cửa xả chính, chấp nhận ngập đồng hoang để giữ chân đê",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "ha", "delta": 1 } }
+          ],
+          "next": "ch5_ep3_33_vo_cua_xa_khung_khiep"
+        },
+        {
+          "id": "c15_dung_thuyen_may_danh_vuot",
+          "label": "Lệnh cho hai phân đội xung kích nhảy xuống xuồng máy lao thẳng vào giữa luồng nước phản kích cận chiến với đặc công địch",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } }
+          ],
+          "next": "ch5_ep3_33_vo_cua_xa_khung_khiep"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_33_vo_cua_xa_khung_khiep",
+      "type": "narration",
+      "location": "Cửa Xả Số 2 — Đập Tràn Thiên Lang",
+      "mood": "urgent",
+      "text": "Hỏa lực súng máy từ trên mặt đập quét xuống mặt sông làm hai chiếc xuồng cao tốc của Thiết Phong bốc cháy, xoay tròn trôi dạt vào rặng tre. Những tưởng mũi đột kích đã bị bẻ gãy hoàn toàn, bất ngờ một tiếng nổ trầm đục rung chuyển tận móng đá dưới chân chúng tôi — một tên cảm tử mang khối thuốc nổ áp sát đã kích hoạt ngòi ngay dưới họng Cửa Xả Số 2.\n\nTrục tời thủy lực gãy gập đôi, cánh cửa thép nặng hàng tấn bắt đầu trượt xuống lệch khớp để hở một khe nước rộng hơn hai mét gầm rú dữ dội. Dòng nước trắng xóa phun thẳng qua khe vỡ như vòi rồng, xói lở ầm ầm vào mép đường dẫn nơi phân đội khóa đuôi và đoàn người dân cuối cùng đang hối hả chạy qua cầu phao.\n\nÁnh đèn pha từ bờ nam quét qua mặt cầu phao rung lắc dữ dội, chiếu rõ những bàn chân trần lấm bùn của người già và em nhỏ đang bám chặt sợi dây thừng dẫn đường. Chỉ chậm lại thêm hai phút thôi, dòng lũ sẽ bứng phăng cả nhịp cầu lẫn tuyến rút lui của nửa Lữ đoàn.\n\nDưới hố van ngập ngang ngực, chốt thép cơ học dự phòng vẫn còn nguyên nhưng bánh răng truyền động đã kẹt cứng vì mảnh gang vỡ. Cần có người nhảy xuống hố van, dùng xà beng ghì chặt chốt thép bằng tay trong vài phút vàng ngọc cho tới khi đội công binh chèn xong dầm khóa — đúng lúc đạn cối của địch đang dồn dập rơi xuống mặt cầu.",
+      "next": "ch5_ep3_34_choice_dinh_menh_cua_xa"
+    },
+    {
+      "id": "ch5_ep3_34_choice_dinh_menh_cua_xa",
+      "type": "choice",
+      "location": "Miệng Hố Van Cửa Xả Số 2 — Đập Tràn Thiên Lang",
+      "text": "Tiếng thép rít chói tai hòa cùng tiếng gào của dòng nước lũ xé ngang mặt đập. Kho hậu cần đã cạn sạch dự bị, còn phân đội công binh dưới hố van đang bị thương gần hết. Trước ngưỡng cửa vỡ đập, bạn hành động thế nào?",
+      "choices": [
+        {
+          "id": "c15_o_lai_giu_cua_xa_hi_sinh",
+          "label": "Trao cuốn sổ bìa xanh cho người liên lạc, tự mình nhảy thẳng xuống hố van xả thay tổ công binh ghì chặt chốt thép giữ cửa đập cho toàn bộ đồng đội và dân thường thoát nạn",
+          "condition": {
+            "all": [
+              { "statMin": { "stat": "TinhDongDoi", "value": 70 } },
+              { "statMax": { "stat": "TiepTe", "value": 44 } }
+            ]
+          },
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 10 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": 10 } }
+          ],
+          "next": "ch5_ep3_35a_giu_chot_cua_xa_hi_sinh"
+        },
+        {
+          "id": "c15_to_chuc_rut_cuon_chieu",
+          "label": "Hét lệnh tổ chức đội hình rút cuốn chiếu từng phân đội qua cầu phao, móc dây tời xe chỉ huy kéo ghì chốt thép từ mép bờ cao",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch5_ep3_35b_giu_vung_cua_xa"
+        },
+        {
+          "id": "c15_pha_dap_phu_doi_dong_nuoc",
+          "label": "Ra lệnh kích nổ phá có kiểm soát bờ đê phụ phía đông để xẻ dòng nước lũ tràn ra đồng hoang, giảm áp khẩn cấp cho Cửa Xả Số 2",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch5_ep3_35c_xe_dong_lu_cuu_dan"
+        },
+        {
+          "id": "c15_goi_hoa_luc_chot_song",
+          "label": "Gọi toàn bộ hỏa lực cối hạng nặng bắn khóa chặt mặt sông thượng lưu, dọn đường cho kíp công binh dự phòng lao xuống chèn dầm thép",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } }
+          ],
+          "next": "ch5_ep3_35d_khoa_mieng_kenh_tay"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_35a_giu_chot_cua_xa_hi_sinh",
+      "type": "narration",
+      "location": "Hố Van Ngập Nước — Cửa Xả Số 2",
+      "mood": "somber",
+      "text": "Không ai kịp cản khi tôi tháo chiếc xắc cốt chứa cuốn sổ bìa xanh và tấm bản đồ nhỏ Thiên Lang nhét vào tay cậu chiến sĩ liên lạc đứng gần nhất, dặn khẽ một câu: 'Đưa hết anh em và bà con qua bờ bên kia đi.' Rồi tôi nhảy thẳng xuống hố van đang sục sôi bọt trắng.\n\nDòng nước lạnh buốt quất vào lồng ngực đến nghẹt thở, nhưng hai bàn tay tôi đã bám chặt vào thanh xà beng chèn ngang bánh răng truyền động. Áp lực hàng vạn tấn nước ép qua cánh thép dồn nặng lên đôi vai khiến xương cốt như muốn rời ra, trong khi phía trên cầu phao tiếng hô gọi nhau rút quân đã bắt đầu xa dần về phía gò cao an toàn.\n\nKhi loạt đạn cối cuối cùng của Thiết Phong giã trúng trụ bê tông phía trên làm mảnh thép trút xuống như mưa, cánh cửa xả cuối cùng cũng sập khít vào ngàm khóa. Trong khoảnh khắc bức tường nước đổ ập xuống hố van, tôi kịp nghe tiếng bước chân người dân và những người lính Thiên Lang đã đặt chân an toàn lên bờ đất vững.",
+      "next": "ending_nga_xuong"
+    },
+    {
+      "id": "ending_nga_xuong",
+      "type": "ending",
+      "location": "Đập Tràn Thiên Lang — Bình Minh Sau Cơn Lũ",
+      "mood": "somber",
+      "endingId": "ending_nga_xuong",
+      "endingTitle": "Ngã Xuống Giữa Dòng Lũ",
+      "text": "Khi mặt trời nhợt nhạt ló rạng sau màn mây xám vùng đồng bằng Thiên Lang, dòng nước lũ bắt đầu rút chậm qua hành lang đê bao còn đứng vững nguyên vẹn. Ba xã hạ lưu và toàn bộ đội hình Lữ Đoàn Thiên Lang đã bình an vượt qua đêm tối khốc liệt nhất của chiến dịch nhờ cánh cửa xả thép được ghì chặt đúng vào giây phút quyết định.\n\nTrên mặt bờ kè bê tông còn loang lổ vết đạn cối, Y sĩ Nguyễn Thu Hà và những người lính sống sót đứng lặng trong gió sớm khi đội công binh kéo lên từ hố van ngập bùn chiếc áo quân phục Đại Tá đã sờn rách. Cuốn sổ bìa xanh thấm nước được cậu liên lạc trao trả lại cho Thượng tá Trần Quốc Vinh mang theo trọn vẹn tên tuổi của từng chiến sĩ, không một dòng dối trá hay gạch xóa.\n\nỞ góc dưới trang cuối tấm bản đồ nhỏ Thiên Lang, nét bút chì 2B đánh dấu những điểm trường học và trạm xá vùng ngập vẫn còn rõ mồn một như lời chứng cuối cùng. Những người dân sống sót từ Gò Tràm lặng lẽ đặt lên mép bê tông Cửa Xả Số 2 một nắm hương còn thơm mùi rơm mới giữa buổi sớm tạnh mưa.\n\nCon đường Quân Lộ của bạn khép lại ở tuổi quân hàm Đại Tá ngay giữa Vùng Lũ Trắng Thiên Lang. Bạn không kịp bước lên ngôi vị cấp Tướng trên những tấm bản đồ chiến lược phương Bắc, nhưng hàng trăm mái nhà yên ấm dưới chân đê và lòng kính trọng lặng thầm của cả một thế hệ lính trẻ đã trở thành tấm bia tưởng niệm bền vững nhất không một bảng thành tích nào thay thế nổi.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ending_nga_xuong",
+            "title": "Ngã Xuống Giữa Dòng Lũ",
+            "entry": "Ở lại tự tay ghì chặt chốt thép Cửa Xả Số 2 khi hậu cần đã cạn sạch, hi sinh anh dũng trên Đập Tràn Thiên Lang để bảo toàn mạng sống cho đồng đội và nhân dân."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_35b_giu_vung_cua_xa",
+      "type": "narration",
+      "location": "Cửa Xả Số 2 — Đập Tràn Thiên Lang",
+      "mood": "tense",
+      "text": "Nhận được khẩu lệnh ngắn gọn, hai chiếc xe chỉ huy lập tức quay đầu lùi sát mép bê tông, thả dây tời móc thẳng vào thanh xà beng khổng lồ bên trong hố van. Dưới sự chỉ huy trực tiếp của tôi ngay sát đầu cầu phao, tổ công binh vừa bắn che vừa thay phiên nhau chèn từng thanh dầm gỗ lim xuống khe thép.\n\nSức kéo của động cơ diesel gầm rít át cả tiếng nước xoáy, kéo giật cánh cửa thép sập dần vào rãnh khóa khi chỉ còn cách thời hạn vỡ đê chưa đầy hai phút. Trên mặt cầu phao, những chiếc cáng thương binh và người dân cuối cùng chạy ù sang bờ nam an toàn.\n\nMột loạt súng máy từ bờ nam quét ngược lại dập tắt nốt ổ hỏa lực cuối cùng của đặc công Thiết Phong trên bãi lau sậy. Khi tia nắng đầu tiên sau năm ngày mưa dầm xuyên qua lớp mây xám hắt xuống mặt nước phù sa, Đập Tràn Thiên Lang vẫn hiên ngang đứng vững giữa biển nước trắng xóa.",
+      "branches": [
+        {
+          "condition": { "charAlive": "bay" },
+          "next": "ch5_ep3_37a_bay_chuyen_thuoc_binh_minh"
+        },
+        {
+          "condition": { "charAlive": "tam" },
+          "next": "ch5_ep3_37b_tam_noi_com_binh_minh"
+        }
+      ],
+      "next": "ch5_ep3_37c_ben_xuong_sau_bao"
+    },
+    {
+      "id": "ch5_ep3_35c_xe_dong_lu_cuu_dan",
+      "type": "narration",
+      "location": "Bờ Đê Phụ Phía Đông — Thiên Lang",
+      "mood": "tense",
+      "text": "Đúng năm giây sau khi còi hiệu sơ tán khu vực phía đông rú lên, ba khối thuốc nổ công binh gắn dọc đoạn đê đất hoang đồng loạt kích hoạt. Cột bùn đất dựng đứng giữa trời đêm, mở ra một cửa thoát lũ rộng hơn ba mươi mét đẩy dòng nước hung dữ tràn sang cánh đồng trũng không người ở.\n\nÁp lực đè lên cánh thép Cửa Xả Số 2 lập tức giảm xuống quá nửa chỉ trong vài chục giây, giúp tổ công binh dễ dàng xoay lại bánh răng khóa chặt chốt an toàn. Đoàn dân sơ tán phía nam và đội hình khóa đuôi đồng loạt vượt qua cầu phao bình yên vô sự.\n\nMất một phần tuyến đường đất dự phòng phía đông nhưng xương sống của Đập Tràn Thiên Lang đã đứng vững trước đòn hiểm độc của Hắc Ưng. Khi ánh bình minh nhạt nắng ló rạng trên rặng dừa nước, những đoàn xuồng cứu hộ bắt đầu quay mũi trở về bến kho nổi.",
+      "branches": [
+        {
+          "condition": { "charAlive": "bay" },
+          "next": "ch5_ep3_37a_bay_chuyen_thuoc_binh_minh"
+        },
+        {
+          "condition": { "charAlive": "tam" },
+          "next": "ch5_ep3_37b_tam_noi_com_binh_minh"
+        }
+      ],
+      "next": "ch5_ep3_37c_ben_xuong_sau_bao"
+    },
+    {
+      "id": "ch5_ep3_35d_khoa_mieng_kenh_tay",
+      "type": "narration",
+      "location": "Trận Địa Cối — Đập Tràn Thiên Lang",
+      "mood": "tense",
+      "text": "Hàng chục quả đạn cối 82 ly từ trận địa bờ nam vút lên vẽ những đường sáng rực giữa màn đêm, dội thành bức tường lửa dày đặc khóa cứng miệng kênh Tây nơi đặc công Thiết Phong định đổ bộ đợt hai. Bị hỏa lực phản pháo chụp thẳng đầu, toán xuồng còn lại của địch buộc phải quay mũi rút chạy hỗn loạn.\n\nTranh thủ khoảng lặng quý giá kéo dài bốn phút ấy, kíp công binh dự phòng lao xuống hố van, dùng xà beng bẩy mạnh mảng gang kẹt ra ngoài và sập chặt cánh cửa thép xuống ngàm đá. Mặt nước dưới chân cầu phao dần lắng dịu trở lại.\n\nNhững tiếng reo hò khàn đặc của anh em chiến sĩ vang lên hòa cùng tiếng nước lũ rút chậm về hạ lưu. Sáng hôm sau, bầu trời đồng bằng tạnh ráo hẳn đi, trả lại những khoảng trời xanh trong trên dải bê tông Đập Tràn nguyên vẹn.",
+      "branches": [
+        {
+          "condition": { "charAlive": "bay" },
+          "next": "ch5_ep3_37a_bay_chuyen_thuoc_binh_minh"
+        },
+        {
+          "condition": { "charAlive": "tam" },
+          "next": "ch5_ep3_37b_tam_noi_com_binh_minh"
+        }
+      ],
+      "next": "ch5_ep3_37c_ben_xuong_sau_bao"
+    },
+    {
+      "id": "ch5_ep3_37a_bay_chuyen_thuoc_binh_minh",
+      "type": "dialogue",
+      "location": "Bãi Đậu Xe Bờ Nam — Lữ Đoàn Thiên Lang",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "condition": { "charAlive": "bay" },
+      "text": "Trời ơi, nắng lên rồi kìa Thủ trưởng ơi! Sáng giờ tui lau sạch hết bùn trên kính chắn gió với thay cặp đèn pha mới cho con xe tải này rồi nè, chuẩn bị chạy chuyến hàng thuốc men đầu tiên vô mấy trạm xá ngoài kia cho cô Hà đây.\n\nHộp kẹo gừng trong táp-lô vẫn còn hơn nửa hộp, chú em cầm một viên ngậm cho ấm giọng rồi còn nhận điện khen thưởng trên Bộ nữa chứ! Qua trận lũ trắng này rồi, tui càng tin cái câu của cánh tài xế tụi tui: đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người!\n\nHồi nãy nghe mấy chú công binh kể chuyện giữ cái cửa xả số hai lúc nửa đêm mà tui rởn hết da gà. Mai mốt chú em có lên tới chức lớn ngoài chiến khu nào xa xôi hơn nữa, cần người ôm vô lăng chạy đèo vượt núi thì cứ gọi một tiếng là bác tài Bảy có mặt liền à nghen!",
+      "next": "ch5_ep3_38_dispatch_thieu_tuong"
+    },
+    {
+      "id": "ch5_ep3_37b_tam_noi_com_binh_minh",
+      "type": "dialogue",
+      "location": "Bếp Hoàng Cầm Bờ Cao — Lữ Đoàn Thiên Lang",
+      "speaker": "tam",
+      "speakerTitle": "Anh nuôi Trần Văn Tám",
+      "mood": "warm",
+      "condition": { "charAlive": "tam" },
+      "text": "Chào buổi sáng Thủ trưởng! Mùi khói bếp củi khô sáng nay thơm nức mũi luôn ha chú em, mới hừng đông mà tụi tui đã thổi xong ba nồi cơm nóng với canh rau tập tàng cho cả đám lính giữ đập lẫn bà con Gò Tràm ăn ấm bụng hết trơn rồi.\n\nHộp kim chỉ trong túi áo ngực tui hên sao còn khô ráo mấy cuộn chỉ xanh, hồi nãy tui mới ngồi vá giùm mấy cháu nhỏ được hai cái cặp sách vải rách toác khi chạy lũ nữa đó! Cơm no bụng rồi là có sức giữ nước giữ làng tiếp thôi chú em.\n\nBà con dưới xóm Gò Tràm sáng nay cứ hỏi thăm chú em hoài, gửi biếu lữ đoàn mấy buồng chuối chín cây để anh em tráng miệng sau đêm thức trắng. Thủ trưởng ăn vội chén cháo nóng rồi vô nhận công điện mới trên Bộ đi, nghe anh em thông tin kháo nhau sáng nay có tin lớn bay từ Thủ đô xuống lắm đó!",
+      "next": "ch5_ep3_38_dispatch_thieu_tuong"
+    },
+    {
+      "id": "ch5_ep3_37c_ben_xuong_sau_bao",
+      "type": "narration",
+      "location": "Bến Xuồng Bờ Nam — Lữ Đoàn Thiên Lang",
+      "mood": "somber",
+      "text": "Bên góc bếp dã chiến mới nhóm lại bằng củi khô và góc bãi đậu xe tải lầy bùn, những người lính trẻ lặng lẽ đặt hai phần cơm nóng và một hộp thiếc kẹo gừng sạch bóng lên chiếc thùng gỗ lót vải bạt xanh. Khói bếp bay là là trên mặt nước lũ đang rút dần, hòa vào mùi bùn phù sa nồng ấm buổi hừng đông.\n\nKhông có tiếng cười xởi lởi quen thuộc của bác tài Bảy hay giọng Quảng hóm hỉnh của anh nuôi Tám vang lên giữa sân như những ngày còn ở Xích Phong, Huyền Ưng. Nhưng những chuyến xe tải mới vẫn nổ máy đều đều hướng vào các trạm xá vùng xa, và bếp lửa đơn vị vẫn đỏ rực nuôi sống hàng trăm con người vừa bước ra từ đêm bão.\n\nTôi đứng nghiêm chào trước hai phần cơm ấy thật lâu, lòng tự nhủ sẽ mang theo cả nỗi mất mát lẫn lòng kiên cường của vùng lũ Thiên Lang vào chặng đường phía trước, rồi quay trở lại phòng cơ yếu nhận bức điện hỏa tốc từ Bộ Tổng Tham Mưu.",
+      "next": "ch5_ep3_38_dispatch_thieu_tuong"
+    },
+    {
+      "id": "ch5_ep3_38_dispatch_thieu_tuong",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Lữ Đoàn Thiên Lang",
+      "mood": "calm",
+      "text": "[QUYẾT ĐỊNH ĐIỀU ĐỘNG & THĂNG QUÂN HÀM — BỘ TỔNG THAM MƯU TỐI CAO]\n\n'Ghi nhận thành tích chỉ huy giữ vững phòng tuyến Bạch Vũ và bảo vệ thành công Đập Tràn Thiên Lang giữa điều kiện thiên tai đặc biệt nghiêm trọng: Thăng quân hàm THIẾU TƯỚNG đối với đồng chí Đại Tá Lữ đoàn trưởng Lữ Đoàn Thiên Lang.'\n\n'Lệnh khẩn: Bàn giao Lữ Đoàn Thiên Lang lại cho Ban Chỉ Huy kế cận, lập tức lên đường hướng Bắc tiếp nhận quyền chỉ huy Sư Đoàn Hắc Hổ trấn giữ dải núi biên ải Bắc Vực trước đợt rét đậm đầu đông.'",
+      "next": "ch5_ep3_39_choice_trang_cuoi_cap_ta"
+    },
+    {
+      "id": "ch5_ep3_39_choice_trang_cuoi_cap_ta",
+      "type": "choice",
+      "location": "Phòng Chỉ Huy Nổi — Lữ Đoàn Thiên Lang",
+      "text": "Chuyến trực thăng chuyển quân đi Bắc Vực đã hạ cánh xuống gò đất khô phía sau sở chỉ huy. Trước khi rời vùng đồng bằng ngập nước khép lại trọn vẹn bốn nấc quân hàm Cấp Tá, bạn ghi lại điều gì trên trang giấy mới của cuốn sổ bìa xanh?",
+      "choices": [
+        {
+          "id": "c15_ghi_ten_nguoi_dan_va_anh_nuoi",
+          "label": "Nắn nót chép lại tên những người giữ bến xuồng, anh nuôi, lái xe và các điểm trường vùng lũ Thiên Lang để không bao giờ quên mặt đất sau lưng",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch5_ep3_bottleneck"
+        },
+        {
+          "id": "c15_kep_ban_do_but_chi_vao_so",
+          "label": "Gấp gọn tấm bản đồ nhỏ Thiên Lang có nét bút chì 2B của Thu Hà kẹp chung vào gáy sổ, tự nhắc mọi nét vẽ chiến lược đều đè lên cuộc sống thật",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } }
+          ],
+          "next": "ch5_ep3_bottleneck"
+        },
+        {
+          "id": "c15_ghi_lai_bai_hoc_doi_noi_gian",
+          "label": "Ghi rõ các lỗ hổng bảo mật đường dây vận tải và thủ đoạn ép số liệu hậu phương để chuẩn bị đối đầu trực diện ở cấp Tướng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } }
+          ],
+          "next": "ch5_ep3_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch5_ep3_bottleneck",
+      "type": "narration",
+      "location": "Gò Đáp Trực Thăng — Vùng Lũ Thiên Lang",
+      "mood": "calm",
+      "isChapterEnd": true,
+      "text": "Cánh quạt trực thăng quay tít thổi rạp những ngọn lau ướt đẫm nước lũ quanh gò đất cao. Từ ô cửa sổ tròn nhìn xuống, vùng đồng bằng Thiên Lang trải dài như một tấm gương bạc lấp loáng ánh nắng sớm, nổi lên giữa biển nước là dải bê tông vững chãi của Đập Tràn và những mái ngói đỏ điểm trường học đang hong khô sau bão.\n\nDưới sân tập kết bến kho nổi đang thu nhỏ dần, những lá cờ đơn vị vẫn tung bay bên dãy bạt quân y trắng xóa và các đoàn xe tải tiếp vận nối đuôi nhau lăn bánh qua đoạn đường vừa vá đá. Mỗi người lính, mỗi người dân đứng vẫy tay dưới kia đều vừa đi qua ranh giới mong manh giữa sự sống và dòng nước dữ.\n\nTrong chiếc xắc cốt đặt trên đầu gối, ba kỷ vật đã nằm cạnh nhau ngay ngắn: cuốn sổ bìa xanh dày cộm chữ viết tay, chiếc bật lửa cùng mặt đồng hồ nứt vết trận Xích Thủy, và tấm bản đồ nhỏ Thiên Lang còn vương nét bút chì 2B của y sĩ Thu Hà. Trên cầu vai áo mới thay trước giờ cất cánh, ngôi sao vàng đầu tiên của cấp Tướng lấp lánh dưới nắng mai.\n\nChương năm của chặng đường Cấp Tá đã khép lại phía sau mặt nước đồng bằng. Trước mũi bay, rặng núi đá xanh thẫm sương mù của dải biên ải Bắc Vực đã bắt đầu hiện ra — nơi Sư Đoàn Hắc Hổ và những phép thử chiến lược khốc liệt hơn gấp bội đang chờ người tân Thiếu Tướng bước xuống.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch5_ep3_thang_thieu_tuong",
+            "title": "Rời Thiên Lang tiến lên Bắc Vực",
+            "entry": "Giữ vững Đập Tràn Thiên Lang qua trận lũ lịch sử và đòn đánh bọc sườn của Thiết Phong, mang theo tấm bản đồ nhỏ Thiên Lang lên đường nhận quân hàm Thiếu Tướng tại Sư Đoàn Hắc Hổ."
+          }
+        }
+      ]
+    }
+  ]
+}

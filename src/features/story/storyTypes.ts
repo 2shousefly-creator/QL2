@@ -11,8 +11,14 @@ export type CharacterId =
   | "vinh"
   | "nam"
   | "loc"
+  | "quang"
+  | "bay"
+  | "linh"
+  | "dung"
+  | "gia_lang"
   | "son"
   | "tam"
+  | "thao"
   | "ha"
   | "hung"
   | "hac_ung";
@@ -27,8 +33,10 @@ export type CharacterState =
 
 export type RelicId =
   | "so_bia_xanh"
+  | "bang_morse_linh"
   | "dong_ho_nut"
   | "bat_lua_khang"
+  | "ho_so_mat_thao"
   | "ban_do_thien_lang";
 
 export type StoryNodeType =
@@ -103,6 +111,7 @@ export interface StoryNode {
 
 export interface StoryChapter {
   id: string;
+  episodeOrder?: number;
   chapterNumber: number;
   title: string;
   ql2ChapterId:
@@ -176,8 +185,9 @@ export interface StoryCampaignSave {
   freeExploreUnlocked: boolean;
 }
 
-export interface StoryChapterMeta {
+export interface StoryEpisodeMeta {
   id: string;
+  episodeOrder: number;
   chapterNumber: number;
   title: string;
   shortTitle: string;
@@ -188,10 +198,17 @@ export interface StoryChapterMeta {
   nextChapterId?: string;
 }
 
+export interface StoryChapterGroup {
+  chapterNumber: number;
+  title: string;
+  rankRange: string;
+  summary: string;
+  episodeIds: string[];
+}
+
 export interface StoryEndingMeta {
   id: string;
   title: string;
   tag: string;
   summary: string;
-  hint: string;
 }

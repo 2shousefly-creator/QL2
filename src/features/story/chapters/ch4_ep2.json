@@ -1,0 +1,1043 @@
+{
+  "id": "ch4_ep2",
+  "episodeOrder": 11,
+  "chapterNumber": 4,
+  "title": "Chương IV · Hồi 11: Bàn Tham Mưu Xích Phong",
+  "ql2ChapterId": "company_officer",
+  "rankRange": "Thượng Úy → Đại Úy",
+  "nextChapterId": "ch4_ep3",
+  "entryNodeId": "ch4_ep2_01_dai_doi_truong",
+  "summary": "Nhận quân hàm Đại úy giữ Đại Đội 3 Huyền Ưng trước khi điều động gấp làm Phó Ban Tác Chiến Tiểu Đoàn Xích Phong: từ chiếc ghế kê thêm cho người chuyển tin bên cửa phòng tham mưu, nét bút giữ lối đi học trẻ em xóm Bến Đá, cuộc truy vấn gắt gao của sĩ quan phản gián Lê Phương Thảo tới ngã rẽ với Vũ Minh Quang ngay trước giờ Cầu Xích Thủy nổi lửa.",
+  "nodes": [
+    {
+      "id": "ch4_ep2_01_dai_doi_truong",
+      "type": "narration",
+      "location": "Doanh trại Đại Đội 3 Huyền Ưng — Sáng đầu mùa khô",
+      "mood": "calm",
+      "text": "Mùa mưa thượng nguồn vừa dứt hẳn được ba hôm, nắng sớm đã kịp hong khô lớp bùn đỏ bám dọc những rãnh thoát nước trước lán chỉ huy Đại Đội 3 Huyền Ưng. Trên khoảng sân đất nện ẩn dưới tán cổ thụ chằng chịt lưới ngụy trang, mùi dầu lau súng hòa lẫn mùi lá mục ẩm ướt phả lên trong làn gió nhẹ đầu ngày.\n\nTôi đứng trước tấm gương nhỏ treo bên cột gỗ lán trực ban, khẽ chạm đầu ngón tay vào ba ngôi sao vàng còn sáng bóng trên nền cầu vai xanh mới nhận hồi cuối tháng. Từ một học viên lỡ nhịp giữa sân sỏi đỏ Quang Trung, rồi người lính giữ chốt đêm sấm sét ở Thiên Minh và thung lũng Vân Long, hôm nay trọng trách Đại đội trưởng Đại Đội 3 Huyền Ưng chính thức đặt lên vai tôi.\n\nNgoài hiên tre, những tiểu đội đầu tiên đã bắt đầu ra bãi kiểm tra cơ số đạn cối và thay dây chằng ba lô chuẩn bị chuyển trạng thái trực chiến. Trong túi áo ngực bên trái, cuốn sổ bìa xanh thầy Trần Quốc Vinh trao vẫn nằm gọn gàng, mép giấy đã sờn mềm theo từng chặng hành quân nhưng từng dòng tên ghi chép bên trong chưa bao giờ phai nét.\n\nTiếng ủng cao su bước dứt khoát từ phía đầu dốc cắt ngang dòng suy nghĩ của tôi. Đại đội trưởng Đỗ Thành Sơn — người vừa nhận lệnh điều động lên trung đoàn để dựng tuyến phòng ngự mới trên dãy đồi Bạch Vũ — đang rảo bước tới trước bàn bàn giao với cuốn sổ quân số quen thuộc kẹp chặt dưới cánh tay.",
+      "next": "ch4_ep2_02_son_ban_giao_cuoi"
+    },
+    {
+      "id": "ch4_ep2_02_son_ban_giao_cuoi",
+      "type": "dialogue",
+      "location": "Lán chỉ huy Đại Đội 3 Huyền Ưng",
+      "speaker": "son",
+      "speakerTitle": "Đại úy Đỗ Thành Sơn",
+      "mood": "calm",
+      "text": "Đại úy dậy sớm thế. Tốt. Ngồi xuống bàn đi. Còn hai tiếng nữa tôi lên trung đoàn.\n\nĐây là dấu đỏ đại đội. Đây là sổ quân số mới. Một trăm ba mươi hai người. Bốn cậu mới bổ sung tối qua. Thuộc tên chưa?\n\nNgắn thôi. Mặt trận Xích Thủy đang nóng. Địch sắp thăm dò bờ bắc. Đừng để mất chốt nào.\n\nLính của tôi, tôi chịu. Giờ là lính của anh. Giữ từng người một đấy.",
+      "next": "ch4_ep2_03_tam_ben_bep_huyen_ung"
+    },
+    {
+      "id": "ch4_ep2_03_tam_ben_bep_huyen_ung",
+      "type": "dialogue",
+      "location": "Khu bếp Hoàng Cầm — Cuối bãi đóng quân Huyền Ưng",
+      "speaker": "tam",
+      "speakerTitle": "Binh nhất Trần Văn Tám",
+      "mood": "warm",
+      "text": "Ơ chú em Đại đội trưởng ghé bếp sớm dữ vậy cà, ngồi xuống cái đòn gỗ ni làm ngụm nước gừng nóng cho ấm cổ họng đã rồi hẵng đi kiểm tra chốt chớ. Sáng nay sương rừng còn nặng hơi lạnh, mấy thằng nhỏ bên tổ trung liên vừa ăn xong nồi cháo thịt bằm là kéo nhau ra rìa suối trực hết trơn rồi.\n\nTui mới tranh thủ lúc lửa than còn đượm vá lại hai đường chỉ mép áo mưa cho tụi tân binh với khâu thêm cái quai túi cứu thương cho y tá tiểu đội. Tay tui ám mùi khói bếp quanh năm chứ hộp kim chỉ trong túi áo ngực ni lúc nào cũng sẵn sàng phục vụ anh em từ miếng vải rách nhỏ nhất đó chú.\n\nÀ mà hồi nãy có người ghé bếp phụ tui chẻ củi với cột lại mấy bó dây mây chằng hòm đạn tiếp ứng ngoài bến xuồng đó. Chú coi ngoài kho có ai đang đứng kiểm tra chốt dây kia kìa.",
+      "branches": [
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch4_ep2_04a_loc_xac_nhan_trang_bi"
+        }
+      ],
+      "next": "ch4_ep2_04b_bep_vang_bong_loc"
+    },
+    {
+      "id": "ch4_ep2_04a_loc_xac_nhan_trang_bi",
+      "type": "dialogue",
+      "location": "Kho vật tư cạnh bếp — Đại Đội 3 Huyền Ưng",
+      "condition": { "charAlive": "loc" },
+      "speaker": "loc",
+      "speakerTitle": "Hạ sĩ Bùi Văn Lộc",
+      "mood": "warm",
+      "text": "Báo cáo Đại đội trưởng... à dạ, còn hai anh em đứng góc kho này cho em gọi anh một tiếng như hồi ở Vân Long nghe anh. Em mới đi cùng tổ vận tải đại đội mang cơ số đạn dự phòng xuống tăng cường cho cánh đồng bằng giáp sông Xích Thủy, sẵn ghé bếp phụ anh Tám kiểm tra lại hết dây bao gói.\n\nHồi mới bước chân vô Thiên Minh hai tay em cứ nắm chặt quai ba lô run lập cập mỗi lần nghe anh Nam gọi tên điểm danh, móc sắt nào cũng gài ngược làm trầy hết xương sườn. Nhờ anh kiên nhẫn kèm cặp từng chút hồi đó nên giờ em tự tay buộc dây chằng súng cho cả tổ bốn đứa tân binh mới về rồi đó anh.\n\nNghe anh em kháo nhau trên sư đoàn sắp điều động anh qua ban tham mưu ngoài Xích Phong hả anh? Dù anh đi tuyến nào tụi em dưới này cũng giữ vững đội hình, anh đi trước, chỗ dây này em cột chặt rồi.",
+      "next": "ch4_ep2_05_cong_dien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_04b_bep_vang_bong_loc",
+      "type": "narration",
+      "location": "Kho vật tư cạnh bếp — Đại Đội 3 Huyền Ưng",
+      "mood": "somber",
+      "text": "Ra tới cửa kho vật tư nhìn cậu lính trẻ đang cặm cụi gài khóa hòm đạn, tôi thoáng khựng lại nửa giây khi bóng lưng nghiêng nghiêng dưới mái lá cứ ngỡ là Bùi Văn Lộc ngày nào. Khi cậu ta ngẩng mặt lên chào theo điều lệnh, khuôn mặt lạ hoắc đầy tàn nhang của một tân binh mới bổ sung từ tuyến sau kéo tôi trở về thực tại lạnh buốt.\n\nTrong góc bếp Hoàng Cầm phía sau lưng, anh nuôi Tám lặng lẽ đặt xuống cạnh ông Táo một bát nước gừng nhỏ bốc khói nghi ngút mà chẳng nói thêm lời nào. Cả hai chúng tôi đều hiểu khoảng trống để lại từ dòng lũ dữ nơi cây cầu Vân Long năm ấy chẳng một tờ danh sách bổ sung quân số nào lấp đầy nổi.\n\nTôi đưa tay chỉnh lại mép dây súng bị xoắn trên vai cậu tân binh trẻ, dặn dò kỹ cách gài chốt chống vướng cành cây trước khi quay trở lại lán chỉ huy. Đúng lúc ấy, chuông máy điện báo trong góc phòng trực ban bỗng ré lên từng hồi gấp gáp khác hẳn nhịp liên lạc thường lệ.",
+      "next": "ch4_ep2_05_cong_dien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_05_cong_dien_xich_phong",
+      "type": "dispatch",
+      "location": "Ban Chỉ Huy Đại Đội 3 Huyền Ưng",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN MẬT — BỘ TƯ LỆNH SƯ ĐOÀN — ĐỘ KHẨN: HỎA TỐC]\n\n\"Qua phân tích ảnh trinh sát không quân và tín hiệu radar tầm thấp rạng sáng nay, cụm xe cơ giới bọc thép cùng pháo tự hành 152 ly của Khối Thiết Phong đang bí mật tập kết dọc dải rừng thưa bờ bắc sông Xích Thủy, uy hiếp trực tiếp trục giao thông huyết mạch qua Cầu Xích Thủy.\"\n\n\"Điều động khẩn cấp Đại úy [Chỉ huy] rời cương vị Đại đội trưởng Đại Đội 3 Huyền Ưng về nhận nhiệm vụ Phó Ban Tác Chiến Tiểu Đoàn Xích Phong. Trực tiếp chịu trách nhiệm điều phối hành lang cơ động, trận địa hỏa lực, tuyến tiếp vận hậu phương và bảo vệ ngã ba dân cư Xích Phong.\"\n\n\"Hoàn tất bàn giao chỉ huy tạm quyền Đại Đội 3 Huyền Ưng trong vòng mười hai giờ. Có mặt trình diện tại Sở Chỉ Huy Tiểu Đoàn Xích Phong trước mười bảy giờ cùng ngày.\"",
+      "branches": [
+        {
+          "condition": { "flag": "giup_bay_tram_y_te" },
+          "next": "ch4_ep2_06a_xe_tai_bay_tin_cay"
+        }
+      ],
+      "next": "ch4_ep2_06b_xe_tai_bay_lam_quen"
+    },
+    {
+      "id": "ch4_ep2_06a_xe_tai_bay_tin_cay",
+      "type": "dialogue",
+      "location": "Cabin xe tải vận tải tuyến rừng — Đường ra Xích Phong",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Chà chà, ngồi gọn vô đây đi chú em Đại úy, bữa nay được chở cố nhân hồi dốc mưa Quang Trung đi nhận chức Phó Ban Tác Chiến coi bộ hên cả chuyến xe đa! Lần trước chú phụ tui khiêng từng thùng thuốc vượt dốc trơn muốn trẹo cả lưng, bữa nay nhìn ba ngôi sao vàng trên vai chú tui mừng còn hơn trúng mánh xăng dầu nữa đó.\n\nNè, thò tay vô hộc táp-lô hốt vài viên kẹo gừng ăn cho ấm bụng dọc đường xóc nghe chú em. Đường từ Huyền Ưng xuống ngã ba Xích Phong dạo này ngập bùn tới mắt cá, xe chở đạn chạy đêm cứ phải gài cầu chậm bò từng thước một, nhưng mà yên tâm đi: đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người.\n\nMà tui dặn nhỏ chú em chuyện này trước khi vô cổng tiểu đoàn nè: mấy bữa nay có cô sĩ quan phản gián từ Huế mới biệt phái xuống Xích Phong kiểm tra hồ sơ gắt gao dữ lắm, cộng thêm ông bạn đồng khóa Vũ Minh Quang của chú cũng vừa từ phòng tham mưu sư đoàn ghé qua nữa đó. Lên bàn tham mưu nhớ giữ vững tay lái như hồi ôm vô lăng vượt dốc nghe chú!",
+      "next": "ch4_ep2_07_khang_ben_phao_xich_thuy"
+    },
+    {
+      "id": "ch4_ep2_06b_xe_tai_bay_lam_quen",
+      "type": "dialogue",
+      "location": "Cabin xe tải vận tải tuyến rừng — Đường ra Xích Phong",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Lên cabin ngồi đi Thủ trưởng ơi, đứng ngoài thùng xe gió rừng quất rát mặt lắm, đường ra Xích Phong còn tới hai chục cây số ổ gà lún bùn lầy nữa lận! Tui là Bảy lái xe tuyến Quang Trung – Thiên Minh hồi trước đây nè, chắc chú em bận rộn trận mạc nên quên mặt ông già chở gạo này rồi ha.\n\nHộc táp-lô trước mặt chú có hộp kẹo gừng tui giấu kỹ tránh mấy thằng lính trẻ xin ăn vặt hết đó, chú cứ tự nhiên bóc hai ba viên ngậm cho thông cổ. Mùa này tuyến tiếp vận qua sông Xích Thủy căng như dây đàn, xe chở gạo lẫn xe kéo pháo chạy suốt đêm không đèn pha mà lòng đường lại hẹp sát mép ruộng dân cư. Đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người.\n\nChú về làm Phó Ban Tác Chiến ở Xích Phong kỳ này là đụng đủ thứ chuyện nhức đầu đó nha: nào là cô sĩ quan thanh tra phản gián mới xuống từ Huế soi từng tờ phiếu xuất kho, lại thêm mấy tay tham mưu trẻ trên sư đoàn hối thúc nộp báo cáo đẹp nữa. Tui chỉ mong mấy ông chỉ huy vẽ bản đồ nhớ chừa đường cho xe hàng tui xoay bánh là mừng hết lớn rồi.",
+      "next": "ch4_ep2_07_khang_ben_phao_xich_thuy"
+    },
+    {
+      "id": "ch4_ep2_07_khang_ben_phao_xich_thuy",
+      "type": "dialogue",
+      "location": "Bến cầu phao phụ bên sườn sông Xích Thủy",
+      "speaker": "khang",
+      "speakerTitle": "Đại úy Lê Minh Khang",
+      "mood": "warm",
+      "text": "Đứng lại chút đã ông bạn giường tầng ơi, xe bác tài Bảy vừa nháy đèn ngoài dốc là tui lội sình từ cụm chốt sườn ra đón mặt ông liền đó! Chà, mới bữa nào còn giành nhau cái ca nước sôi ở Quang Trung mà giờ ông đã vọt thẳng lên Phó Ban Tác Chiến Tiểu Đoàn Xích Phong rồi ha.\n\nThôi bỏ cái vẻ nghiêm nghị công điện đi, chỗ hai thằng mình có ai dòm đâu. Tui nói thiệt bụng này nha: đơn vị cơ động của tui mới được điều sang giữ dải hố bom bên bờ bắc sông Xích Thủy, sát sườn mặt trận pháo của tụi Thiết Phong luôn đó. Lên ngồi bàn tham mưu rồi thì làm ơn nhớ mặt mũi từng mét bùn dưới này giùm tui một cái.\n\nCoi chừng cái bản đồ nó lừa mắt mình đó nha. Trên giấy người ta kẻ một đường thước thẳng tắp sạch sẽ lắm, chứ bước xuống bãi lau mới biết chỗ nào lún ngập háng, chỗ nào pháo địch nó căn sẵn tọa độ rồi. Đừng có nói chuyện kiểu trên giấy với tui nghe chưa — còn nghe nhau là còn đội hình!",
+      "next": "ch4_ep2_08_choice_hai_gio_cuoi"
+    },
+    {
+      "id": "ch4_ep2_08_choice_hai_gio_cuoi",
+      "type": "choice",
+      "location": "Trạm giao liên ngã ba Xích Thủy — Hai giờ trước giờ trình diện",
+      "text": "Khang vừa vỗ hai cái thật chắc lên vai bạn theo quy ước cũ rồi quay ngược về phía bến xuồng. Trước mặt bạn còn gần hai tiếng đồng hồ cuối cùng trước khi chính thức bước chân vào Phòng Tác Chiến Tiểu Đoàn Xích Phong và gánh lấy guồng máy tham mưu.",
+      "choices": [
+        {
+          "id": "c_ra_soat_tuyen_hao_huyen_ung",
+          "label": "Quay lại kiểm tra nốt tuyến hào dự bị cùng đại đội phó Huyền Ưng, ghi rõ từng điểm sạt lở vào sổ bìa xanh",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "son", "delta": 1 } }
+          ],
+          "next": "ch4_ep2_09_tien_vao_xich_phong"
+        },
+        {
+          "id": "c_kiem_ke_kho_cung_bay",
+          "label": "Ngồi luôn trong cabin cùng bác tài Bảy đối chiếu hết phiếu đạn, nhiên liệu và lịch xe chạy đêm qua Xích Phong",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addRel": { "char": "bay", "delta": 2 } }
+          ],
+          "next": "ch4_ep2_09_tien_vao_xich_phong"
+        },
+        {
+          "id": "c_dong_bo_tan_so_cung_linh",
+          "label": "Ghé trạm vô tuyến tiền phương đồng bộ bảng mật danh liên lạc dự phòng giữa Huyền Ưng, Khang và Xích Phong",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addRel": { "char": "linh", "delta": 2 } }
+          ],
+          "next": "ch4_ep2_09_tien_vao_xich_phong"
+        },
+        {
+          "id": "c_o_lai_cung_khang_phan_tich_bo_bac",
+          "label": "Trải bản đồ lên nắp thùng đạn cùng Khang, đánh dấu trước ba điểm tập kết ẩn tránh pháo bên bờ bắc",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addRel": { "char": "khang", "delta": 2 } }
+          ],
+          "next": "ch4_ep2_09_tien_vao_xich_phong"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_09_tien_vao_xich_phong",
+      "type": "narration",
+      "location": "Tuyến lộ tiếp vận — Cửa ngõ Xích Phong",
+      "mood": "calm",
+      "text": "Gần hai tiếng đồng hồ cuối cùng trước giờ bàn giao trôi qua nhanh như một cái chớp mắt. Những đoạn bờ sạt lở ven sông dễ ngập khi triều dâng, những khúc cua khuất tầm nhìn lẫn những điểm nghẽn dầu diesel và bộ ắc quy thiếu trên đường dây đều được đánh dấu rõ ràng vào mép cuốn sổ bìa xanh.\n\nKhi trèo lên xe tiến thẳng vào ngã ba Xích Phong, gấu quần kaki của tôi đã lấm bê bết bùn đất, nhưng đầu óc lại sáng tỏ và nhẹ nhõm đến lạ.\n\nTôi không bước vào phòng tham mưu với đôi tay sạch sẽ xa rời trận địa, mà mang theo hình hài thật sự của từng mét đất và từng lỗ hổng hậu cần nơi anh em đang đứng chốt.",
+      "next": "ch4_ep2_10_phong_tac_chien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_10_phong_tac_chien_xich_phong",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Ngã ba đường quân sự",
+      "mood": "calm",
+      "text": "Tiểu Đoàn bộ Xích Phong đóng án ngữ ngay ngã ba đường quân sự trọng yếu, nơi rìa rừng già phía tây đột ngột mở ra những cánh đồng trũng và các xóm dân cư thưa thớt nép mình ven sông Xích Thủy. Đứng từ tháp canh bê tông mới đổ còn hăng mùi xi măng, chỉ cần xoay người một vòng là thấy hai thế giới áp sát nhau đến nghẹt thở.\n\nBên trái hàng rào kẽm gai là dàn ăng-ten radar quay đều cạnh trận địa pháo phòng không phủ kín lưới ngụy trang rêu sẫm. Ngoái sang bên phải lại hiện ra mái ngói cũ kỹ rêu phong của ngôi trường tiểu học xóm Bến Đá và con đê đất nhỏ hẹp chạy ngang qua những vạt ruộng rau xanh mướt.\n\nBên trong Phòng Tác Chiến Tiểu Đoàn, mùi giấy can, mực bút dạ xanh đỏ, dầu máy phát điện và khói thuốc lá quện đặc vào nhau. Giữa phòng kê bốn chiếc ghế gỗ bọc nỉ tươm tất vây quanh tấm sa bàn lớn, còn ngay cạnh khung cửa ra vào chỉ là một khoảng nền xi măng trống trơn lạnh lẽo.",
+      "branches": [
+        {
+          "condition": { "flag": "tin_canh_bao_mat_ma_linh" },
+          "next": "ch4_ep2_11a_linh_canh_bao_than_tin"
+        }
+      ],
+      "next": "ch4_ep2_11b_linh_canh_bao_chinh_quy"
+    },
+    {
+      "id": "ch4_ep2_11a_linh_canh_bao_than_tin",
+      "type": "dialogue",
+      "location": "Góc máy thông tin — Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu úy Trần Mỹ Linh",
+      "mood": "calm",
+      "text": "Em chào anh vừa xuống nhận nhiệm vụ Phó Ban Tác Chiến ở Xích Phong ạ. Hồi ở Thiên Minh anh tin lời cảnh báo nhiễu sóng của em kịp lúc, nên hôm lên đây nhận ca trưởng đài mã hóa tiểu đoàn em giữ nguyên bộ bảng mã dự phòng cũ để sẵn trên bàn trực cho anh dễ phối hợp.\n\nMấy bữa nay em trực canh sóng đêm bên bờ bắc thấy có hiện tượng hơi lạ anh ơi: các kênh liên lạc chiến thuật của Thiết Phong đột ngột chuyển sang trạng thái ổn định kỳ lạ, ít nhiễu tạp âm hẳn đi so với tuần trước. Em gõ nhịp kiểm tra đối chứng suốt ba ca vẫn thấy bất an.\n\nSóng sạch quá mới là sóng có bẫy. Em đã đánh dấu sẵn hai tần số nhảy cóc dự bị cho tuyến cầu Xích Thủy rồi, chừng nào vào giao ban anh ký nháy thông qua giùm em để các đại đội dưới sông kịp nạp khóa mới trước khi trời tối nha anh.",
+      "next": "ch4_ep2_12_nguoi_chuyen_tin_ben_cua"
+    },
+    {
+      "id": "ch4_ep2_11b_linh_canh_bao_chinh_quy",
+      "type": "dialogue",
+      "location": "Góc máy thông tin — Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu úy Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Báo cáo Phó Ban Tác Chiến mới nhận nhiệm vụ, tôi là Trần Mỹ Linh phụ trách tổ mật mã và vô tuyến Tiểu Đoàn Xích Phong. Toàn bộ nhật ký tần số tuần này tôi đã đóng tập xếp gọn bên mép trái sa bàn theo đúng quy chuẩn kỹ thuật của ban chỉ huy.\n\nTuy nhiên, tôi xin phép lưu ý đồng chí một điểm bất thường trong ba đêm trực gần nhất: các kênh vô tuyến trinh sát bên phía Thiết Phong dọc bờ bắc bỗng dưng yên ắng và trong trẻo bất thường, không có tiếng nhiễu khí quyển hay tiếng thử máy thường lệ. Theo kinh nghiệm trực đài của tôi, sóng sạch quá mới là sóng có bẫy.\n\nTôi đề nghị ban tác chiến cân nhắc sớm việc đổi bảng khóa tần số cấp tiểu đoàn. Lần trước ở Thiên Minh lời cảnh báo tương tự từng bị gạt qua vì sợ trễ nhịp liên lạc, tôi không muốn sự cố ấy lặp lại ngay trước cửa ngõ Xích Thủy.",
+      "next": "ch4_ep2_12_nguoi_chuyen_tin_ben_cua"
+    },
+    {
+      "id": "ch4_ep2_12_nguoi_chuyen_tin_ben_cua",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Chiều muộn",
+      "mood": "tense",
+      "text": "Chiều xuống nhanh kéo theo một đợt mưa rây bụi lạnh buốt tạt xiên qua mái hiên phòng trực ban. Bên trong căn phòng sáng ánh đèn măng-sông, bốn chiếc ghế nỉ quanh sa bàn đều đã kín chỗ các sĩ quan phụ trách pháo binh, công binh và tác chiến, ai nấy cúi gằm mặt theo dõi những mũi tên xanh đỏ chồng chéo.\n\nNgay sát mép cửa gỗ, một chiến sĩ chuyển tin trẻ măng từ tuyến trạm lẻ vừa chạy bộ xuyên rừng về nộp báo cáo tuần tra đang đứng nép mình vào vách tường. Hai ống quần cậu ta ướt sũng bùn sông, đế giày cao su sục sạo nước lạnh, thỉnh thoảng cậu phải khẽ nhấc từng gót chân lên cho đỡ rát vết phồng rộp sau chặng đường hơn chục cây số.\n\nGần hai mươi phút trôi qua trong lúc nhân viên văn thư loay hoay niêm phong sáp cho túi mật lệnh hồi đáp, cậu lính trẻ vẫn đứng nghiêm chẳng dám nhúc nhích nửa bước. Quanh góc cửa ra vào trống trơn không có lấy một chiếc ghế đẩu nào cho người chuyển tin đặt lưng.",
+      "next": "ch4_ep2_13_choice_chiec_ghe"
+    },
+    {
+      "id": "ch4_ep2_13_choice_chiec_ghe",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "text": "Sĩ quan trực ban tham mưu ngồi đối diện khẽ liếc sang góc cửa rồi lại cúi xuống gọt đầu bút chì, coi việc người chuyển tin đứng chờ là chuyện hiển nhiên của kỷ luật đầu não. Đôi vai ướt mưa của cậu lính trẻ hơi run lên vì gió lùa từ hành lang.",
+      "choices": [
+        {
+          "id": "c_ke_ghe_chuyen_tin",
+          "label": "Đứng dậy kéo một chiếc ghế gỗ từ góc kho kê ngay cạnh cửa cho người chuyển tin ngồi nghỉ, rót thêm ca nước chè ấm",
+          "effects": [
+            { "setFlag": "dat_ghe_cho_nguoi_chuyen_tin" },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_chiec_ghe",
+                "title": "Chiếc ghế cạnh cửa phòng tham mưu",
+                "entry": "Kê thêm một chiếc ghế gỗ bên cửa Phòng Tác Chiến Xích Phong cho các chiến sĩ chuyển tin đường dài ngồi nghỉ chân trong lúc chờ nhận mật lệnh."
+              }
+            }
+          ],
+          "next": "ch4_ep2_14a_ke_ghe"
+        },
+        {
+          "id": "c_dan_ra_hien_ngoi_hom",
+          "label": "Bước ra ngoài hiên chỉ cho cậu lính ngồi tạm lên thùng đạn rỗng tránh gió rồi hối văn thư đóng dấu nhanh",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } }
+          ],
+          "next": "ch4_ep2_14b_ben_ngoai_vong_sa_ban"
+        },
+        {
+          "id": "c_giu_nghi_thuc_phong_tham_muu",
+          "label": "Giữ nguyên bố cục bốn ghế phòng tham mưu theo điều lệnh, yêu cầu người chuyển tin nhận túi lệnh xong là rút ngay",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } }
+          ],
+          "next": "ch4_ep2_14b_ben_ngoai_vong_sa_ban"
+        },
+        {
+          "id": "c_lap_hop_giao_nhan_ngoai_cong",
+          "label": "Quy định từ nay mọi giao liên chỉ nộp túi lệnh tại trạm gác cổng, cấm lính dính bùn bước vào phòng tác chiến",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -2 } }
+          ],
+          "next": "ch4_ep2_14b_ben_ngoai_vong_sa_ban"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_14a_ke_ghe",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "mood": "warm",
+      "text": "Thoạt đầu cậu chiến sĩ chuyển tin giật mình khựng lại, lúng túng xua tay vì sợ cái quần đẫm bùn sẽ làm dơ mặt ghế gỗ sạch bóng của ban tham mưu tiểu đoàn. Phải tới khi tôi ấn nhẹ hai vai bảo cậu cứ ngồi xuống cởi bớt đôi ủng cho máu lưu thông, cậu mới rụt rè đặt lưng lên mép ghế và thở ra một hơi dài nhẹ nhõm.\n\nNgụm trà nguội làm gương mặt tái nhợt vì mưa lạnh của người lính trẻ ấm dần lên. Cậu bắt đầu kể nhỏ cho tôi nghe đủ thứ chuyện dọc đường mòn vừa lội qua: đoạn suối nào nước mới dâng ngang thắt lưng, quãng dốc nào cây đổ đè đứt dây điện thoại dã chiến.\n\nTừ buổi chiều ấy, chiếc ghế gỗ cạnh cửa trở thành chỗ dừng chân quen thuộc của cánh chuyển tin đường dài. Những con người lội qua mọi ngả rừng Xích Phong mang theo thứ thông tin sống động mà đôi khi hệ thống điện đài mã hóa phải mất cả nửa ngày mới kịp cập nhật.",
+      "next": "ch4_ep2_15_bao_lu_ben_cui"
+    },
+    {
+      "id": "ch4_ep2_14b_ben_ngoai_vong_sa_ban",
+      "type": "narration",
+      "location": "Mái hiên Phòng Tác Chiến Xích Phong",
+      "mood": "calm",
+      "text": "Cậu chiến sĩ chuyển tin dập gót giày đánh cạch, đưa hai tay nhận túi da bạt vừa đóng dấu niêm phong rồi lặng lẽ lui ra khỏi không gian làm việc của ban tham mưu theo đúng quy củ.\n\nCăn phòng sa bàn giữ nguyên được sự sạch sẽ, yên tĩnh và chuẩn xác từng phút một trên lịch trực, không bị gián đoạn bởi tiếng ủng lội bùn hay chuyện vặt hành lang. Viên sĩ quan trực ban đối diện gật gù tán thành thái độ giữ nghiêm điều lệnh ấy.\n\nTuy nhiên, bức tường gạch và khoảng nền xi măng lạnh ngắt trống trơn cạnh khung cửa cũng tách hẳn người chuyển tin khỏi những bàn tính tọa độ bên trong. Tiếng bước chân vội vã xa dần trong màn mưa xám khiến tôi thoáng nhìn theo lâu hơn bình thường một nhịp.",
+      "next": "ch4_ep2_15_bao_lu_ben_cui"
+    },
+    {
+      "id": "ch4_ep2_15_bao_lu_ben_cui",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Ba ngày sau",
+      "mood": "tense",
+      "text": "Ba ngày sau, mưa nguồn từ dãy núi phía bắc trút xuống trắng trời suốt hai đêm liền làm mực nước các nhánh sông đổ về Xích Phong dâng cao đột ngột. Dòng nước đỏ sậm cuốn phăng những mảng lục bình lớn và cành cây mục trôi rầm rập qua các hẻm đá.\n\nChập tối, phòng tác chiến mở giao ban khẩn dưới ánh đèn măng-sông reo xì xì. Nhiệm vụ tối quan trọng đêm nay là điều phối đoàn xe chở đạn pháo 152 ly cơ động gấp lên trận địa dự phòng phía bắc trước rạng sáng để sẵn sàng đánh chặn mũi đột kích của Thiết Phong.\n\nTrên tấm bản đồ hành quân treo tường, trục đường tắt băng qua cây cầu gỗ Bến Củi vẫn được tô nét mực xanh thông suốt theo kết quả khảo sát đầu tuần của đội công binh tuyến sau, không có bất kỳ ký hiệu cảnh báo hư hại nào.",
+      "branches": [
+        {
+          "condition": { "flag": "dat_ghe_cho_nguoi_chuyen_tin" },
+          "next": "ch4_ep2_16a_canh_bao_cau_ben_cui"
+        }
+      ],
+      "next": "ch4_ep2_16b_tac_nghen_cau_ben_cui"
+    },
+    {
+      "id": "ch4_ep2_16a_canh_bao_cau_ben_cui",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "mood": "warm",
+      "text": "Đúng khoảnh khắc tôi chuẩn bị đặt bút ký lệnh xuất phát cho đoàn xe tải đạn ba cầu, cậu chiến sĩ chuyển tin đang ngồi vắt nước áo mưa trên chiếc ghế gỗ cạnh cửa bỗng ngẩng phắt đầu lên với đôi mắt mở lớn. Nhờ được ngồi lại trong phòng chờ niêm phong công văn khác nên cậu vừa nghe trọn tọa độ tuyến đường hành quân tôi đọc to cho sĩ quan vận tải chép.\n\nCậu vội đứng bật dậy bước sát bàn báo thẳng một tin nóng chưa kịp lên mạng mật mã: chiều nay khi lội tắt qua ngả Bến Củi giao thư hỏa tốc, cậu tận mắt chứng kiến nước lũ ngầm đã xoáy rỗng chân cọc làm sụp hẳn một bên mố cầu gỗ phía bắc. Tổ công binh vừa cắm biển cấm xe nặng cách đây hai giờ mà đài vô tuyến cụm pháo vẫn chưa nhận được thông báo.\n\nTôi lập tức gạch chéo tuyến đường chết ấy trên sa bàn, chuyển toàn bộ đoàn xe sang ngả đường đá cấp phối phía tây. Nhờ chậm lại mười phút đổi lộ trình, toàn bộ cơ số đạn pháo hạng nặng đã tới trận địa an toàn đúng giờ quy định.",
+      "effects": [
+        { "addStat": { "stat": "TiepTe", "delta": 6 } },
+        { "addStat": { "stat": "SiKhi", "delta": 4 } }
+      ],
+      "next": "ch4_ep2_17_bay_ben_bai_xe_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_16b_tac_nghen_cau_ben_cui",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "mood": "tense",
+      "text": "Người lính chuyển tin mới chạy qua tuyến Bến Củi chiều nay chỉ kịp đặt túi công văn lên mép bàn rồi vội vã xoay gót bước ra màn mưa theo đúng quy định không nán lại trong phòng chỉ huy, hoàn toàn không hay biết kế hoạch điều động đoàn xe đạn đêm nay.\n\nGần nửa đêm, giữa lúc đoàn xe tiếp tế nặng trịch đang ì ạch bò trong màn mưa dày đặc, đài vô tuyến bỗng ré lên bản tin khẩn làm cả phòng tác chiến đứng bật dậy: mố cầu gỗ Bến Củi đã sụt gãy vì nước lũ ngầm xoáy rỗng từ chập tối, chiếc xe đi đầu suýt lao thẳng xuống khe nước xiết.\n\nCả đoàn xe chở đạn buộc phải lùi ngược giữa đoạn đường rừng chật hẹp trong đêm tối mịt mùng để tìm lối vòng khác. Sự cố đốt sạch phần nhiên liệu dự trữ quý giá và đẩy lùi lịch triển khai hỏa lực pháo binh chậm gần ba tiếng đồng hồ.",
+      "effects": [
+        { "addStat": { "stat": "TiepTe", "delta": -6 } },
+        { "addStat": { "stat": "KyLuat", "delta": -4 } }
+      ],
+      "next": "ch4_ep2_17_bay_ben_bai_xe_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_17_bay_ben_bai_xe_xich_phong",
+      "type": "dialogue",
+      "location": "Bãi tập kết xe vận tải Tiểu Đoàn Xích Phong",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "tense",
+      "text": "Hú hồn hú vía thiệt chớ chú em ơi, tui vừa đánh xe tấp vô bãi kiểm dầu mà hai bắp tay còn mỏi nhừ vì ôm vô lăng xoay trở qua mấy khúc cua bùn đêm qua đây nè! Cái cầu gỗ Bến Củi mục ruột hồi nào chẳng thấy ai chấm mực đỏ trên bản đồ cả, may hay rủi một chuyến xe nhiều khi chỉ cách nhau một lời nhắc miệng đúng lúc đó chú.\n\nThôi ăn viên kẹo gừng cho lại sức rồi coi giùm cánh lái xe tụi tui cái lịch vận tải sáng nay đi. Nghe bên hậu cần pháo binh kháo nhau họ sắp xin lệnh ban tham mưu cho xe ủi san bằng đoạn bờ đê ruộng trũng ngoài xóm Bến Đá để rút ngắn đường kéo pháo phải không chú?\n\nTui nói thiệt lòng này nha: cánh tài xế tụi tui chạy đường ngắn được phút nào mừng phút nấy, nhưng mà sáng nào tui đánh xe ngang qua khúc đó cũng thấy bầy con nít cắp cặp lội bờ đê đi học ríu rít như chim sẻ. Mấy chú trên bàn sa bàn tính cho kỹ kẻo lỡ tay gạch mất đường của tụi nhỏ thì tội lắm.",
+      "next": "ch4_ep2_18_ban_do_loi_di_hoc"
+    },
+    {
+      "id": "ch4_ep2_18_ban_do_loi_di_hoc",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Sáng hôm sau",
+      "mood": "tense",
+      "text": "Sáng hôm sau, một sĩ quan hậu cần pháo binh trải lên mặt bàn gỗ tấm bản đồ quy hoạch đường kéo pháo mới in còn thơm mùi giấy nến, đặt đè thẳng lên tờ bản đồ vẽ tay cũ kỹ mà tổ trinh sát Huyền Ưng để lại từ đợt chốt đầu tiên.\n\nTrên tờ giấy kẻ tay sờn mép ấy, uốn lượn theo bờ đê đất cao ráo băng qua cánh đồng trũng xóm Bến Đá là một đường nét đứt mảnh mai tô bằng mực tím với dòng chú thích nắn nót: \"Lối đi học — Xóm Bến Đá\". Đó là con đường khô ráo duy nhất để hàng chục đứa trẻ trong xóm đi tới ngôi trường ngói đỏ bên kia ngã ba mỗi sáng mà không phải lội ruộng ngập.\n\nĐứng bên cạnh sa bàn, sĩ quan pháo binh đề nghị điều ngay xe ủi san phẳng bờ đê, trải vỉ thép và giăng kẽm gai hai bên để biến thành tuyến tắt cho xe chở đạn 152 ly, rút ngắn đúng mười hai phút mỗi lượt quay đầu. Nếu giữ nguyên lối đi học cho dân, đoàn xe pháo phải đi vòng khúc cua đá dăm dài hơn và dễ lún bùn hơn.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch4_ep2_19a_dung_gop_y"
+        },
+        {
+          "condition": { "charAlive": "gia_lang" },
+          "next": "ch4_ep2_19b_gia_lang_can_dan"
+        }
+      ],
+      "next": "ch4_ep2_19c_mot_minh_truoc_net_muc_tim"
+    },
+    {
+      "id": "ch4_ep2_19a_dung_gop_y",
+      "type": "dialogue",
+      "location": "Hành lang Phòng Tác Chiến Xích Phong",
+      "condition": { "charAlive": "dung" },
+      "speaker": "dung",
+      "speakerTitle": "Thượng sĩ Hoàng Tiến Dũng",
+      "mood": "tense",
+      "text": "Này ông bạn Phó Ban ơi, tôi mới dẫn tổ trinh sát cắt rừng về nộp ảnh bãi bồi thì nghe mấy ông hậu cần bàn chuyện ủi bờ đê xóm Bến Đá hả? Tôi nóng tính nói thẳng ruột ngựa luôn cho nhanh: xe kéo pháo chạy vòng đường đá dăm tốn thêm mười phút thật, nhưng trục đường ấy khuất sau gò đất cao.\n\nÔng thử kéo xe đạn chạy thẳng qua cái bờ đê trống huơ trống hoác sát vách trường học kia xem sao! Trinh sát không quân Thiết Phong nó soi ra đoàn xe tải nặng bò ngang qua đó thì nó dập pháo phản kích xuống trúng đầu cả lũ trẻ con đang ngồi học đánh vần mất.\n\nTôi vuốt quai mũ sắt nói thật với ông một câu: đánh nhau với giặc thì xông pha kiểu gì tôi cũng theo, chứ lôi bọn con nít ra nằm sát đường xe đạn thì thắng nhanh mười phút cũng chẳng vẻ vang gì đâu!",
+      "next": "ch4_ep2_20_choice_loi_di_truong_hoc"
+    },
+    {
+      "id": "ch4_ep2_19b_gia_lang_can_dan",
+      "type": "dialogue",
+      "location": "Cổng gác Tiểu Đoàn Xích Phong",
+      "condition": { "charAlive": "gia_lang" },
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Bản Sương Mù)",
+      "mood": "calm",
+      "text": "Chào anh chỉ huy mới về gác ngã ba sông nhé, già đem gùi gừng khô với ít lá thuốc cầm máu từ bản trên xuôi thuyền xuống gửi bác tài Bảy chuyển cho trạm xá dưới này. Ngồi nghỉ dưới gốc bàng ngoài cổng nghe bà con xóm Bến Đá xôn xao chuyện bộ đội sắp đem máy ủi gạt mất con đê nhỏ đi học của lũ trẻ phải không?\n\nGià gõ cây gậy trúc xuống bậc đá này nói với anh chỉ huy một lời của người sống cả đời bên suối cạn: rừng không giấu dấu chân người vội, mà dòng nước cũng chẳng quên người mở đường hay người chắn lối đâu.\n\nCon đê ấy mùa mưa lũ giữ cho bàn chân bọn trẻ khỏi sa xuống ruộng sâu, mà cũng là lối bà con gánh từng gánh củi, từng rổ sắn ra tiếp sức cho bộ đội khi đường lớn tắc nghẽn. Bà con thương lính thì đất dưới chân lính mới ấm được. Anh cầm bút vẽ trên bàn lớn nhớ chừa cho lũ trẻ một con đường khô ráo tới lớp nghe anh.",
+      "next": "ch4_ep2_20_choice_loi_di_truong_hoc"
+    },
+    {
+      "id": "ch4_ep2_19c_mot_minh_truoc_net_muc_tim",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "mood": "calm",
+      "text": "Không có tiếng nói thẳng thắn của Dũng hay lời nhắc nhở chậm rãi của Già Kiên bên cạnh, chỉ có tôi đứng lặng trước hai tấm bản đồ đặt chồng lên nhau dưới ánh đèn trắng. Ngón tay tôi lần theo đường mực tím mảnh mai trên tờ giấy vẽ tay nhàu nát mà tổ trinh sát Huyền Ưng đã cẩn thận chú thích từ những ngày đầu giữ tuyến.\n\nNgoài khung cửa sổ mở hé, tiếng trống trường xóm Bến Đá vừa điểm ba hồi giòn giã báo giờ vào lớp buổi sáng, hòa lẫn tiếng động cơ diesel gầm rì ngoài trục lộ quân sự. Một nét bút chì đỏ gạch xuống lúc này không chỉ đổi hướng những bánh xe sắt, mà còn đè thẳng lên nhịp sống bình thường hiếm hoi còn sót lại giữa vùng giáp ranh.",
+      "next": "ch4_ep2_20_choice_loi_di_truong_hoc"
+    },
+    {
+      "id": "ch4_ep2_20_choice_loi_di_truong_hoc",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "text": "Cây bút chì đỏ nằm sẵn trong tay bạn phía trên bản vẽ quy hoạch tuyến pháo Xích Phong. Sĩ quan hậu cần pháo binh đứng chờ chữ ký phê duyệt để kịp điều xe ủi xuất phát trong sáng nay.",
+      "choices": [
+        {
+          "id": "c_giu_nguyen_loi_di_hoc",
+          "label": "Khoanh tròn bảo toàn nguyên vẹn lối đi học cho trẻ em trên bản vẽ tác chiến, nắn toàn bộ xe đạn vòng ra đường đá dăm phía tây",
+          "effects": [
+            { "setFlag": "giu_loi_di_truong_hoc_xich_phong" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 8 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_loi_di_hoc",
+                "title": "Nét mực tím trên bản đồ Xích Phong",
+                "entry": "Giữ nguyên lối đi học của trẻ em xóm Bến Đá trên bản vẽ tác chiến Tiểu Đoàn Xích Phong thay vì san ủi làm đường tắt cho xe pháo 152 ly."
+              }
+            }
+          ],
+          "next": "ch4_ep2_21a_giu_loi_di"
+        },
+        {
+          "id": "c_giu_loi_di_chia_khung_gio",
+          "label": "Giữ nguyên mặt đê đất cho dân, lập trạm gác phân khung giờ cấm xe quân sự tuyệt đối vào hai buổi trẻ đi học và tan trường",
+          "effects": [
+            { "setFlag": "giu_loi_di_truong_hoc_xich_phong" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_loi_di_hoc",
+                "title": "Nét mực tím trên bản đồ Xích Phong",
+                "entry": "Bảo vệ lối đi học của trẻ em xóm Bến Đá bằng cách giữ nguyên bờ đê đất và phân giờ cấm xe quân sự qua khu vực trường học."
+              }
+            }
+          ],
+          "next": "ch4_ep2_21b_chia_gio_an_toan"
+        },
+        {
+          "id": "c_ui_bo_de_trai_vi_thep",
+          "label": "Phê duyệt san ủi bờ đê, trải vỉ thép và giăng kẽm gai để ưu tiên tối đa tốc độ tiếp đạn pháo binh ra mặt trận",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 7 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -9 } }
+          ],
+          "next": "ch4_ep2_21c_ui_bo_de"
+        },
+        {
+          "id": "c_ui_de_nhung_bac_cau_tam",
+          "label": "Cho xe ủi san bờ đê làm đường pháo, đồng thời cắt nửa tiểu đội công binh bắc cầu ván tạm qua ruộng sâu cho học sinh",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } }
+          ],
+          "next": "ch4_ep2_21c_ui_bo_de"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_21a_giu_loi_di",
+      "type": "narration",
+      "location": "Bờ đê xóm Bến Đá — Buổi sáng hôm sau",
+      "mood": "warm",
+      "text": "Sáu giờ rưỡi sáng hôm sau, đứng từ ụ bao cát đầu chốt nhìn xuống con đê đất mướt cỏ, tôi thấy bảy tám đứa nhỏ mặc áo trắng ngả màu, chân xỏ dép nhựa líu ríu dắt tay nhau đi qua hàng cọc tiêu sơn trắng đỏ mà công binh mới đóng chặn lối xe cơ giới tối qua.\n\nTiếng cười nói giòn tan của bọn trẻ vang vọng giữa khoảng không gian yên tĩnh hiếm hoi trước giờ mặt trận nổi gió. Mấy bà mẹ đội nón lá đi làm đồng ngang trạm gác liền dừng chân đặt lại bên gốc bàng hai rổ sắn luộc còn bốc khói nghi ngút cho kíp trực sáng, dặn tụi lính trẻ ăn nóng kẻo lạnh bụng.\n\nĐến trưa, khi một tổ trinh sát cần xuồng vượt gấp nhánh sông đang dâng lũ để kiểm tra bãi lau phía bắc, ông lái đò xóm Bến Đá lập tức chèo ra đón chẳng đòi một lời giải thích.",
+      "next": "ch4_ep2_22_thao_xuat_hien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_21b_chia_gio_an_toan",
+      "type": "narration",
+      "location": "Bờ đê xóm Bến Đá — Trạm gác phân luồng",
+      "mood": "calm",
+      "text": "Theo phương án phân khung giờ, hai chiến sĩ kiểm soát quân sự đứng cầm cờ đỏ hai đầu bờ đê từ sáu giờ sáng, chặn toàn bộ xe cơ giới hạng nặng suốt bốn mươi phút để bọn trẻ xóm Bến Đá đi học an toàn trên mặt đê không bị sụt lún.\n\nAnh trung đội trưởng vận tải pháo binh có hơi nhăn mặt khi phải chờ qua giờ cao điểm buổi sáng, nhưng khi nhìn thấy lũ trẻ cúi đầu chào các chú bộ đội bên trạm gác, cái nhíu mày của anh cũng dãn ra thành nụ cười hiền. Dân xóm Bến Đá tuy vẫn còn dè dặt trước những chiếc xe pháo chạy qua lúc trưa vắng, nhưng không còn ánh mắt oán trách nào hướng về hàng rào kẽm gai tiểu đoàn nữa.",
+      "next": "ch4_ep2_22_thao_xuat_hien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_21c_ui_bo_de",
+      "type": "narration",
+      "location": "Bờ đê xóm Bến Đá — Mặt đường trải vỉ thép",
+      "mood": "somber",
+      "text": "Lưỡi gạt máy ủi xé toạc thảm cỏ xanh trên bờ đê trước buổi trưa, hất tung những bụi dứa dại cùng mấy khóm hoa mười giờ ven lối mòn xuống mép ruộng. Những tấm vỉ thép nặng trịch dập xuống ken két, tiếp theo là cuộn kẽm gai bùng nhùng giăng dọc hai bên hành lang đường pháo.\n\nSáng hôm sau, đứng sau hàng rào thép lạnh lẽo là hai người mẹ ôm chặt cặp sách của con nhìn đoàn xe tải nặng gầm rú phun khói dầu đen kịt, buộc phải dắt lũ trẻ men theo lề quốc lộ đầy ổ gà ngập nước hoặc đi trên những tấm ván tạm trơn trượt bắc vội qua ruộng sâu.\n\nThời gian quay vòng đạn pháo trên biểu đồ tham mưu rút ngắn lại rõ rệt, nhưng từ buổi sáng hôm ấy không còn người dân nào dừng chân trò chuyện hay mang rổ khoai luộc tới cổng chốt gác Xích Phong nữa.",
+      "next": "ch4_ep2_22_thao_xuat_hien_xich_phong"
+    },
+    {
+      "id": "ch4_ep2_22_thao_xuat_hien_xich_phong",
+      "type": "narration",
+      "location": "Phòng làm việc phụ — Ban Tác Chiến Tiểu Đoàn Xích Phong",
+      "mood": "tense",
+      "text": "Buổi chiều, mưa lại lất phất gõ lên mái tôn lạnh lẽo. Không báo trước bằng còi xe hay tiếng gọi cửa ồn ào, một nữ sĩ quan mang quân hàm Thiếu úy mặc áo mưa quân nhu cài khuy thẳng tắp lặng lẽ bước vào phòng làm việc phụ của ban tham mưu.\n\nTrên ngực áo cô đính phù hiệu ngành bảo vệ an ninh quân đội, tay xách chiếc cặp da màu nâu khóa đồng cũ kỹ. Các sĩ quan trực ban quanh sa bàn lập tức hạ giọng hẳn xuống, trao nhau những cái liếc mắt đầy dè chừng khi cô kéo ghế ngồi đối diện tôi.\n\nThiếu úy Lê Phương Thảo — cán bộ thanh tra phản gián mới được điều động từ Huế vào mặt trận — mở khóa cặp da, rút ra một tập hồ sơ bìa cứng màu xám, chậm rãi gấp đôi góc tờ hồ sơ mật trước khi đặt ngay ngắn lên mặt bàn giữa hai chúng tôi.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "che_giau_loi_khang" },
+              { "flag": "bo_qua_sai_lech_kho_sung" }
+            ]
+          },
+          "next": "ch4_ep2_23a_thao_truy_vet_so_cu"
+        },
+        {
+          "condition": {
+            "any": [
+              { "flag": "bo_qua_nhieu_song_linh" },
+              { "flag": "giu_lenh_cat_cau_van_long" }
+            ]
+          },
+          "next": "ch4_ep2_23b_thao_truy_vet_lenh_chien"
+        }
+      ],
+      "next": "ch4_ep2_23c_thao_truy_vet_he_thong"
+    },
+    {
+      "id": "ch4_ep2_23a_thao_truy_vet_so_cu",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Chào đồng chí Phó Ban Tác Chiến. Tôi là Thiếu úy Lê Phương Thảo, tổ thanh tra phản gián biệt phái. Xin lỗi vì làm phiền giờ rà bản đồ của đồng chí, nhưng có vài con số cũ từ hồi Quang Trung tới đợt bàn giao kho quân khí ở Vân Long buộc tôi phải ngồi xuống hỏi thẳng một lần.\n\nGiấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được. Trong tập hồ sơ lưu trữ tại văn phòng sư đoàn, tôi thấy phần ghi chép sổ trực cũ và một biên bản sai lệch cơ số súng ở Vân Long vốn có dấu vết sửa xóa, vậy mà khi lên tới bàn thẩm định cấp trên lại bỗng dưng sạch bong không tì vết.\n\nNgười ký nháy xác nhận khâu cuối cùng là chữ ký của đồng chí. Tôi muốn biết liệu đồng chí tự tay giấu sai sót vì tình cảm cá nhân, hay có bàn tay nào từ khối tham mưu cấp trên đã mượn tên đồng chí để hợp thức hóa số liệu cho đẹp?",
+      "next": "ch4_ep2_24_thao_yeu_cau_ho_so_goc"
+    },
+    {
+      "id": "ch4_ep2_23b_thao_truy_vet_lenh_chien",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Chào đồng chí Phó Ban Tác Chiến. Tôi là Thiếu úy Lê Phương Thảo từ đoàn thanh tra phản gián. Đồng chí cứ giữ nguyên trạng thái bình tĩnh, tôi không đến đây để bắt bẻ một người lính từng trực tiếp đổ mồ hôi ngoài tuyến lửa Thiên Minh và Vân Long.\n\nTuy nhiên, giấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được. Khi đối chiếu nhật ký vô tuyến từ hồi giữ chốt ở Thiên Minh — lúc cảnh báo nhiễu sóng từng bị bỏ qua — cùng giờ kích nổ cắt cầu tại Vân Long, tôi phát hiện bản sao lưu trên sư đoàn đã bị cắt xén mất hai đoạn phụ lục quan trọng.\n\nAi đó trên phòng tham mưu cấp trên đang cố biến mọi quyết định trả giá bằng máu ngoài thực địa thành những trang báo cáo hoàn mỹ không một vết xước. Đồng chí có biết ai đã chạm vào tập phụ lục mang chữ ký của mình không?",
+      "next": "ch4_ep2_24_thao_yeu_cau_ho_so_goc"
+    },
+    {
+      "id": "ch4_ep2_23c_thao_truy_vet_he_thong",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Chào đồng chí Phó Ban Tác Chiến. Tôi là Thiếu úy Lê Phương Thảo bên bộ phận thanh tra phản gián. Tôi đã đọc kỹ hầu hết hồ sơ của đồng chí từ khóa Quang Trung qua hai chiến dịch ở Thiên Minh và Vân Long — nhìn chung nét bút của đồng chí giữ được sự thẳng thắn hiếm thấy.\n\nThế nhưng, giấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được. Giữa chặng chuyển quân từ Vân Long về Xích Phong tuần trước, hai phiếu điều chỉnh quân số dự bị và một công điện báo cáo tỷ lệ hỏng hóc thiết bị vô tuyến mang tên đồng chí đã bị ai đó đánh máy lại với con số lạc quan hơn tới ba mươi phần trăm.\n\nTôi đang truy tìm đầu mối đường dây làm đẹp số liệu nằm ngay trong hàng ngũ tham mưu tuyến sau trước khi chiến dịch Xích Thủy nổ súng. Chắc chắn đồng chí cũng nhìn thấy vài dấu hiệu bất thường trong mấy tập công điện chuyển xuống Xích Phong mấy ngày nay rồi chứ?",
+      "next": "ch4_ep2_24_thao_yeu_cau_ho_so_goc"
+    },
+    {
+      "id": "ch4_ep2_24_thao_yeu_cau_ho_so_goc",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Tôi nói rõ quan điểm làm việc của mình để đồng chí khỏi mất công đoán ý: thanh tra phản gián không đi tìm anh hùng hoàn hảo không biết mắc lỗi, nhưng chúng tôi tuyệt đối không bỏ qua thói quen che giấu sự thật làm mù mắt Bộ Chỉ Huy trước giờ nổ súng.\n\nNgày mai đoàn công tác của văn phòng sư đoàn sẽ xuống kiểm tra toàn diện mức sẵn sàng chiến đấu của Tiểu Đoàn Xích Phong. Ngay bây giờ, tôi cần xem toàn bộ bản gốc sổ giao nhận công điện, nhật ký trực vô tuyến và các ghi chú điều chỉnh tuyến tiếp vận tại đây — kể cả những trang có vết gạch sửa hay lỗi chậm trễ từ các giai đoạn trước.\n\nĐồng chí chọn đặt tập hồ sơ thật lên mặt bàn này, hay giữ lại phần góc khuất cho riêng bộ máy tiểu đoàn tự xử lý?",
+      "next": "ch4_ep2_25_choice_dieu_tra_thao"
+    },
+    {
+      "id": "ch4_ep2_25_choice_dieu_tra_thao",
+      "type": "choice",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "text": "Ánh mắt sắc lạnh nhưng điềm tĩnh của Thiếu úy Lê Phương Thảo dừng lại trên ngăn tủ sắt đựng hồ sơ gốc sau lưng bạn. Ngoài hành lang, tiếng máy điện báo vẫn gõ đều từng hồi ngắn ngủi.",
+      "choices": [
+        {
+          "id": "c_giao_toan_bo_ho_so_goc",
+          "label": "Mở khóa tủ sắt, giao toàn bộ bản gốc công điện, nhật ký trực và cả phần ghi chép sai sót từ các chiến dịch trước cho Thảo đối chiếu",
+          "effects": [
+            { "setFlag": "hop_tac_dieu_tra_thao" },
+            { "addRel": { "char": "thao", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_dieu_tra_thao",
+                "title": "Góc giấy gấp của Lê Phương Thảo",
+                "entry": "Hợp tác minh bạch với sĩ quan phản gián Lê Phương Thảo, bàn giao toàn bộ hồ sơ gốc tại Tiểu Đoàn Xích Phong để truy vết nguồn sai lệch số liệu."
+              }
+            }
+          ],
+          "next": "ch4_ep2_26a_thao_ghi_nhan_trung_thuc"
+        },
+        {
+          "id": "c_giao_ho_so_xich_phong_giu_chuyen_cu",
+          "label": "Cung cấp đầy đủ hồ sơ lệch số liệu gần đây ở Xích Phong cho Thảo điều tra, nhưng giữ lại phần lỗi cũ của đồng đội hồi Ch 1–3",
+          "effects": [
+            { "setFlag": "hop_tac_dieu_tra_thao" },
+            { "addRel": { "char": "thao", "delta": 1 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_dieu_tra_thao",
+                "title": "Góc giấy gấp của Lê Phương Thảo",
+                "entry": "Bàn giao hồ sơ điều động Xích Phong cho Lê Phương Thảo nhưng khéo léo che chắn những vết xước cũ của anh em đồng đội từ thời Quang Trung và Thiên Minh."
+              }
+            }
+          ],
+          "next": "ch4_ep2_26b_thao_nhan_ra_khoang_trong"
+        },
+        {
+          "id": "c_chi_nop_ban_tom_tat_sach",
+          "label": "Giấu bớt những công điện bất lợi và sự cố trễ vận tải, chỉ nộp tập báo cáo tổng hợp đã được biên tập gọn gàng",
+          "effects": [
+            { "setFlag": "giau_ho_so_truoc_thao" },
+            { "addRel": { "char": "thao", "delta": -3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_dieu_tra_thao",
+                "title": "Góc giấy gấp của Lê Phương Thảo",
+                "entry": "Giữ lại các công điện nhạy cảm và giao bản báo cáo tổng hợp đã gọt sạch vết lỗi cho thanh tra phản gián Lê Phương Thảo."
+              }
+            }
+          ],
+          "next": "ch4_ep2_26c_thao_dong_cap_ho_so"
+        },
+        {
+          "id": "c_tu_choi_khong_co_lenh_su_doan",
+          "label": "Từ chối giao bản gốc vì lý do bảo mật tác chiến cấp tiểu đoàn, yêu cầu Thảo xuất trình giấy ủy quyền đóng dấu trực tiếp từ Tham mưu trưởng",
+          "effects": [
+            { "setFlag": "giau_ho_so_truoc_thao" },
+            { "addRel": { "char": "thao", "delta": -2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch4_ep2_26c_thao_dong_cap_ho_so"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_26a_thao_ghi_nhan_trung_thuc",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "calm",
+      "text": "Tốt lắm. Tôi đã xem xong cả ba trang có vết gạch chéo bằng bút mực đỏ của đồng chí lẫn tập phiếu kho đầy dấu bùn ở góc dưới.\n\nTrong nghề thanh tra chúng tôi, một bản báo cáo lấm bùn và đầy vết tự sửa sai luôn đáng tin gấp mười lần những tập giấy trắng tinh thơm mùi mực mới. Người dám giữ nguyên vết mực lỗi của chính mình là người chưa học thói bán đứng mạng lính để mua lấy sự bình yên trên giấy.\n\nTôi sẽ giữ kín danh sách nhân sự nhạy cảm không liên quan tới đường dây làm giả số liệu ở cấp trên. Đêm nay đồng chí cứ tập trung giữ tuyến Xích Thủy — còn phần kiểm tra những chữ ký lạ mặt từ phòng tham mưu sư đoàn, để tôi xử lý.",
+      "next": "ch4_ep2_27_quang_xuat_hien_sau_mua"
+    },
+    {
+      "id": "ch4_ep2_26b_thao_nhan_ra_khoang_trong",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Đồng chí hợp tác rất nhanh ở phần hồ sơ tiếp vận Xích Phong, nhưng đừng nghĩ đôi mắt dân phản gián không nhận ra khoảng trống hai tuần đầu tháng trong nhật ký cũ mà đồng chí cố tình để lại trong tủ sắt.\n\nTôi tạm chấp nhận thiện chí bảo vệ nội bộ của một người chỉ huy đại đội cũ, miễn là những điểm nghẽn hiện tại ở Xích Phong được phơi bày đúng sự thật trước giờ nổ súng. Tập tài liệu này đủ để tôi khoanh vùng người đã tự ý sửa tỷ lệ đạn pháo trên sư đoàn.\n\nNhưng tôi dặn trước đồng chí một câu: nếu lần tới sự che chắn tình cảm cá nhân ấy vô tình mở kẽ hở cho kẻ xấu lợi dụng, tôi sẽ không chỉ gấp góc tờ hồ sơ này làm dấu đâu.",
+      "next": "ch4_ep2_27_quang_xuat_hien_sau_mua"
+    },
+    {
+      "id": "ch4_ep2_26c_thao_dong_cap_ho_so",
+      "type": "dialogue",
+      "location": "Phòng làm việc phụ — Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Rất đúng quy trình, rất gọn ghẽ, và cũng sạch sẽ đến mức đáng ngờ. Không một vết gạch xóa, không một dòng than phiền chậm xe hay thiếu phụ tùng, cứ như Tiểu Đoàn Xích Phong đóng quân giữa thời bình vậy.\n\nTôi không cần cãi tay đôi với đồng chí ngay tại đây làm gì. Nhưng đồng chí nên nhớ câu nói đầu tiên tôi đặt xuống bàn này: giấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được — và thực địa Cầu Xích Thủy ngoài kia cũng chẳng biết nói dối theo ý của người viết báo cáo đâu.\n\nTôi sẽ ghi nhận đầy đủ thái độ làm việc hôm nay vào biên bản thanh tra. Chào đồng chí Phó Ban Tác Chiến.",
+      "next": "ch4_ep2_27_quang_xuat_hien_sau_mua"
+    },
+    {
+      "id": "ch4_ep2_27_quang_xuat_hien_sau_mua",
+      "type": "narration",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Chập tối",
+      "mood": "calm",
+      "text": "Bóng Thiếu úy Lê Phương Thảo vừa khuất sau hàng rào cổng gác chưa đầy hai mươi phút thì một chiếc xe u-oát mang biển số bộ tham mưu sư đoàn ghé vào sân tiểu đoàn bộ, đèn gầm phủ bạt kín chỉ hắt ra hai vệt sáng mờ trên vũng nước đọng.\n\nCánh cửa phòng tác chiến bật mở, bước vào là một sĩ quan trẻ dáng cao gầy, bộ quân phục kaki phẳng phiu không vướng lấy một chấm bùn đường rừng dù ngoài trời vẫn rây mưa lạnh. Dưới ánh đèn măng-sông sáng rực, chiếc bút máy nắp kim loại quen thuộc xoay tròn ba vòng gọn gàng giữa mấy ngón tay thon dài: Vũ Minh Quang.\n\nNgười bạn đồng khóa từng đứng đầu bảng điểm lý thuyết tại Học Viện Quang Trung nay đã mang hàm Đại úy giữ vai trò sĩ quan phái viên tham mưu trực thuộc văn phòng của anh Phạm Quang Hùng trên sư đoàn. Quang khép hờ cửa gỗ, ra hiệu cho hai nhân viên văn thư tạm ra ngoài ăn cơm tối để chỉ còn lại hai người bên tấm sa bàn.",
+      "branches": [
+        {
+          "condition": {
+            "any": [
+              { "flag": "hop_tac_voi_quang_quang_trung" },
+              { "flag": "quang_nho_an_tinh_van_long" }
+            ]
+          },
+          "next": "ch4_ep2_28a_quang_mo_loi_ban_cu"
+        }
+      ],
+      "next": "ch4_ep2_28b_quang_giu_the_tham_muu"
+    },
+    {
+      "id": "ch4_ep2_28a_quang_mo_loi_ban_cu",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Lâu ngày mới gặp lại nhau trong phòng tham mưu thế này, ở riêng hai đứa thôi thì cứ gọi 'tôi – cậu' cho đỡ khách sáo. Tôi vẫn nhớ hồi ở Quang Trung cậu chia cho tôi phần ghi chú thực địa, rồi cả lần cậu kéo tổ tôi thoát vây dưới thung lũng Vân Long nữa.\n\nChính vì còn nhớ những chuyện ấy nên tôi mới xin anh Phạm Quang Hùng cho xuống Xích Phong trước đoàn thanh tra một ngày để nói chuyện thẳng thắn với cậu. Tôi mới chạm mặt cô Thảo phản gián ngoài cổng trạm — cô ta đang săm soi từng con số chênh lệch giữa tiểu đoàn và sư đoàn đấy.\n\nCậu là người lính đi lên từ chốt gác Thiên Minh, tôi biết cậu làm việc thật, nhưng cách làm thật thà đến mức phơi hết mọi vết xước ra trước mặt thanh tra và hội đồng trên sư đoàn lúc này là tự khóa đường tiến của cả hai chúng ta.",
+      "next": "ch4_ep2_29_quang_loi_keo_phe_hung"
+    },
+    {
+      "id": "ch4_ep2_28b_quang_giu_the_tham_muu",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Chào đồng chí Phó Ban Tác Chiến. Không có ai ở đây ngoài hai người đồng khóa cũ, nên tôi mạn phép nói chuyện kiểu 'tôi – cậu' cho ngắn gọn trước giờ giao ban tối. Tôi vừa lướt qua cô Thảo bên phản gián ngoài cổng, sắc mặt cô ta lạnh băng như sắp lập biên bản cả tiểu đoàn.\n\nTừ thời ở Quang Trung tôi với cậu đã khác cách nhìn từ sa bàn xuống chiến hào rồi, nhưng hôm nay bàn cờ không còn gói gọn trong một bài thi thực địa nữa. Trên văn phòng tham mưu sư đoàn, anh Phạm Quang Hùng đang trực tiếp nắm quyền phân bổ cơ số pháo dự bị và xét duyệt danh sách đề bạt Cấp Tá đợt tới.\n\nVà nói thẳng ra là cụm Xích Phong của cậu đang bị soi rất kỹ vì tỷ lệ xe trễ lịch với mấy lùm xùm hồ sơ tồn đọng. Tôi xuống đây là muốn cho cậu một lối thoát hợp lý trước khi mọi thứ trở nên quá muộn.",
+      "next": "ch4_ep2_29_quang_loi_keo_phe_hung"
+    },
+    {
+      "id": "ch4_ep2_29_quang_loi_keo_phe_hung",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Cảm tính không giữ nổi chốt đâu. Tính bằng xác suất đi. Anh Hùng nói rất rõ với tôi: trước một chiến dịch lớn như Xích Thủy, Bộ Chỉ Huy cần nhìn thấy một tuyến phòng thủ vững vàng để giữ sĩ khí hậu phương và giành ưu tiên hỏa lực, chứ không cần mấy tờ báo cáo rên rỉ thiếu đạn ẩm dầu làm rối đội hình.\n\nĐây là đề nghị của tôi dành cho cậu ngay tối nay: cậu ký ghép phụ lục điều chỉnh lại mức sẵn sàng của Xích Phong lên chín mươi lăm phần trăm cho khớp với số liệu tổng hợp của nhóm anh Hùng trên sư đoàn, đồng thời gạt bớt mấy kiến nghị lặt vặt của cô Thảo sang một bên.\n\nĐổi lại, cụm Xích Phong sẽ được cấp ưu tiên hai tiểu đội pháo tăng cường, còn tôi với cậu sẽ cùng có mặt trong danh sách thăng Thiếu tá đầu mùa chiến dịch tới. Nếu cậu cứ ôm khư khư đống báo cáo phơi bày toàn sự cố bùn lầy lên trên, cả cậu lẫn tiểu đoàn này sẽ bị liệt vào diện yếu kém và gạt ra rìa ngay lập tức.",
+      "next": "ch4_ep2_30_thu_tay_thay_vinh"
+    },
+    {
+      "id": "ch4_ep2_30_thu_tay_thay_vinh",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Ký ức trang thư tay",
+      "speaker": "vinh",
+      "speakerTitle": "Thiếu tá Trần Quốc Vinh (Thư tay kẹp trong sổ)",
+      "mood": "calm",
+      "text": "Tôi xin phép Quang suy nghĩ năm phút rồi đứng ra mép cửa sổ hít một hơi gió lạnh, tay chạm vào phong thư cũ mà Thiếu tá Trần Quốc Vinh đã kẹp gọn trong cuốn sổ bìa xanh gửi theo xe tiếp liệu từ tuần trước. Từng dòng chữ nghiêng đều đặn của thầy như vang lên rành rọt bên tai giữa tiếng mưa rơi:\n\n\"Lên tới ghế tham mưu rồi, cám dỗ lớn nhất không phải tiếng súng phía trước mà là cây bút nằm sẵn trên bàn giấy phía sau. Chỉ cần sửa một con số cho tròn trịa, cậu sẽ được khen là biết lo đại cục, được mở đường tiến thân rất nhanh.\"\n\n\"Nhưng tôi hỏi cậu: đến lúc pháo địch dập xuống chỗ cậu từng báo cáo là đủ trăm phần trăm quân số trong khi thực tế chỉ còn bảy phần mười, ai sẽ trả giá cho ba phần mười còn thiếu ấy? Đừng viết điều mình chưa làm được — chậm ba nhịp đạo đức là mất cả một thế hệ lính đấy.\"",
+      "next": "ch4_ep2_31_choice_nga_re_quang"
+    },
+    {
+      "id": "ch4_ep2_31_choice_nga_re_quang",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "text": "Bạn gấp phong thư của thầy Vinh lại, xoay người đối diện Vũ Minh Quang bên tấm sa bàn rực sáng ánh đèn. Quang vẫn xoay nhẹ nắp chiếc bút máy ba vòng chờ câu trả lời dứt khoát.",
+      "choices": [
+        {
+          "id": "c_thuyet_phuc_quang_bang_so_lieu_that",
+          "label": "Từ chối liên minh số liệu giả, trải thẳng sổ thực địa và tính cho Quang thấy nếu pháo tăng cường đặt sai chỗ thì bộ binh Khang bên bờ bắc sẽ chết trắng",
+          "effects": [
+            { "setFlag": "quang_dong_minh_xich_phong" },
+            { "addRel": { "char": "quang", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_nga_re_quang",
+                "title": "Ngã rẽ với Vũ Minh Quang",
+                "entry": "Từ chối làm đẹp số liệu cho nhóm Phạm Quang Hùng, dùng phân tích thực chiến kéo Vũ Minh Quang đứng lại cùng chiến tuyến báo cáo trung thực tại Xích Phong."
+              }
+            }
+          ],
+          "next": "ch4_ep2_32a_quang_chon_so_lieu_that"
+        },
+        {
+          "id": "c_giu_vung_nguyen_tac_goi_quang_o_lai",
+          "label": "Khẳng định dứt khoát mình giữ nguyên báo cáo thật dù mất suất thăng cấp, mời Quang ở lại Xích Phong trực tiếp kiểm chứng tuyến cầu trước khi ký bất cứ giấy tờ nào",
+          "effects": [
+            { "setFlag": "quang_dong_minh_xich_phong" },
+            { "addRel": { "char": "quang", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_nga_re_quang",
+                "title": "Ngã rẽ với Vũ Minh Quang",
+                "entry": "Giữ nguyên báo cáo trung thực trước áp lực từ sư đoàn, khiến Vũ Minh Quang dừng bước bên sa bàn Xích Phong thay vì tiếp tục chạy theo chỉ tiêu ảo."
+              }
+            }
+          ],
+          "next": "ch4_ep2_32a_quang_chon_so_lieu_that"
+        },
+        {
+          "id": "c_gat_phang_quang_doa_bao_thao",
+          "label": "Gạt phăng đề nghị của Quang ngay lập tức và cảnh cáo sẽ nộp thẳng lời gạ gẫm của anh ta lên bàn thanh tra Lê Phương Thảo",
+          "effects": [
+            { "setFlag": "quang_theo_phe_hung" },
+            { "setCharState": { "char": "quang", "state": "rival" } },
+            { "addRel": { "char": "quang", "delta": -4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_nga_re_quang",
+                "title": "Ngã rẽ với Vũ Minh Quang",
+                "entry": "Đối đầu gay gắt với Vũ Minh Quang và đe dọa báo cáo thanh tra; Quang dứt khoát quay lưng ngả hẳn về phe Phạm Quang Hùng."
+              }
+            }
+          ],
+          "next": "ch4_ep2_32b_quang_quay_lung_phe_hung"
+        },
+        {
+          "id": "c_dong_y_ky_ghep_cho_dep_so_lieu",
+          "label": "Chấp nhận ký nháy ghép phần phụ lục số liệu đẹp để đổi lấy pháo tăng cường và đường tiến thân, mặc cho Quang tự xoay xở phần còn lại với phe Hùng",
+          "effects": [
+            { "setFlag": "quang_theo_phe_hung" },
+            { "setCharState": { "char": "quang", "state": "rival" } },
+            { "addRel": { "char": "quang", "delta": -2 } },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -5 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch4_ep2_nga_re_quang",
+                "title": "Ngã rẽ với Vũ Minh Quang",
+                "entry": "Thỏa hiệp ký phụ lục làm đẹp số liệu với Vũ Minh Quang; Quang chính thức gia nhập quỹ đạo phe Phạm Quang Hùng và xem mối quan hệ này chỉ là cuộc đổi chác quyền lực."
+              }
+            }
+          ],
+          "next": "ch4_ep2_32c_quang_bat_tay_thuc_dung"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_32a_quang_chon_so_lieu_that",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "warm",
+      "text": "Khoan đã... cậu dừng ngón tay ngay chỗ tuyến đường ngập bờ bắc hồi nãy cho tôi nhìn lại cái bảng tính cơ số đạn thực tế của cậu một lần nữa đi.\n\nTôi xoay nắp bút máy chậm lại rồi vặn chặt hẳn xuống thân bút. Hóa ra bản tổng hợp mà văn phòng anh Hùng đưa cho tôi xem chiều qua đã cắt mất hai xe đạn hỏng trục ở Bến Củi và tính khống luôn cả phần dự bị chưa về tới kho.\n\nNếu giữ cái xác suất chín mươi lăm phần trăm ảo ấy mà đẩy bộ binh qua cầu, thì chính tay tôi đang tính toán trên một bài toán bị thiếu biến số. Được rồi, cậu thắng lần nữa ở phần thực địa đấy.\n\nTôi sẽ gọi điện lên văn phòng sư đoàn xin rút lại cái phụ lục làm đẹp kia và ở lại Xích Phong đêm nay trực tiếp tính toán bảng bắn thật cùng cậu. Thà chậm thăng một cấp còn hơn mang tiếng đẩy cả đại đội vào chỗ chết vì con số sai.",
+      "next": "ch4_ep2_33_dem_tinh_truoc_con_bao"
+    },
+    {
+      "id": "ch4_ep2_32b_quang_quay_lung_phe_hung",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Hừ, giọng điệu chính nghĩa của cậu y hệt hồi còn đứng trước hội đồng chấm thi ở Quang Trung vậy, lúc nào cũng tưởng chỉ có một mình cậu biết xót mạng lính còn người làm tham mưu bọn tôi là lũ bàn giấy vô cảm hết cả!\n\nTôi đóng nắp bút máy cái 'tách' gọn lỏn rồi nhét thẳng vào túi áo ngực. Cậu muốn đem tên tôi nộp cho cô Thảo thì cứ việc viết biên bản cho dài vào — nhưng tôi nhắc cậu nhớ, ở cấp tiểu đoàn trở lên, không phải cứ thật thà ôm đống số liệu rách nát là giữ được trận địa đâu.\n\nTừ giờ trở đi, đường cậu cậu đi, tôi về làm đúng phần việc của văn phòng anh Phạm Quang Hùng trên sư đoàn. Đêm nay Cầu Xích Thủy có vỡ trận hay thiếu pháo chi viện thì cậu tự đứng ra mà gánh lấy cái xác suất thực địa của cậu.",
+      "next": "ch4_ep2_33_dem_tinh_truoc_con_bao"
+    },
+    {
+      "id": "ch4_ep2_32c_quang_bat_tay_thuc_dung",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "somber",
+      "text": "Vậy mới gọi là người biết nhìn thời thế chứ, Đại úy ạ. Cậu đừng nhìn tôi bằng ánh mắt nặng nề như thế — trên bàn cờ chiến dịch lớn, đôi khi cả anh Hùng lẫn chúng ta đều chỉ là những người chọn phương án ít tổn hại cho vị trí của mình nhất.\n\nTôi cầm tờ phụ lục đã ký nháy kẹp gọn vào bìa da cứng, nụ cười trên môi Quang bỗng trở nên xa lạ và lạnh lẽo khác hẳn cái vẻ tranh luận hăng say thời học viên. Cậu đã bước một chân vào vòng quay thành tích của nhóm anh Hùng rồi đấy, nhưng đừng tưởng vậy là hai đứa mình thành anh em chung lưng đấu cật.\n\nTrong cuộc chơi xác suất này, hôm nay tôi giữ lưng cho cậu vì lợi ích tuyến Xích Phong, còn ngày mai ai đứng vững được trên bàn hội đồng sư đoàn thì tự thân người đó giữ lấy ghế của mình.",
+      "next": "ch4_ep2_33_dem_tinh_truoc_con_bao"
+    },
+    {
+      "id": "ch4_ep2_33_dem_tinh_truoc_con_bao",
+      "type": "narration",
+      "location": "Đài quan sát Tiểu Đoàn Xích Phong — 01 giờ 20 phút sáng",
+      "mood": "calm",
+      "text": "Quá nửa đêm, cơn mưa phùn tạm ngớt, nhường chỗ cho một sự tĩnh lặng nặng nề phủ trùm khắp ngã ba Xích Phong. Bước dọc hành lang xi măng đi kiểm tra các vị trí gác đêm, tôi nghe rõ tiếng máy phát điện chạy cầm chừng rì rầm sau vách đất và tiếng ngáy đều đều của vài chiến sĩ trực ca đang chợp mắt trên sạp gỗ.\n\nKhi leo lên tầng gác quan sát nhìn về phía Cầu Xích Thủy, dải sông đen thẫm uốn lượn như một vệt mực loang giữa màn sương mù trắng đục. Bên kia bờ bắc, rặng lau sậy rộng hàng cây số im phăng phắc đến kỳ lạ — không một ánh đèn pin chớp nháy, không tiếng chó sủa từ các xóm bỏ hoang, đến cả tiếng động cơ gầm gừ xa xa mọi đêm nay cũng bặt tăm.\n\nĐúng lúc tôi vừa nâng ống nhòm lên quét dọc chân cầu sắt thì tiếng bước chân nhẹ nhàng nhưng dứt khoát vang lên sau lưng trên cầu thang bê tông.",
+      "next": "ch4_ep2_34_linh_nghe_song_bat_thuong"
+    },
+    {
+      "id": "ch4_ep2_34_linh_nghe_song_bat_thuong",
+      "type": "dialogue",
+      "location": "Đài quan sát Tiểu Đoàn Xích Phong",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu úy Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Anh chưa nghỉ chút nào hả anh? Em mới rời bàn trực ba phút chạy lên báo gấp với anh tình hình phòng mật mã vừa ghi nhận lúc một giờ mười lăm phút.\n\nToàn bộ bảy tần số trinh sát và chỉ huy cơ giới của Khối Thiết Phong bên kia bờ bắc bỗng dưng cắt liên lạc đồng loạt cùng một giây — ngay cả bản tin kiểm tra thời tiết định kỳ hai tiếng một lần của tụi nó cũng biến mất sạch. Em áp tai nghe qua máy thu dự phòng mà chỉ thấy tiếng tĩnh điện êm ru, không có lấy một xung nhiễu nhỏ.\n\nSóng sạch quá mới là sóng có bẫy. Em sợ tụi nó đang chuyển toàn bộ sang liên lạc hữu tuyến hoặc giữ im lặng vô tuyến tuyệt đối để áp sát đầu cầu trong đêm sương này đó anh!",
+      "next": "ch4_ep2_34b_choice_tan_so_du_phong"
+    },
+    {
+      "id": "ch4_ep2_34b_choice_tan_so_du_phong",
+      "type": "choice",
+      "location": "Đài quan sát Tiểu Đoàn Xích Phong — 01 giờ 25 phút sáng",
+      "text": "Đầu ngón tay Linh khẽ gõ nhịp Morse dồn dập lên lan can sắt lạnh buốt. Chỉ một mệnh lệnh của bạn lúc này sẽ quyết định toàn bộ mạng thông tin tiểu đoàn phản ứng thế nào trước sự im lặng đáng ngờ bên kia sông.",
+      "choices": [
+        {
+          "id": "c_nhay_tan_so_du_phong_ngay",
+          "label": "Ra lệnh cho Linh chuyển toàn bộ mạng liên lạc tiểu đoàn sang bảng tần số nhảy cóc dự phòng ngay lập tức, chấp nhận mất năm phút gián đoạn giao ban",
+          "effects": [
+            { "addRel": { "char": "linh", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } }
+          ],
+          "next": "ch4_ep2_35_khang_goi_tu_bo_bac"
+        },
+        {
+          "id": "c_giu_kenh_cu_mo_them_duong_day_huu_tuyen",
+          "label": "Giữ nguyên kênh vô tuyến hiện tại làm nghi binh để địch tưởng ta chủ quan, đồng thời cử hai lính thông tin rải gấp thêm đường dây hữu tuyến dự phòng xuống đầu cầu",
+          "effects": [
+            { "addRel": { "char": "linh", "delta": 1 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } }
+          ],
+          "next": "ch4_ep2_35_khang_goi_tu_bo_bac"
+        },
+        {
+          "id": "c_cho_radar_quet_them_khong_doi_ma",
+          "label": "Chưa đổi mã khóa vội để tránh làm rối các đại đội đang hành quân đêm, yêu cầu đài radar quay dải tần thấp quét sát mặt đất bờ bắc",
+          "effects": [
+            { "addRel": { "char": "linh", "delta": -1 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } }
+          ],
+          "next": "ch4_ep2_35_khang_goi_tu_bo_bac"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_35_khang_goi_tu_bo_bac",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Xích Phong — Kênh hữu tuyến dã chiến số 4",
+      "speaker": "khang",
+      "speakerTitle": "Đại úy Lê Minh Khang (Từ bờ bắc sông Xích Thủy)",
+      "mood": "tense",
+      "text": "Alô, đầu cầu Xích Phong nghe rõ trả lời đi ông bạn ơi! Tui đang nằm trong hố ngập bên rìa bãi lau bờ bắc, kéo sát tổ hợp điện thoại dây đồng sát miệng nói nhỏ cho khỏi lộ tiếng nè.\n\nNước sông dâng lên nhanh quá, ngập tới nửa bắp vế anh em hết rồi, nhưng chuyện đó không đáng ngại bằng cái tiếng ầm ì nặng trịch đang dội từ lòng đất sau rặng đồi thấp phía bắc. Không phải tiếng sấm đâu ông — tiếng động cơ xe tăng hạng nặng tắt đèn chạy số thấp đang ém quân chờ giờ nổ súng đó!\n\nTui bấm nhẹ cái bật lửa 'tách' một cái sát ống nghe làm dấu cho ông chắc ăn đúng giọng tui rồi nha. Bên đó chuẩn bị sẵn phương án pháo sáng với cơ số yểm trợ đi, tụi tui bên này căng mắt chờ lệnh — còn nghe nhau là còn đội hình!",
+      "next": "ch4_ep2_36_cong_dien_bao_dong_do"
+    },
+    {
+      "id": "ch4_ep2_36_cong_dien_bao_dong_do",
+      "type": "dispatch",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — 02 giờ 55 phút sáng",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN KHẨN — TRẠM RADAR CẢNH GIỚI XÍCH PHONG — BÁO ĐỘNG ĐỎ]\n\n\"02:55 — Toàn màn hình radar tầm thấp Xích Phong đồng loạt phát hiện hai mũi cơ giới bọc thép kết hợp pháo tự hành 152 ly của Khối Thiết Phong đang vượt qua dải rừng thưa bờ bắc tiến thẳng xuống trục Cầu Xích Thủy!\"\n\n\"Sóng gây nhiễu điện tử cường độ cao bắt đầu đánh sập các kênh vô tuyến tầm xa từ hướng bắc. Ước tính mũi xe tăng đi đầu của địch sẽ áp sát vùng đệm pháo kích đầu cầu trong vòng bốn mươi phút nữa.\"\n\n\"Phân đội cơ động của Đại úy Lê Minh Khang đang ở vị trí tiền tiêu bờ bắc đối diện trực tiếp hỏa lực áp chế. Yêu cầu Phó Ban Tác Chiến Tiểu Đoàn Xích Phong hạ lệnh điều phối tiền khai trước khi còi báo động toàn khu vực hú lên!\"",
+      "next": "ch4_ep2_37_choice_tien_khai_chi_vien"
+    },
+    {
+      "id": "ch4_ep2_37_choice_tien_khai_chi_vien",
+      "type": "choice",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong — Trước giờ G",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c_cho_xac_nhan_lenh_tieu_doan",
+      "text": "Đèn báo động đỏ trên tường phòng tác chiến chớp nháy liên hồi, hắt ánh sáng gắt gỏng lên tấm bản đồ sông Xích Thủy. Mười giây trước khi còi báo động toàn tiểu đoàn hú vang, bạn phải quyết định ngay hướng ưu tiên xuất kích đầu tiên!",
+      "choices": [
+        {
+          "id": "c_day_huyen_ung_ra_cau_som",
+          "label": "Điều ngay lực lượng dự bị Đại Đội 3 Huyền Ưng cơ động gấp xuống giữ đầu cầu phía nam, mở sẵn kho đạn pháo sáng yểm trợ bờ bắc",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } }
+          ],
+          "next": "ch4_ep2_38a_lenh_xuat_kich_khan"
+        },
+        {
+          "id": "c_chuyen_doan_xe_dan_len_tuyen_cao",
+          "label": "Ưu tiên toàn lực đẩy đoàn xe chở đạn 152 ly và xăng dầu theo trục đường đá dăm cao lên trận địa pháo trước khi đường bị pháo kích khóa chết",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } }
+          ],
+          "next": "ch4_ep2_38b_giu_huyet_mach_tiep_te"
+        },
+        {
+          "id": "c_cat_to_cong_binh_cai_min_tru_cau",
+          "label": "Cắt ngay tổ công binh xuống đặt dây kích nổ dự phòng vào trụ chính Cầu Xích Thủy, chuẩn bị phương án phong tỏa tuyệt đối bờ nam",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } }
+          ],
+          "next": "ch4_ep2_38c_phong_toa_cau_cho_lenh"
+        },
+        {
+          "id": "c_cho_xac_nhan_lenh_tieu_doan",
+          "label": "Giữ nguyên vị trí chờ trạm radar đối chiếu lại tín hiệu thật giả và chờ Tiểu đoàn trưởng ký lệnh xuất quân chính thức đúng điều lệnh",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": -4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch4_ep2_38c_phong_toa_cau_cho_lenh"
+        }
+      ]
+    },
+    {
+      "id": "ch4_ep2_38a_lenh_xuat_kich_khan",
+      "type": "narration",
+      "location": "Trục lộ Xích Phong — 03 giờ 05 phút sáng",
+      "mood": "urgent",
+      "text": "Hồi còi báo động vừa cất lên cũng là lúc những tiếng bước chân rầm rập của đội hình dự bị Đại Đội 3 Huyền Ưng đã rẽ màn mưa lao thẳng xuống dốc đường hướng ra Cầu Xích Thủy. Quen mặt từng người chỉ huy cũ nên chẳng ai phải hỏi lại mệnh lệnh lần thứ hai.\n\nPhía sau lưng, pháo thủ cụm hỏa lực vội vã bóc niêm phong các hòm đạn chiếu sáng, ánh đèn pin đội đầu lấp loáng như đom đóm dọc mép công sự đất đỏ. Nhịp chuyển trạng thái đi trước đối phương nửa bước khiến cả phòng tác chiến bừng lên thứ khí thế quyết liệt đến nghẹt thở.",
+      "branches": [
+        {
+          "condition": { "flag": "quang_dong_minh_xich_phong" },
+          "next": "ch4_ep2_39a_quang_sat_canh_ban_do"
+        }
+      ],
+      "next": "ch4_ep2_39b_quang_rut_ve_tuyen_sau"
+    },
+    {
+      "id": "ch4_ep2_38b_giu_huyet_mach_tiep_te",
+      "type": "narration",
+      "location": "Trục đường đá dăm phía tây — 03 giờ 05 phút sáng",
+      "mood": "urgent",
+      "text": "Tiếng động cơ xe tải hạng nặng đồng loạt gầm vang trong đêm tối, nối đuôi nhau bò qua con đường đá dăm phía tây để đưa toàn bộ cơ số đạn pháo 152 ly ra khỏi vùng trũng trước khi trận địa bị pháo địch khóa đầu.\n\nBác tài Bảy nhấn còi hai tiếng ngắn báo hiệu chiếc xe dẫn đầu đã qua khỏi khúc cua nguy hiểm. Dù mũi bộ binh cơ động phía sau xuất kích chậm hơn vài phút để nhường đường cho xe đạn, nhưng họng pháo chủ lực của toàn tiểu đoàn đã đảm bảo đủ sức bắn giữ nhịp suốt cả đêm dài sắp tới.",
+      "branches": [
+        {
+          "condition": { "flag": "quang_dong_minh_xich_phong" },
+          "next": "ch4_ep2_39a_quang_sat_canh_ban_do"
+        }
+      ],
+      "next": "ch4_ep2_39b_quang_rut_ve_tuyen_sau"
+    },
+    {
+      "id": "ch4_ep2_38c_phong_toa_cau_cho_lenh",
+      "type": "narration",
+      "location": "Hành lang Sở Chỉ Huy Tiểu Đoàn Xích Phong — 03 giờ 10 phút sáng",
+      "mood": "tense",
+      "text": "Không khí trong phòng sa bàn đặc quánh lại dưới ánh đèn báo động đỏ chớp tắt liên hồi. Mệnh lệnh chuẩn xác theo quy trình giữ cho toàn bộ hệ thống không bị cuốn vào bẫy nghi binh, song khoảng lặng chờ đợi hoặc cảnh tượng tổ công binh lầm lũi ôm cuộn dây kích nổ chạy xuống đầu cầu khiến ánh mắt nhiều người thoáng sững lại.\n\nTừ phía chân trời hướng bắc, những quầng chớp lửa đầu tiên của pháo tầm xa Khối Thiết Phong đã bắt đầu lóe sáng rạch ngang màn mây đen kịt. Tiếng ùng oàng nặng nề dội qua mặt sông báo hiệu cơn bão lửa thực sự tại Cầu Xích Thủy chỉ còn tính bằng phút.",
+      "branches": [
+        {
+          "condition": { "flag": "quang_dong_minh_xich_phong" },
+          "next": "ch4_ep2_39a_quang_sat_canh_ban_do"
+        }
+      ],
+      "next": "ch4_ep2_39b_quang_rut_ve_tuyen_sau"
+    },
+    {
+      "id": "ch4_ep2_39a_quang_sat_canh_ban_do",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "urgent",
+      "text": "Tôi đã tính xong bảng phần tử bắn chặn cho ba khẩu đội pháo dự phòng dựa trên đúng số lượng đạn thực tế còn trong kho rồi đây! Hai bên sườn cầu bờ bắc có ba điểm mù radar, tôi đã đánh dấu bằng nét chì xanh trên sa bàn để cậu nhìn thấy ngay khi xuống đầu cầu.\n\nCậu cứ xuống thẳng tuyến trước nắm chỉ huy mặt cầu đi, phần điều phối hỏa lực từ phòng tác chiến và giữ liên lạc chi viện lên sư đoàn ở nhà tôi gánh cùng cậu. Không có bất kỳ con số tô hồng nào trên bàn này tối nay hết.\n\nGiữ mạng về đấy nhé, bạn đồng khóa — còn nhiều chuyện tụi mình phải tính tiếp sau trận cầu này lắm.",
+      "branches": [
+        {
+          "condition": { "flag": "hop_tac_dieu_tra_thao" },
+          "next": "ch4_ep2_40a_thao_tin_tuong_truoc_cau"
+        }
+      ],
+      "next": "ch4_ep2_40b_thao_canh_giac_truoc_cau"
+    },
+    {
+      "id": "ch4_ep2_39b_quang_rut_ve_tuyen_sau",
+      "type": "dialogue",
+      "location": "Cửa Phòng Tác Chiến Tiểu Đoàn Xích Phong",
+      "speaker": "quang",
+      "speakerTitle": "Đại úy Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Tôi đã gom xong tập báo cáo điều phối gửi về văn phòng tham mưu sư đoàn trước khi đường dây bị pháo kích cắt đứt rồi. Xe của tôi sẽ lùi về sở chỉ huy dự phòng tuyến sau theo đúng phân công nhiệm vụ của anh Phạm Quang Hùng.\n\nCậu ở lại gánh mặt cầu Xích Thủy cho vững, đừng để mất nhịp pháo chi viện rồi lại đổ lỗi cho bảng phân bổ từ cấp trên. Tôi sẽ theo dõi sát kết quả trận đêm nay từ bàn tham mưu sư đoàn — mọi con số cậu ký đều phải tự chịu trách nhiệm trước hội đồng đấy.\n\nChào đồng chí Phó Ban Tác Chiến.",
+      "branches": [
+        {
+          "condition": { "flag": "hop_tac_dieu_tra_thao" },
+          "next": "ch4_ep2_40a_thao_tin_tuong_truoc_cau"
+        }
+      ],
+      "next": "ch4_ep2_40b_thao_canh_giac_truoc_cau"
+    },
+    {
+      "id": "ch4_ep2_40a_thao_tin_tuong_truoc_cau",
+      "type": "dialogue",
+      "location": "Bậc thềm Sở Chỉ Huy Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "calm",
+      "text": "Đồng chí khoác áo mưa vào đi kẻo lạnh, ngoài đầu cầu gió sông mạnh lắm đấy. Tôi vừa gửi xong bản điện khẩn khóa niêm phong lên tuyến trên theo đúng hồ sơ thật đồng chí bàn giao chiều nay — ít nhất trên bàn tham mưu tối nay không ai có thể lừa dối về tình trạng thực tế của Xích Phong nữa.\n\nTôi vẫn giữ góc hồ sơ gấp đôi trong cặp da này làm bằng chứng cho đồng chí. Cố gắng giữ nguyên vẹn người từ Cầu Xích Thủy trở về, bởi vì cuộc chiến thật sự với những chữ ký giả dối phía sau lưng chúng ta chỉ mới bắt đầu sau đêm nay thôi.\n\nBảo trọng nhé, đồng chí Đại úy.",
+      "next": "ch4_ep2_bottleneck"
+    },
+    {
+      "id": "ch4_ep2_40b_thao_canh_giac_truoc_cau",
+      "type": "dialogue",
+      "location": "Bậc thềm Sở Chỉ Huy Tiểu Đoàn Xích Phong",
+      "speaker": "thao",
+      "speakerTitle": "Thiếu úy Lê Phương Thảo",
+      "mood": "tense",
+      "text": "Tôi cũng sắp chuyển cùng tổ hồ sơ sang hầm dự phòng theo lệnh báo động. Trước khi đồng chí xuống Cầu Xích Thủy, tôi chỉ muốn nhắc lại một điều cuối cùng thôi.\n\nChiều nay đồng chí chọn giữ kín những phần giấy tờ góc khuất trước bàn thanh tra, tôi tôn trọng quyền chỉ huy tại chỗ của đồng chí trong giờ phút cấp bách này. Nhưng sau tiếng pháo đêm nay, mọi sự chênh lệch giữa báo cáo sạch sẽ trên giấy và thực tế máu đổ ngoài cầu đều sẽ tự phơi bày dưới ánh sáng ban ngày.\n\nMong đồng chí xử lý trận đánh đêm nay ngay thẳng hơn cách đồng chí mở tủ hồ sơ hồi chiều. Đi cẩn thận.",
+      "next": "ch4_ep2_bottleneck"
+    },
+    {
+      "id": "ch4_ep2_bottleneck",
+      "type": "narration",
+      "location": "Trục đường hướng ra Cầu Xích Thủy — 03 giờ 20 phút sáng",
+      "mood": "urgent",
+      "text": "Tôi thắt chặt dây thắt lưng bao súng ngắn, gài kín chiếc cúc túi áo ngực nơi cuốn sổ bìa xanh nằm sát lồng ngực, rồi kéo mũ sắt sụp xuống trán bước thẳng ra khỏi vùng sáng đèn măng-sông của phòng tác chiến Xích Phong.\n\nMưa lớn lại đổ xuống sầm sập quất rát mặt đường đất đỏ. Phía trước mặt, vòm thép Cầu Xích Thủy bắt đầu rung lên từng đợt trong ánh chớp đỏ lòa của pháo kích tầm xa rải dọc bờ bắc, nơi Lê Minh Khang và những người lính tiền phương đang căng mình chờ lệnh chi viện.\n\nBàn tham mưu phía sau lưng đã khép lại với những chiếc ghế đặt thêm, những nét bút giữ lối đi cho dân, ánh mắt sắc lạnh của phản gián và ngã rẽ không thể quay đầu với người bạn đồng khóa. Giờ đây, mọi con số trên bản đồ đều sắp phải trả lời bằng lửa đạn ngay trên mặt cầu sắt Xích Thủy.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch4_ep2_ket_thuc_xich_phong",
+            "title": "Đêm rời bàn tham mưu Xích Phong",
+            "entry": "Hoàn thành những quyết định đầu tiên trên cương vị Phó Ban Tác Chiến Tiểu Đoàn Xích Phong trước sự thanh tra của Lê Phương Thảo và ngã rẽ với Vũ Minh Quang, lao thẳng xuống Cầu Xích Thủy giữa cơn bão pháo Thiết Phong."
+          }
+        }
+      ],
+      "isChapterEnd": true
+    }
+  ]
+}

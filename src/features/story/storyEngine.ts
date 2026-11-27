@@ -44,7 +44,7 @@ export function createInitialCharStates(): Record<CharacterId, CharacterState> {
 export function createFreshCampaignSave(firstChapter: StoryChapter): StoryCampaignSave {
   const entry = firstChapter.nodes.find((n) => n.id === firstChapter.entryNodeId);
   const base: StoryCampaignSave = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     currentChapterId: firstChapter.id,
     currentNodeId: firstChapter.entryNodeId,
     stats: createInitialStats(),

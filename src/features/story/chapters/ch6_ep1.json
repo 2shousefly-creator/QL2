@@ -1,0 +1,1129 @@
+{
+  "id": "ch6_ep1",
+  "episodeOrder": 16,
+  "chapterNumber": 6,
+  "title": "Chương VI · Hồi 16: Sư Đoàn Hắc Hổ & Mùa Đông Bắc Vực",
+  "ql2ChapterId": "general",
+  "rankRange": "Thiếu Tướng → Trung Tướng",
+  "nextChapterId": "ch6_ep2",
+  "entryNodeId": "ch6_ep1_01_su_doan_hac_ho",
+  "summary": "Nhận quân hàm Thiếu Tướng chỉ huy Sư Đoàn Hắc Hổ trấn giữ dãy núi biên ải Bắc Vực giữa đợt rét đậm đầu mùa, đối mặt đòn thăm dò tác chiến điện tử và tối hậu thư mật của Tư lệnh Khối Thiết Phong 'Hắc Ưng'; thăng quân hàm Trung Tướng Quân Đoàn Bắc Vực giữa cuộc khủng hoảng thiếu điện trạm xá của Y sĩ Nguyễn Thu Hà trước khi nhận lệnh hỏa tốc thăng Thượng Tướng về tiếp quản Đại Chiến Khu Long Vũ.",
+  "nodes": [
+    {
+      "id": "ch6_ep1_01_su_doan_hac_ho",
+      "type": "narration",
+      "location": "Đèo Gió — Sở Chỉ Huy Sư Đoàn Hắc Hổ, Bắc Vực",
+      "mood": "calm",
+      "text": "Chuyến xe chỉ huy rời vùng đồng bằng sình lầy Thiên Lang và dải đồi đất đỏ Bạch Vũ lúc trời còn sương, leo suốt tám tiếng đồng hồ ngược dốc đá tai mèo để chạm tới Đèo Gió khi hoàng hôn vừa đóng băng trên những ngọn thông già. Cái ẩm ướt quen thuộc của mùa nước nổi biến mất hẳn, nhường chỗ cho luồng gió bấc khô rát táp thẳng vào gò má.\n\nTrong căn hầm bê tông bán âm ăn sâu vào vách núi đá vôi, một ngôi sao vàng Thiếu Tướng trên cầu vai áo dạ mới vẫn còn thơm mùi hồ vải. Trên mặt bàn sắt lạnh ngắt, tôi đặt cuốn sổ bìa xanh đã sờn bốn góc cạnh tấm bản đồ nhỏ Thiên Lang gấp tư và những kỷ vật mang theo suốt từ thuở Quang Trung.\n\nMỗi trang giấy trong cuốn sổ ấy đều mang dấu mực của những người đã đi cùng tôi từ vọng gác Thiên Minh qua cầu Xích Thủy tới vùng ngập Thiên Lang. Giờ đây, nét bút tiếp theo phải viết giữa tiếng gió núi gầm gào bên rìa biên giới phía Bắc.\n\nNgoài cửa hầm, lá cờ đỏ sao vàng của Sư Đoàn Hắc Hổ phần phật giật mạnh trong tiếng gió rít qua khe đá. Mùa đông năm nay ở Bắc Vực đến sớm hơn mọi bản tin khí tượng, mang theo một bàn cờ hoàn toàn khác hẳn những trận đánh cấp trung đoàn và lữ đoàn phía sau lưng.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_thieu_tuong",
+            "title": "Thiếu Tướng — Sư Đoàn Hắc Hổ",
+            "entry": "Nhận quân hàm Thiếu Tướng và trọng trách Tư lệnh Sư Đoàn Hắc Hổ giữa mùa đông rét buốt tại tuyến núi đá Bắc Vực."
+          }
+        }
+      ],
+      "next": "ch6_ep1_02_dispatch_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_02_dispatch_hac_ho",
+      "type": "dispatch",
+      "location": "Phòng Cơ Yếu — Bộ Tư Lệnh Sư Đoàn Hắc Hổ",
+      "mood": "tense",
+      "text": "[QUYẾT ĐỊNH ĐIỀU ĐỘNG CÁN BỘ CẤP CAO — BỘ TỔNG THAM MƯU]\n\n\"Căn cứ thành tích giữ vững trục lộ Bạch Vũ và cứu trợ vùng ngập Thiên Lang: Thăng quân hàm THIẾU TƯỚNG, bổ nhiệm đồng chí giữ chức Tư lệnh Sư Đoàn Hắc Hổ thuộc Quân khu Bắc Vực, hiệu lực từ 00 giờ ngày hôm nay.\"\n\n\"Nhiệm vụ trọng tâm: Chấn chỉnh phòng tuyến đèo cao từ Mỏm Đá Đen đến Khe Gió, bảo toàn kho nhiên liệu sưởi mùa đông và thiết lập lưới cảnh giới trước dấu hiệu tập trung binh lực mới của Cụm Thiết Phong bên kia biên giới.\"",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 3 } }
+      ],
+      "branches": [
+        {
+          "condition": { "flag": "thoa_hiep_hung_de_thang_chuc" },
+          "next": "ch6_ep1_03a_hung_goi_chuc_mung"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "thao" },
+              {
+                "any": [
+                  { "flag": "thao_tin_tuong_tuyet_doi" },
+                  { "flag": "giu_bang_chung_pham_quang_hung" }
+                ]
+              }
+            ]
+          },
+          "next": "ch6_ep1_03b_thao_nhac_chung_cu"
+        },
+        {
+          "condition": { "charAlive": "vinh" },
+          "next": "ch6_ep1_03c_vinh_dan_do_truoc_deo"
+        }
+      ],
+      "next": "ch6_ep1_03d_phong_ban_giao_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_03a_hung_goi_chuc_mung",
+      "type": "dialogue",
+      "location": "Phòng Điện Thoại Mật — Sở Chỉ Huy Hắc Hổ",
+      "speaker": "hung",
+      "speakerTitle": "Trung tướng Phạm Quang Hùng — Phó Tham mưu trưởng",
+      "mood": "tense",
+      "text": "Chúc mừng Tân Thiếu Tướng Sư Đoàn Hắc Hổ nhé. Tôi biết cậu từ hồi Thiên Lang đã có bản lĩnh nhìn thẳng vào đại cục, không để những con số vụn vặt làm chậm bước tiến chung của cả bộ máy.\n\nCứ giữ vững cái đầu lạnh như lúc cậu ký hợp thức hóa hồ sơ Bạch Vũ ấy. Trên bàn hội đồng người ta chỉ nhìn kết quả cuối, không ai đếm từng vỏ đạn hay từng lít dầu hao hụt dọc đường đèo đâu.\n\nMùa đông Bắc Vực năm nay sẽ có nhiều đoàn kiểm tra từ hậu phương lên nắm tình hình tiếp vận. Đôi khi phải biết cắt bỏ một ngón tay để giữ cả bàn tay, cậu hiểu ý anh chứ?",
+      "effects": [
+        { "addRel": { "char": "hung", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_04_tuyen_deo_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_03b_thao_nhac_chung_cu",
+      "type": "dialogue",
+      "location": "Hầm Hồ Sơ Mật — Sở Chỉ Huy Hắc Hổ",
+      "speaker": "thao",
+      "speakerTitle": "Trung tá phản gián Lê Phương Thảo",
+      "mood": "tense",
+      "condition": { "charAlive": "thao" },
+      "text": "Chúc mừng Thủ trưởng lên hàng Tướng lĩnh, nhưng tôi buộc phải mang tin lạnh hơn cả gió Đèo Gió xuống đây ngay đêm đầu tiên. Nhóm nhà thầu hậu cần từng làm giả sổ thương vong ở Bạch Vũ vừa trúng luôn gói cung ứng dầu diesel sưởi cho Bắc Vực.\n\nSau những gì ông chứng minh tại Thiên Lang, bộ phận phản gián của tôi đặt niềm tin tuyệt đối vào chữ ký của ông trên mặt trận này. Tôi gấp đôi góc tập hồ sơ mật mang theo bên mình đây để ông xem thẳng mã số lô hàng.\n\nGiấy tờ biết nói dối, nhưng chữ ký thì không tự đổi nét được — chỉ cần thêm một mắt xích chứng từ ở miền Bắc nữa là đủ khóa hết đường lùi của phe ông Phạm Quang Hùng.\n\nTrên Bộ có người muốn đẩy ông ra tuyến núi lạnh này để vừa lấy tiếng trấn ải vừa tách ông khỏi vòng thẩm tra ở Thủ đô. Hãy cẩn thận với từng bảng kê nhiên liệu đặt lên bàn tháng này.",
+      "effects": [
+        { "addRel": { "char": "thao", "delta": 1 } },
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "next": "ch6_ep1_04_tuyen_deo_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_03c_vinh_dan_do_truoc_deo",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến — Sở Chỉ Huy Hắc Hổ",
+      "speaker": "vinh",
+      "speakerTitle": "Thượng tá Trần Quốc Vinh",
+      "mood": "calm",
+      "condition": { "charAlive": "vinh" },
+      "text": "Nghe tin cậu nhận Sư Đoàn Hắc Hổ đúng lúc gió bấc tràn về, tôi tranh thủ ghé qua trên đường đi khảo sát thực tế cho Viện Học thuyết. Ngôi sao vàng trên vai áo cậu giờ nặng hơn hẳn thời cầm cuốn sổ bìa xanh ở Quang Trung rồi đấy.\n\nTôi gõ đuôi bút lên mép bàn hỏi cậu một câu thôi: lên tới cấp Sư đoàn trưởng rồi, cậu còn nghe thấy tiếng ho của người lính đứng gác ngoài vọng gác sương muối không?\n\nChậm ba nhịp là mất nửa đội hình rồi đấy, nhưng vội một nhịp trên bản đồ mà quên kiểm tra đôi tất khô dưới chân lính thì cả mùa đông này sư đoàn sẽ tự tan từ bên trong. Đừng viết điều mình chưa làm được.\n\nĐừng để những báo cáo thành tích dày cộp che mất tiếng bước chân tuần đêm trên dãy núi đá này. Cậu cứ giữ lấy thói quen ghi chép trung thực từng ngày trực thì dù lên cấp nào cũng không lạc đường.",
+      "effects": [
+        { "addRel": { "char": "vinh", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep1_04_tuyen_deo_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_03d_phong_ban_giao_hac_ho",
+      "type": "narration",
+      "location": "Phòng Tác Chiến — Sở Chỉ Huy Hắc Hổ",
+      "mood": "calm",
+      "text": "Đêm đầu tiên tiếp nhận Sư Đoàn Hắc Hổ trôi qua trong tiếng máy nổ rì rầm phía sau vách núi và mùi giấy hồ sơ mới còn hăng mùi mực in. Trợ lý tham mưu lần lượt đặt lên bàn từng tập sổ quân số, sơ đồ bãi mìn phòng ngự và bảng dự trữ dầu sưởi mùa đông.\n\nTrên tường đá treo tấm bản đồ tỷ lệ lớn vẽ chi chít các đường bình độ dốc đứng của dãy Bắc Vực. Khác với những cánh đồng ngập nước ở Thiên Lang, nơi đây mỗi con đường đèo chỉ đủ rộng cho một thân xe bám sát vực sâu hun hút.\n\nNgồi một mình trước ngọn đèn bàn chụp xanh, tôi lật giở từng trang phụ lục quân trang để kiểm tra xem áo bông, tất len và bình tích nhiệt đã xuống đủ tới các đại đội giữ chốt hay chưa. Những con số trên giấy nhìn ngay ngắn đến mức đáng ngờ.\n\nTôi mở trang trắng tiếp theo trong cuốn sổ bìa xanh, ghi vội ba chữ 'Mùa đông Bắc Vực' rồi khoác chiếc áo bông dày bước ra ngoài kiểm tra đoàn xe tiếp tế vừa bò lên tới chân dốc.",
+      "next": "ch6_ep1_04_tuyen_deo_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_04_tuyen_deo_hac_ho",
+      "type": "narration",
+      "location": "Dốc Đá Trắng — Tuyến đường tiếp vận Sư Đoàn Hắc Hổ",
+      "mood": "calm",
+      "text": "Sáng sớm hôm sau, màn sương muối trắng đục phủ kín các khúc cua tay áo dẫn từ thung lũng lên trận địa Sư Đoàn Hắc Hổ. Nhiệt độ ngoài trời tụt xuống gần ngưỡng đóng băng, khiến mặt đường cấp phối ẩm ướt đóng thành từng mảng váng trơn trượt.\n\nDưới chân dốc, một đoàn xe vận tải quân sự phủ bạt xanh kín mít đang nổ máy gầm rú, bánh xích chống trượt cắn rào rạo vào mặt đá để kéo những phuy dầu sưởi, hòm đạn cối và bao áo bông lên tuyến chốt. Khói xả diesel đặc quánh quyện vào sương sớm tạo thành một dải mây xám lờ mờ.\n\nHai bên ta-luy, những tốp chiến sĩ công binh mặc áo bông bạc màu tay cầm xẻng cào lớp băng mỏng và rải xỉ than chống trượt cho bánh xe tải nặng leo dốc. Gió bấc thổi từng cơn buốt rát qua vành tai.\n\nTôi bước xuống mép ta-luy dương, vẫy tay ra hiệu cho chiếc xe đi đầu vừa nghiến thắng dừng lại sát hàng cọc tiêu sơn trắng đỏ.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "bay" },
+              { "notFlag": "bay_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep1_05a_bay_chuyen_dau_mua_dong"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "tam" },
+              { "notFlag": "tam_hi_sinh_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep1_05b_tam_khau_ao_bong"
+        }
+      ],
+      "next": "ch6_ep1_05c_chuyen_xe_khong_nguoi_cu"
+    },
+    {
+      "id": "ch6_ep1_05a_bay_chuyen_dau_mua_dong",
+      "type": "dialogue",
+      "location": "Dốc Đá Trắng — Bãi dỡ hàng Hắc Hổ",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "bay" },
+          { "notFlag": "bay_hi_sinh_thien_lang" }
+        ]
+      },
+      "text": "Chà chà, chú em Thiếu Tướng đứng hứng gió bắc ngoài mép vực sớm dữ ha! Tui mới chạy tăng cường từ đoàn xe miền xuôi lên Bắc Vực đêm qua, qua bốn cái đèo mù sương mới thấy được mặt trời ló sau đỉnh đá đó chú em.\n\nMấy cậu tài xế trẻ ngoài này chưa quen leo dốc đóng váng băng nên hồi khuya có hai xe trượt bánh suýt sập ta-luy, tui phải nhảy xuống móc cáp kéo phụ tới bốn giờ sáng. Đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người!\n\nNè, thò tay vô hộc táp-lô lấy hộp kẹo gừng ngậm một viên cho ấm ngực đi Thủ trưởng. Mà tui nói nhỏ câu này nha: lô phuy dầu sưởi bọn nhà thầu giao ở trạm trung chuyển dưới chân núi hôm qua nghe tiếng gõ vỏ thùng bộp bộp nghi lắm, như bị rút bớt ruột rồi đổ nước pha vô đáy vậy đó.",
+      "effects": [
+        { "addRel": { "char": "bay", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep1_06_choice_dem_dau_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_05b_tam_khau_ao_bong",
+      "type": "dialogue",
+      "location": "Bếp Hoàng Cầm dã chiến — Sư Đoàn Hắc Hổ",
+      "speaker": "tam",
+      "speakerTitle": "Chuẩn úy hậu cần Trần Văn Tám",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "tam" },
+          { "notFlag": "tam_hi_sinh_thien_lang" }
+        ]
+      },
+      "text": "Ối dào, chú em Thiếu Tướng mới lên núi đã ghé thăm bếp củi của tui trước sao! Cầm liền chén nước gừng nóng với củ khoai nướng tro này cho tan cái giá lạnh thấm vô xương đi chú.\n\nTụi anh nuôi tụi tui từ miền ngập Thiên Lang theo đơn vị dời lên vùng đá vôi này, ngó bếp củi khói bay nghi ngút vậy chứ phải giấu ống khói vô khe đá kẻo trinh sát bên kia nó soi thấy liền. Trong túi áo ngực tui vẫn giữ nguyên hộp kim chỉ cũ, hồi sáng mới vá lại mười hai đôi bao tay len cho tiểu đội gác đèo xong.\n\nMà chú em coi chừng mấy thùng dầu nấu bếp mới cấp tuần này nghen: lửa cháy khét lẹt mà đóng cặn đen ngòm đáy chảo. Người thợ bếp như tui ngửi mùi khói là biết có đứa pha dầu tạp dưới tuyến sau rồi đó.",
+      "effects": [
+        { "addRel": { "char": "tam", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep1_06_choice_dem_dau_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_05c_chuyen_xe_khong_nguoi_cu",
+      "type": "narration",
+      "location": "Bãi dỡ hàng Dốc Đá Trắng — Bắc Vực",
+      "mood": "somber",
+      "text": "Cậu tài xế trẻ nhảy từ cabin chiếc xe tải đầu đoàn xuống, đưa tay chào đúng điều lệnh rồi nhanh chóng quay ra tháo xích lốp. Trên hộc táp-lô cũ kỹ vẫn còn kẹp một mẩu giấy ghi cách đổ đèo sương mù từ thời bác tài Phan Văn Bảy và mùi khói bếp quen thuộc của anh nuôi Trần Văn Tám vẫn phảng phất trong ký ức đơn vị.\n\nChiếc hộp thiếc đựng kẹo gừng nằm im trên mặt gỗ sờn cũ như một dấu lặng nhắc về những cung đường ngập nước Thiên Lang nơi các anh đã ngã xuống để giữ trọn nhịp tiếp vận. Cậu lái xe trẻ khẽ khép cửa buồng lái, vội vã nhập vào tổ bốc dỡ cùng tiểu đội công binh.\n\nPhía bên bếp dã chiến cuối bãi xe, tổ hậu cần đang lúi húi khơi lại ngọn lửa ẩm sương muối. Một anh nuôi trẻ lắc đầu than khẽ rằng lô dầu đốt sưởi mới nhập kho sáng nay có mùi khét lạ, ngọn lửa cứ bập bùng rồi tắt lịm giữa chừng.\n\nNhững mảnh ghép nhỏ từ bãi xe và bếp lửa khiến tôi lập tức dừng chân quan sát kỹ hàng phuy sắt sơn xanh xếp dọc vách đá.",
+      "next": "ch6_ep1_06_choice_dem_dau_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_06_choice_dem_dau_hac_ho",
+      "type": "choice",
+      "location": "Sở Chỉ Huy Sư Đoàn Hắc Hổ — Chập tối",
+      "mood": "tense",
+      "text": "Đêm đầu tiên nắm Sư Đoàn Hắc Hổ vừa buông xuống giữa tiếng gió bấc hú dài qua hẻm núi. Trên bàn là ba đầu việc gấp cần đích thân Thiếu Tướng xuống kiểm tra trước nửa đêm.",
+      "choices": [
+        {
+          "id": "c16_kiem_chot_gac_va_ao_am",
+          "label": "Đích thân leo bộ lên các vọng gác sườn Bắc kiểm tra quân trang chống rét, điều chỉnh lịch đổi gác ngắn lại giữa băng giá",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } }
+          ],
+          "next": "ch6_ep1_07a_tuan_chot_gac_bang_gia"
+        },
+        {
+          "id": "c16_niêm_phong_kho_dau_kiem_tra",
+          "label": "Cho lập biên bản niêm phong ngay lô phuy dầu nghi bị pha tạp, trích mẫu kiểm định và bắt đơn vị cung ứng giải trình",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 1 } },
+            { "addRel": { "char": "thao", "delta": 1 } }
+          ],
+          "next": "ch6_ep1_07b_kiem_ke_kho_xang_dau"
+        },
+        {
+          "id": "c16_nghien_cuu_sa_ban_bien_gioi",
+          "label": "Ngồi trọn đêm trong hầm bản đồ cùng ban tác chiến, đối chiếu quy luật chuyển quân mùa đông năm trước của Thiết Phong",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -1 } }
+          ],
+          "next": "ch6_ep1_07c_doi_chieu_ban_do_gio_ret"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_07a_tuan_chot_gac_bang_gia",
+      "type": "narration",
+      "location": "Vọng gác sườn Bắc — Mỏm Đá Đen",
+      "mood": "warm",
+      "text": "Ánh đèn pin bọc vải đỏ rọi xuống từng bậc đá trơn như mỡ khi tôi leo ngược hơn bốn trăm mét dốc đứng lên vọng gác Mỏm Đá Đen. Hai chiến sĩ trẻ đứng nép sau ụ đá chắn gió, hơi thở phả ra trắng xóa ngay trước vành mũ sắt đóng sương.\n\nTôi kiểm tra lại dây giày, găng tay giữ súng và ký lệnh rút thời gian mỗi ca gác đêm xuống còn sáu mươi phút thay vì hai tiếng như lệ cũ. Dù việc chia nhỏ ca trực làm quân số nghỉ ngơi bị xé lẻ đôi chút, ánh mắt những người lính trẻ sáng hẳn lên khi thấy vị Tư lệnh Thiếu Tướng tự tay chỉnh lại khuy áo bông cho họ.\n\nTrước khi rời chốt, tôi ngồi xổm bên bếp than nhỏ giấu sau vách đá nghe cậu tiểu đội trưởng kể chuyện quê nhà và ghi tên từng người trong kíp trực vào trang mới của cuốn sổ bìa xanh.\n\nTrở xuống hầm chỉ huy khi đồng hồ điểm nửa đêm, đôi chân tôi tê buốt nhưng đầu óc tỉnh táo lạ thường.",
+      "next": "ch6_ep1_08_hop_su_doan_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_07b_kiem_ke_kho_xang_dau",
+      "type": "narration",
+      "location": "Kho Nhiên Liệu Số 2 — Sư Đoàn Hắc Hổ",
+      "mood": "tense",
+      "text": "Đèn măng-xông treo giữa kho đá tỏa ánh sáng lạnh lẽo lên hàng trăm phuy dầu xếp sát vách hầm. Tổ kỹ thuật dùng ống thủy tinh hút mẫu từ đáy năm thùng ngẫu nhiên vừa nhập từ trạm trung chuyển miền xuôi.\n\nKết quả khiến cả thủ kho lẫn trợ lý hậu cần sững người: gần một phần năm số thùng bị lắng lớp nước pha cặn bẩn dày đặc dưới đáy, đủ làm đông đặc bộ lọc máy phát điện chỉ sau ba giờ chạy máy trong thời tiết âm độ.\n\nTôi yêu cầu các sĩ quan trực ký tên đồng loạt vào biên bản hiện trường và lưu mẫu thủy tinh vào hộp niêm phong sắt để không một đường dây hậu phương nào có thể đánh tráo hồ sơ khi thanh tra tới.\n\nTôi cho niêm phong toàn bộ lô hàng lỗi, gửi điện khẩn kèm mẫu niêm yết về ban thanh tra để làm bằng chứng buộc nhà thầu thay thế ngay trong tuần.",
+      "next": "ch6_ep1_08_hop_su_doan_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_07c_doi_chieu_ban_do_gio_ret",
+      "type": "narration",
+      "location": "Hầm Bản Đồ — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "mood": "calm",
+      "text": "Trong căn hầm kín gió, tiếng bút chì sột soạt lướt trên tờ giấy can phủ kín bản đồ địa hình Bắc Vực. Tôi cùng hai sĩ quan tác chiến trải toàn bộ nhật ký tuần tra ba mùa đông trước lên bàn gỗ để tìm quy luật di chuyển của Khối Thiết Phong.\n\nMột chi tiết nổi bật hiện ra rõ mồn một: mỗi khi nhiệt độ biên giới tụt dưới hai độ C và sương mù che khuất các khe núi, đối phương luôn giảm cường độ pháo ban ngày nhưng tăng đột biến các tốp thám báo trang bị máy đo cao tần dò tuyến.\n\nĐến khi tờ mờ sáng, ba đường mũi tên đỏ đánh dấu những khe núi dễ bị luồn sâu nhất đã hiện lên rành mạch trước buổi giao ban đầu tiên.",
+      "next": "ch6_ep1_08_hop_su_doan_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_08_hop_su_doan_hac_ho",
+      "type": "narration",
+      "location": "Hầm Giao Ban — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "mood": "tense",
+      "text": "Bảy giờ sáng, toàn bộ chỉ huy các trung đoàn trực thuộc Sư Đoàn Hắc Hổ có mặt đông đủ quanh bàn sa bàn đất đắp nổi. Hơi ấm từ chiếc bếp than nhỏ đặt góc phòng chẳng thấm vào đâu so với luồng khí lạnh lùa qua khe cửa gỗ.\n\nTrước khi thông qua phương án bố phòng mùa đông toàn sư đoàn, tôi đưa mắt nhìn quanh những gương mặt thân quen đã cùng mình đi qua biết bao chiến trường khói lửa từ miền xuôi lên tới rìa núi đá phía Bắc.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep1_09a_khang_nhac_ban_do_bac_vuc"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "flag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep1_09b_khang_giu_khoang_cach"
+        },
+        {
+          "condition": { "charAlive": "son" },
+          "next": "ch6_ep1_09c_son_canh_bao_suon_nui"
+        }
+      ],
+      "next": "ch6_ep1_09d_sa_ban_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_09a_khang_nhac_ban_do_bac_vuc",
+      "type": "dialogue",
+      "location": "Bàn Sa Bàn — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "calm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Chà, ngôi sao vàng Thiếu Tướng trên vai áo nhìn oai phong quá xá nha bạn hiền! Tui đứng chờ mấy tay tham mưu dọn bản đồ xong để gõ lại hai cái lên vai ông cho đúng lệ bộ đội mình đây — còn nghe nhau là còn đội hình!\n\nMà nhận cái sư đoàn trấn ải mùa đông này thì nhớ kỹ lời tui dặn hoài nha: coi chừng cái bản đồ nó lừa mắt mình đó nha. Nhìn mấy đường đồng mức vẽ thẳng thớm trên giấy thấy dễ hành quân lắm, chứ lội thực địa ra Khe Gió là vách đá dựng đứng, gió thổi bay cả mũ sắt chứ giỡn sao!\n\nHôm qua tui đi kiểm tra tuyến vận tải mạn khe Bắc về mà lạnh cóng cả ngón tay bật lửa. Xe chở củi với chở đạn leo dốc băng trơn cứ trượt bánh rèn rẹt bên mép vực.\n\nĐừng có nói chuyện kiểu trên giấy với tui lúc chia quân giữ đèo nghen. Lính mình lạnh xương lạnh thịt ngoài hầm đá chịu không nổi trận kéo dài nếu không có hầm trú ẩn với củi dầu đâu.",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_10_choice_bo_tri_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_09b_khang_giu_khoang_cach",
+      "type": "narration",
+      "location": "Bàn Sa Bàn — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "mood": "somber",
+      "text": "Ở góc đối diện bàn sa bàn, Đại tá Lê Minh Khang đứng thẳng lưng trong bộ áo bông dày, không bật nắp chiếc bật lửa kim loại quen thuộc mà chỉ lặng lẽ đẩy xấp báo cáo quân số về phía tôi bằng hai đầu ngón tay.\n\nSau những lựa chọn thiết huyết đánh đổi sinh mạng trinh sát ở Bạch Vũ và Thiên Lang, giữa hai người bạn giường tầng năm nào ở Quang Trung giờ chỉ còn lại đúng hai tiếng 'Thủ trưởng' và 'đồng chí' lạnh lẽo theo điều lệnh.\n\nKhông khí quanh bàn sa bàn chùng hẳn xuống trong tiếng gió rít ngoài khe đá. Ngay cả các trợ lý tham mưu trẻ cũng tự giác hạ giọng báo cáo khi nhận ra khoảng cách vô hình ngăn đôi hai vị chỉ huy từng sống chết bên nhau ở Thiên Minh.\n\nKhi tôi vừa khẽ bước lại định đưa tay đặt lên vai cậu ta, Khang khéo léo lùi nửa bước cầm lấy tập tài liệu, ánh mắt nhìn thẳng xuống sa bàn khe núi đầy băng giá như nhắc nhở rằng ranh giới lòng tin một khi đã rạn nứt rất khó hàn lại.",
+      "next": "ch6_ep1_10_choice_bo_tri_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_09c_son_canh_bao_suon_nui",
+      "type": "dialogue",
+      "location": "Bàn Sa Bàn — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "tense",
+      "condition": { "charAlive": "son" },
+      "text": "Chào Thiếu Tướng. Tôi vừa kiểm xong tuyến sườn Tây. Quân số đủ. Áo bông thiếu một phần ba.\n\nĐêm qua ba lính trẻ tê cóng chân. Vách đá Đèo Gió hút gió lắm. Đừng đẩy pháo lên đỉnh trần vội.\n\nĐào hầm trước đã. Lính rét quá không giữ súng nổi. Lính của tôi, tôi chịu. Ngắn gọn vậy thôi.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_10_choice_bo_tri_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_09d_sa_ban_hac_ho",
+      "type": "narration",
+      "location": "Bàn Sa Bàn — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "mood": "tense",
+      "text": "Các trung đoàn trưởng lần lượt báo cáo tình trạng thực tế của từng cụm điểm tựa dọc biên giới Bắc Vực. Điểm chung đáng lo nhất không nằm ở quân số hay đạn nhọn, mà ở sự khắc nghiệt của sương muối và tốc độ tiêu hao nhiên liệu sưởi ấm tăng gấp đôi dự kiến.\n\nNếu dàn lực lượng quá mỏng ra các mỏm cao điểm biên giới để răn đe đối phương, đường tiếp tế sẽ bị kéo căng qua những khúc cua đóng băng. Ngược lại, nếu co cụm vào hầm sâu tuyến sau, các khe đá phía trước có thể trở thành hành lang trống cho đặc nhiệm Thiết Phong.\n\nCả căn hầm lặng đi, chờ cây bút chì chỉ huy của Tân Thiếu Tướng đặt xuống sa bàn Sư Đoàn Hắc Hổ.",
+      "next": "ch6_ep1_10_choice_bo_tri_hac_ho"
+    },
+    {
+      "id": "ch6_ep1_10_choice_bo_tri_hac_ho",
+      "type": "choice",
+      "location": "Bàn Sa Bàn — Sở Chỉ Huy Sư Đoàn Hắc Hổ",
+      "text": "Bạn quyết định bố trí thế trận mùa đông cho Sư Đoàn Hắc Hổ trên tuyến núi đá Bắc Vực theo phương án nào?",
+      "choices": [
+        {
+          "id": "c16_day_chot_tien_tieu",
+          "label": "Đẩy mạnh hỏa lực và công sự tiền tiêu lên các mỏm cao điểm án ngữ biên giới để chặn đứng mọi mũi dò đường của Thiết Phong",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } }
+          ],
+          "next": "ch6_ep1_11a_chot_cao_diem"
+        },
+        {
+          "id": "c16_cung_co_ham_hau_can",
+          "label": "Ưu tiên đào hầm trú ẩn giữ nhiệt, gia cố kho dầu và lát gỗ chống trơn các tuyến đèo trước khi bung quân ra sườn trước",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } }
+          ],
+          "next": "ch6_ep1_11b_ham_hau_can_am"
+        },
+        {
+          "id": "c16_phoi_hop_dan_ban_dan_duong",
+          "label": "Phối hợp với các bản vùng cao biên giới lập tổ tuần tra đường mòn núi đá và mở chung trạm sưởi ấm dân quân",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } }
+          ],
+          "next": "ch6_ep1_11c_tuan_tra_dan_ban"
+        },
+        {
+          "id": "c16_co_dong_phuc_kich_khe_da",
+          "label": "Giữ chủ lực ở tuyến hầm giữa, tung các đại đội khinh binh cơ động luân phiên phục kích theo từng khe đá để tiết kiệm nhiên liệu",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -2 } }
+          ],
+          "next": "ch6_ep1_11d_phuc_kich_khe_da"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_11a_chot_cao_diem",
+      "type": "narration",
+      "location": "Cao điểm 812 — Đèo Gió, Bắc Vực",
+      "mood": "tense",
+      "text": "Hai tiểu đoàn bộ binh và cụm súng cối 100 ly lập tức kéo pháo ngược dốc lên chiếm lĩnh dải cao điểm biên giới trong cơn mưa phùn lạnh cắt da. Tiếng cuốc chim bổ xuống nền đá vôi vang vọng khắp thung lũng trắng xóa sương mù.\n\nĐội hình tiền tiêu đứng chân vững chãi như bức tường thép nhìn thẳng sang dải núi xám bên kia đường biên. Khí thế toàn sư đoàn lên cao rõ rệt khi thế trận chủ động được thiết lập ngay từ đầu mùa rét.\n\nTừ trên mỏm đá cao điểm 812 nhìn xuống, mọi động tĩnh chuyển quân dọc thung lũng biên giới đều nằm gọn trong tầm kính trắc địa của pháo binh ta, khiến các toán thám báo đối phương không dám bén mảng lại gần hàng rào dây thép gai.\n\nTuy nhiên, việc đẩy pháo lên cao cũng khiến đoàn xe tải tiếp tế phải chạy hết công suất suốt ngày đêm, ngốn cạn phần lớn cơ số dầu dự phòng sớm hơn dự tính.",
+      "next": "ch6_ep1_12_linh_canh_bao_nhieu_song"
+    },
+    {
+      "id": "ch6_ep1_11b_ham_hau_can_am",
+      "type": "narration",
+      "location": "Hầm Trú Ẩn Trung Tâm — Sư Đoàn Hắc Hổ",
+      "mood": "calm",
+      "text": "Hàng trăm cây gỗ thông đổ từ trận bão mùa thu được cưa xẻ nhanh chóng để lát mặt đường dốc và dựng vách cách nhiệt cho các hầm nghỉ giữa ca của bộ đội. Những chiếc bếp giữ than được chôn sâu dưới nền đá để vừa sưởi ấm vừa không lộ khói.\n\nNhờ nền tảng hậu cần chắc chắn, tỷ lệ binh sĩ cảm lạnh và tê cóng bàn chân giảm hẳn chỉ sau năm ngày đầu áp dụng. Mạch xe vận tải từ thung lũng bò lên ổn định, không còn cảnh trượt bánh mắc kẹt giữa đèo.\n\nTrong các kho ngầm mới gia cố, từng thùng đạn cối và pin vô tuyến được kê cao trên ván gỗ khô ráo, bọc thêm lớp bạt chống ẩm để sẵn sàng chịu đựng những trận mưa tuyết kéo dài nhiều ngày liền.\n\nDẫu vài sĩ quan trẻ nóng lòng muốn đẩy chốt tiến sát biên giới hơn, toàn sư đoàn đã có được bộ khung vững chắc để trụ qua mùa đông dài.",
+      "next": "ch6_ep1_12_linh_canh_bao_nhieu_song"
+    },
+    {
+      "id": "ch6_ep1_11c_tuan_tra_dan_ban",
+      "type": "narration",
+      "location": "Bản Đá Trắng — Rìa Khe Gió",
+      "mood": "warm",
+      "text": "Những người thợ săn kỳ cựu của các bản người miền núi nhanh chóng dẫn đường cho trinh sát Hắc Hổ đánh dấu lại toàn bộ lối mòn vượt suối đá cạn và các hang gió tránh bão tuyết. Kinh nghiệm đi rừng từ thời Già Kiên năm xưa ở Bản Sương Mù lại phát huy tác dụng ngay giữa dãy Bắc Vực.\n\nBên những bếp lửa sưởi chung đầu bản, bộ đội chia bớt muối và chăn dạ dự phòng, còn bà con mang ra những bó củi gộc cháy đượm không khói cho các tổ chốt tiền tiêu. Bức tường lòng dân dựng lên một vành đai cảnh báo sống động hơn bất kỳ hàng rào kẽm gai nào.\n\nChiều muộn, lũ trẻ trong bản còn theo chân các chiến sĩ liên lạc mang những bình nước chè rừng nóng hổi lên tận cửa hầm, sưởi ấm bàn tay cóng đỏ của cả kíp trực.\n\nChỉ riêng ban tác chiến hơi đau đầu khi phải điều chỉnh lại quy trình bảo mật doanh trại để đồng bộ cùng mạng lưới tuần tra hỗn hợp này.",
+      "next": "ch6_ep1_12_linh_canh_bao_nhieu_song"
+    },
+    {
+      "id": "ch6_ep1_11d_phuc_kich_khe_da",
+      "type": "narration",
+      "location": "Khe Đá Lạnh — Sườn Đông Bắc Vực",
+      "mood": "tense",
+      "text": "Thay vì dàn quân chết dí trên đỉnh núi hứng gió, các đại đội khinh binh chia thành từng toán nhỏ đeo bao gạo sấy và túi giữ nhiệt, luồn lách thay ca phục kích giữa những khe đá ngoằn ngoèo. Máy phát điện chỉ bật theo khung giờ ngắn để tiết kiệm từng lít dầu.\n\nLối đánh cơ động giúp Hắc Hổ giữ kín quân số thật trước ống nhòm đối phương và bảo toàn nguồn dự trữ chiến lược. Tuy nhiên, việc phải hành quân đêm liên tục qua những con suối đóng váng băng khiến đôi vai người lính mỏi rã rời.\n\nMỗi tốp tuần tra trở về hầm nghỉ đều phải hơ vội đôi bít tất ướt trên bếp than không khói trước khi kịp chợp mắt ba tiếng đồng hồ rồi lại tiếp tục thay chốt.\n\nBa ngày sau khi thế trận sư đoàn vừa ổn định, phòng vô tuyến mật mã bỗng phát tín hiệu báo động khẩn cấp lúc hai giờ chiều.",
+      "next": "ch6_ep1_12_linh_canh_bao_nhieu_song"
+    },
+    {
+      "id": "ch6_ep1_12_linh_canh_bao_nhieu_song",
+      "type": "dialogue",
+      "location": "Trạm Vô Tuyến Dã Chiến — Sư Đoàn Hắc Hổ",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Thủ trưởng xuống đúng lúc lắm ạ. Hai tiếng đồng hồ nay toàn bộ dải tần số sóng ngắn nối giữa Sư Đoàn Hắc Hổ với các đài quan sát đỉnh núi bỗng dưng im phăng phắc, không còn chút tạp âm khí quyển nào dù ngoài đèo gió giật rất mạnh.\n\nĐầu ngón tay em gõ kiểm tra nhịp Morse trên mặt bàn gỗ suốt từ trưa vẫn thấy một dải xung cực mảnh quét qua từng kênh một theo chu kỳ đúng bốn mươi lăm giây. Sóng sạch quá mới là sóng có bẫy, Thủ trưởng ạ — đây chính là bước dò pha chuẩn bị cho đòn tác chiến điện tử tổng lực của Khối Thiết Phong!\n\nKhông chỉ thăm dò tần số, bộ phận giải mã của em vừa bắt được một bức điện phát lặp cố ý trên kênh dự phòng quốc tế, nhắm thẳng vào mật danh bộ chỉ huy Sư Đoàn Hắc Hổ. Người ký bức điện phía bên kia chính là cái tên chúng ta từng nghe từ sau trận Bạch Vũ.",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_13_dispatch_hac_ung_toi_hau_thu"
+    },
+    {
+      "id": "ch6_ep1_13_dispatch_hac_ung_toi_hau_thu",
+      "type": "dispatch",
+      "location": "Phòng Giải Mã Vô Tuyến — Sư Đoàn Hắc Hổ",
+      "mood": "urgent",
+      "text": "[BỨC ĐIỆN MÃ HÓA CHẶN THU ĐƯỢC — TƯ LỆNH KHỐI THIẾT PHONG: MẬT DANH \"HẮC ƯNG\"]\n\n\"Gửi Tân Tư lệnh Sư Đoàn Hắc Hổ. Tôi đã tính xong phương trình mùa đông của ông: nhiệt độ Đèo Gió đêm nay xuống âm năm độ, lượng dầu sưởi tuyến trước của ông hụt mười tám phần trăm, và mạng vô tuyến vùng núi đang lộ bốn điểm trễ sóng.\"\n\n\"Trong vòng bốn mươi tám giờ tới, hãy rút toàn bộ cụm pháo khỏi cao điểm 812 về sau thung lũng. Nếu cố bám trụ giữa cơn bão băng sắp tới, đòn khóa sóng điện tử và pháo tầm xa của Thiết Phong sẽ biến các công sự đá đó thành những phòng lạnh không lối thoát.\"",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_hac_ung",
+            "title": "Tối hậu thư mùa đông của Hắc Ưng",
+            "entry": "Trần Mỹ Linh phát hiện tín hiệu dò phá sóng tiền trạm và chặn thu bức tối hậu thư lạnh lùng từ Tư lệnh Khối Thiết Phong mang mật danh Hắc Ưng."
+          }
+        }
+      ],
+      "next": "ch6_ep1_14_quang_phan_tich_hac_ung"
+    },
+    {
+      "id": "ch6_ep1_14_quang_phan_tich_hac_ung",
+      "type": "dialogue",
+      "location": "Phòng Giải Mã Vô Tuyến — Sư Đoàn Hắc Hổ",
+      "speaker": "quang",
+      "speakerTitle": "Thượng tá Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Tôi xoay nắp bút máy ba vòng mà vẫn thấy lạnh sống lưng với những con số trong bức điện này. Hắc Ưng không nói giọng hăm dọa rỗng tuếch — hắn nắm gần khớp cả nhiệt độ vùng cao lẫn tỷ lệ hao hụt dầu của mình, chứng tỏ bên cạnh trinh sát điện tử, mạng lưới nội gián hậu cần vẫn đang rò rỉ thông tin lên phía Bắc.\n\nCảm tính không giữ nổi chốt đâu, tính bằng xác suất đi. Theo mô hình phân tích tác chiến điện tử của tôi, xác suất Thiết Phong mở trận đánh lớn ngay tuần này chỉ khoảng ba mươi phần trăm vì địa hình đóng băng cản xe tăng nặng của chính chúng.\n\nBảy mươi phần trăm còn lại là một đòn chiến tranh tâm lý nhằm ép mình tự rút pháo hoặc bật toàn bộ máy phát dự phòng để lộ tọa độ. Nhưng nếu ba mươi phần trăm kia xảy ra thật đúng đêm mất sóng thì hậu quả khôn lường — cậu quyết định đối phó thế nào?",
+      "next": "ch6_ep1_15_choice_phan_ung_hac_ung"
+    },
+    {
+      "id": "ch6_ep1_15_choice_phan_ung_hac_ung",
+      "type": "choice",
+      "location": "Phòng Giải Mã Vô Tuyến — Sư Đoàn Hắc Hổ",
+      "text": "Trước bức tối hậu thư của Hắc Ưng và làn sóng dò phá tần số đang quét qua toàn dãy Bắc Vực, bạn ra lệnh phản ứng ra sao?",
+      "choices": [
+        {
+          "id": "c16_trien_khai_tan_so_gia",
+          "label": "Tin nhận định của Linh: dựng đài phát mồi chạy vòng lặp giả trên tần số cũ, đồng thời cho công binh kéo đường dây hữu tuyến bọc thép nối các đèo",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addRel": { "char": "linh", "delta": 2 } }
+          ],
+          "next": "ch6_ep1_16a_day_huu_tuyen_bang_gia"
+        },
+        {
+          "id": "c16_san_tram_nhieu_bien_gioi",
+          "label": "Tung phân đội trinh sát luồn khe núi đá áp sát biên giới ngay trong đêm để định vị và đánh phá trạm tiếp sóng điện tử tiền phương của địch",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -2 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch6_ep1_16b_dot_kich_tram_phat"
+        },
+        {
+          "id": "c16_giu_im_lang_vo_tuyen",
+          "label": "Ban hành lệnh im lặng vô tuyến tuyệt đối bảy mươi hai giờ, phủ lưới tản nhiệt ngụy trang máy phát và dùng người chạy bộ truyền mật lệnh",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } }
+          ],
+          "next": "ch6_ep1_16c_im_lang_duoi_tuyet"
+        },
+        {
+          "id": "c16_phan_tin_nghi_binh_quang",
+          "label": "Dùng bài toán nghi binh của Quang: dựng trận địa pháo gỗ bên sườn Đông và phát lệnh di chuyển giả để đánh lừa cảm biến của Hắc Ưng",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -2 } },
+            { "addRel": { "char": "quang", "delta": 2 } }
+          ],
+          "next": "ch6_ep1_16d_nghi_binh_xac_suat"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_16a_day_huu_tuyen_bang_gia",
+      "type": "narration",
+      "location": "Tuyến Dây Khe Gió — Bắc Vực",
+      "mood": "calm",
+      "text": "Suốt đêm trắng sương muối, các tổ thông tin công binh phải đeo găng tay cao su dày chống cóng để kẹp từng mét cáp điện thoại bọc thép dọc theo khe đá khuất pháo. Ngón tay ai nấy sưng đỏ tấy nhưng đường dây vẫn nối thông từ sở chỉ huy lên tận Mỏm Đá Đen.\n\nSong song đó, Linh cho đặt hai bộ phát công suất nhỏ tại một hẻm núi bỏ hoang để phát đều đặn các bản tin thời tiết mã hóa cũ. Khi xung gây nhiễu cường độ mạnh của Thiết Phong bắt đầu dội xuống lúc gần sáng, toàn bộ hỏa lực của đối phương chỉ trút vào khu vực phát mồi trống không.\n\nNhững cột khói đen bốc lên vô ích giữa hẻm đá vắng bóng người trong khi kíp trực thông tin dưới hầm sâu vẫn gõ phím nhịp nhàng đối chiếu từng lượt điểm danh.\n\nMạng lưới liên lạc thật của Hắc Hổ vẫn chạy trơn tru dưới lớp đá lạnh, giữ vững thế chủ động suốt những ngày bão giá đầu tiên.",
+      "next": "ch6_ep1_17_dispatch_trung_tuong_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_16b_dot_kich_tram_phat",
+      "type": "narration",
+      "location": "Hẻm Núi Ranh Giới — Sườn Bắc Đèo Gió",
+      "mood": "tense",
+      "text": "Trong đêm tối mịt mùng sương muối, hai mươi hai chiến sĩ trinh sát mang theo thiết bị định vị cầm tay bám dây thừng tụt xuống hẻm đá sát đường biên. Sau ba giờ lần theo hướng chùm sóng cao tần, họ phát hiện một xe thùng ngụy trang ăng-ten đĩa của Thiết Phong đậu khuất sau mỏm đá vôi.\n\nLoạt súng chống tăng phát nổ xé toạc màn đêm yên ắng, biến trạm tiếp sóng tiền phương của địch thành một khối lửa bùng cháy dữ dội giữa tuyết giá. Cánh quân trinh sát lập tức rút ngược lên dốc dưới làn đạn cối bắn đuổi mù mịt từ bên kia biên giới.\n\nÁnh lửa từ chiếc xe bị thiêu rụi hắt sáng cả một góc trời biên ải trước khi bị màn tuyết dày dập tắt dần vào lúc rạng đông.\n\nĐòn đánh táo bạo làm hệ thống trinh sát điện tử của Hắc Ưng bị chột mắt suốt bốn ngày liền, dù bốn chiến sĩ của ta bị thương nhẹ vì ngã trượt trên băng đá lúc rút quân.",
+      "next": "ch6_ep1_17_dispatch_trung_tuong_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_16c_im_lang_duoi_tuyet",
+      "type": "narration",
+      "location": "Toàn tuyến Sư Đoàn Hắc Hổ — Bắc Vực",
+      "mood": "tense",
+      "text": "Đúng mười tám giờ, toàn bộ đài vô tuyến thuộc Sư Đoàn Hắc Hổ đồng loạt ngắt công tắc nguồn theo lệnh giữ im lặng tuyệt đối. Bầu không khí trên dãy núi đá trở nên tĩnh mịch đến rợn người, chỉ còn tiếng gió rít qua các khe đá vôi và tiếng bước chân giao liên chạy bộ chuyển mật thư.\n\nBên kia biên giới, các trạm dò sóng của Thiết Phong liên tục quét chùm xung kích thích suốt hai ngày nhưng không thu được bất kỳ tín hiệu phản hồi nào để khóa tọa độ. Hắc Ưng buộc phải hoãn kế hoạch chỉnh pháo vì không đoán được bố trí thực của ta.\n\nGiữa các kíp trực, chiến sĩ liên lạc mang túi thư da luồn qua những đường hào ngập tuyết trắng, bàn tay ôm chặt ống mật lệnh bọc vải dầu trước ngực.\n\nSự im lặng khắc nghiệt giúp giữ trọn kho nhiên liệu quý giá, nhưng nỗi chờ đợi mòn mỏi trong bóng tối khiến không ít chiến sĩ trẻ ngoài hầm chốt cảm thấy căng thẳng.",
+      "next": "ch6_ep1_17_dispatch_trung_tuong_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_16d_nghi_binh_xac_suat",
+      "type": "narration",
+      "location": "Sườn Đông Bắc Vực",
+      "mood": "tense",
+      "text": "Hơn mười chiếc nòng pháo giả làm bằng thân gỗ thông sơn đen được dựng vội trên sườn Đông kèm theo hai bếp dầu đốt mồi tạo dấu nhiệt giả dưới màn sương. Cùng lúc đó, ban tác chiến của Quang cố tình phát đi vài bức điện mật hóa lỏng để nhử máy bay trinh sát địch.\n\nĐúng như tính toán xác suất, pháo binh tầm xa của Thiết Phong lập tức chuyển hướng trút hơn một trăm quả đạn xuống khu đồi đá trống trải phía Đông, phung phí cơ số đạn và làm lộ vị trí hai trận địa pháo tự hành của chính chúng.\n\nNhững tiếng nổ vang dội sườn núi suốt gần một giờ đồng hồ trong khi lực lượng thật của Hắc Hổ vẫn bình yên vô sự trong hầm đá tuyến giữa.\n\nTuy nhiên, vài loạt đạn lạc trượt sườn núi đã rơi sát khu vực chăn thả của một bản vùng cao chưa kịp sơ tán hết, khiến bà con một phen hoảng loạn trong đêm rét.",
+      "next": "ch6_ep1_17_dispatch_trung_tuong_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_17_dispatch_trung_tuong_bac_vuc",
+      "type": "dispatch",
+      "location": "Sở Chỉ Huy Quân Đoàn Bắc Vực — Đèo Gió",
+      "mood": "tense",
+      "text": "[SẮC LỆNH THĂNG QUÂN HÀM & BỔ NHIỆM — BỘ TỔNG THAM MƯU]\n\n\"Trước diễn biến rét đậm bất thường khiến hai sư đoàn bạn bên cánh Tây bị đứt gãy đường tiếp vận và rối loạn thông tin dưới áp lực tác chiến điện tử của Khối Thiết Phong: Quyết định thăng quân hàm TRUNG TƯỚNG đối với Thiếu Tướng Tư lệnh Sư Đoàn Hắc Hổ, bổ nhiệm giữ chức Tư lệnh QUÂN ĐOÀN BẮC VỰC.\"\n\n\"Chịu trách nhiệm thống nhất chỉ huy toàn bộ ba sư đoàn giữ dải núi biên ải phía Bắc, điều phối tập trung nguồn máy phát điện diesel, nhiên liệu sưởi ấm và lực lượng quân y vượt qua đợt rét kỷ lục trong tháng Chạp.\"",
+      "effects": [
+        { "addStat": { "stat": "SiKhi", "delta": 3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_trung_tuong",
+            "title": "Trung Tướng — Tư lệnh Quân Đoàn Bắc Vực",
+            "entry": "Đứng vững trước đòn thăm dò điện tử của Hắc Ưng và được thăng hàm Trung Tướng thống lĩnh toàn Quân Đoàn Bắc Vực giữa cơn bão tuyết khắc nghiệt."
+          }
+        }
+      ],
+      "next": "ch6_ep1_18_khung_hoang_ret_dam"
+    },
+    {
+      "id": "ch6_ep1_18_khung_hoang_ret_dam",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "mood": "urgent",
+      "text": "Hai ngôi sao Trung Tướng chưa kịp ấm trên cầu vai thì một đợt không khí lạnh tăng cường dữ dội nhất trong vòng hai mươi năm tràn xuống toàn dãy Bắc Vực. Mưa tuyết pha băng quất rát mặt, làm đứt gãy ba cột điện cao thế dẫn từ thủy điện miền xuôi lên vùng biên giới.\n\nNhiệt độ ban đêm tụt thẳng xuống âm sáu độ C. Toàn bộ hệ thống sưởi ấm và thiết bị y tế của ba trạm xá quân dân y dã chiến nằm dọc sườn núi lập tức rơi vào cảnh cạn sạch dầu máy phát, trong khi hàng chục thương binh nặng và người dân bản bị bỏng lạnh đang thở dốc dưới mái tôn đóng băng.\n\nCùng thời điểm ấy, các lữ đoàn pháo binh án ngữ trục đèo chính cũng đồng loạt gửi điện hỏa tốc đòi giữ nguyên một trăm phần trăm máy phát diesel dự bị để nuôi radar bắt mục tiêu và hệ thống sấy thủy lực nòng pháo. Cánh cửa hầm chỉ huy bật mở tung trong tiếng gió rít.",
+      "next": "ch6_ep1_19_ha_mang_ban_do_cham_chi"
+    },
+    {
+      "id": "ch6_ep1_19_ha_mang_ban_do_cham_chi",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "urgent",
+      "text": "Xin lỗi vì không gõ cửa trước, Trung Tướng! Nhưng nếu đợi đủ thủ tục văn thư thì đêm nay sẽ có ít nhất mười lăm người ngừng thở ngay trên giường bạt ở ba trạm xá tiền phương!\n\nTôi rút cây bút chì 2B trên vành mũ xuống khoanh tròn ba điểm đỏ trên bản đồ cho Thủ trưởng nhìn rõ đây: Trạm xá Khe Đá, Trạm xá Mỏm Thông và điểm cấp cứu Bản Sương. Máy tạo ô-xy đóng băng hết rồi, dầu sưởi trong bình chỉ đủ cầm cự tới hai mươi hai giờ đêm nay.\n\nBên pháo binh đòi gom sạch máy phát dự phòng của quân đoàn để giữ lưới radar bắn đêm. Tôi hỏi thẳng Thủ trưởng: những người lính bị tê cóng vừa khiêng từ chiến hào về cùng trẻ con người bản đang nằm truyền dịch kia, trong mắt các ông họ có được tính vào đội hình chiến đấu không?",
+      "branches": [
+        {
+          "condition": { "flag": "quang_theo_phe_hung" },
+          "next": "ch6_ep1_20a_quang_phe_hung_ep_dien"
+        }
+      ],
+      "next": "ch6_ep1_20b_quang_tinh_toan_rui_ro"
+    },
+    {
+      "id": "ch6_ep1_20a_quang_phe_hung_ep_dien",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "quang",
+      "speakerTitle": "Thượng tá Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Chị Hà bình tĩnh nhìn bảng cân đối năng lượng này trước đã, tôi vừa xoay nắp bút máy ba lần kiểm tra lại từng kilowatt công suất rồi. Toàn quân đoàn hiện chỉ còn mười bốn máy phát dự phòng đủ tải chạy xuyên bão băng.\n\nNếu ta rút sáu máy chuyển về ba trạm xá vùng cao, hệ thống radar trinh sát pháo binh và bộ sấy thủy lực của cụm lựu pháo 155 ly sẽ sụt xuống mức báo động. Hắc Ưng chỉ cần phóng một đợt tập kích lúc nửa đêm vào khe đèo không có radar dẫn bắn là toàn tuyến Bắc Vực mất bốn trăm người chứ không phải mười lăm ca cấp cứu.\n\nTrung tướng Hùng trên Bộ vừa điện nhắc rõ: tuyến phòng ngự biên giới không được phép để hở mắt thần dù chỉ nửa giờ. Cảm tính không giữ nổi chốt đâu Thủ trưởng — chọn cứu trạm xá lúc này là tự mở toang cửa ải cho Thiết Phong.",
+      "next": "ch6_ep1_21_choice_may_phat_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_20b_quang_tinh_toan_rui_ro",
+      "type": "dialogue",
+      "location": "Phòng Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "quang",
+      "speakerTitle": "Thượng tá Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Tôi xoay nắp bút máy ba lần mà vẫn chưa dám đặt bút gạch phần nào trên bảng phân bổ cả, Thủ trưởng ạ. Tổng công suất của mười bốn máy phát dự bị hiện chỉ đáp ứng được khoảng sáu mươi lăm phần trăm nhu cầu tối thiểu toàn quân đoàn trong đêm âm sáu độ.\n\nTính bằng xác suất thì bài toán cực kỳ tàn nhẫn: ưu tiên đủ điện cho trạm xá của chị Hà đồng nghĩa các cụm radar pháo binh sẽ phải chạy gián đoạn hoặc chuyển sang ngắm bắn thủ công theo bảng tọa độ giấy, làm chậm phản pháo mất bốn tới sáu phút nếu Hắc Ưng đánh đêm.\n\nNgược lại, dồn toàn bộ máy phát cho pháo binh thì trạm xá phải khiêng thương binh đi sơ tán xuống chân núi giữa bão tuyết. Lệnh cuối cùng của Tư lệnh Quân Đoàn sẽ định đoạt mạng sống cả hai đầu dây.",
+      "next": "ch6_ep1_21_choice_may_phat_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_21_choice_may_phat_bac_vuc",
+      "type": "choice",
+      "location": "Phòng Chỉ Huy Quân Đoàn Bắc Vực",
+      "text": "Giữa cơn bão băng âm sáu độ, bảng phân bổ 14 máy phát diesel và lượng dầu sưởi cuối cùng của Quân Đoàn Bắc Vực đang chờ nét bút quyết định của bạn.",
+      "choices": [
+        {
+          "id": "c16_uu_tien_tram_xa_bac_vuc",
+          "label": "Ưu tiên cấp máy phát và đoàn xe dầu sưởi cho cả 3 trạm xá chấm bút chì của Thu Hà, yêu cầu pháo binh dùng bảng ngắm cơ khí dự phòng",
+          "effects": [
+            { "setFlag": "uu_tien_tram_xa_bac_vuc" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 7 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -5 } },
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addRel": { "char": "ha", "delta": 4 } },
+            { "addRel": { "char": "hung", "delta": -2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep1_tram_xa",
+                "title": "Giữ ánh đèn trạm xá Bắc Vực",
+                "entry": "Điều máy phát điện và dầu sưởi cho ba trạm xá dã chiến của Y sĩ Nguyễn Thu Hà giữa đêm rét kỷ lục âm sáu độ."
+              }
+            }
+          ],
+          "next": "ch6_ep1_22a_cuu_tram_xa_bac_vuc"
+        },
+        {
+          "id": "c16_chia_luong_dau_chia_ca_hai",
+          "label": "Cắt toàn bộ điện sưởi và đèn chiếu sáng tại Sở Chỉ Huy Quân Đoàn, chia đôi máy phát để giữ sống cả trạm xá lẫn các khẩu đội pháo nòng cốt",
+          "effects": [
+            { "setFlag": "uu_tien_tram_xa_bac_vuc" },
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addRel": { "char": "ha", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": -1 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep1_tram_xa",
+                "title": "Tắt lò sưởi Sở Chỉ Huy giữ trạm xá",
+                "entry": "Cắt điện sưởi Sở Chỉ Huy Quân Đoàn để chia sẻ máy phát cho cả trạm xá của Thu Hà và các trận địa pháo trọng yếu."
+              }
+            }
+          ],
+          "next": "ch6_ep1_22b_chi_huy_tat_lo_suoi"
+        },
+        {
+          "id": "c16_cat_dien_tram_xa_cho_phao_binh",
+          "label": "Dồn 100% máy phát điện cho trận địa pháo binh và radar phòng không, lệnh cho trạm xá chuyển bệnh nhân xuống chân núi bằng cáng bộ",
+          "effects": [
+            { "setFlag": "cat_dien_tram_xa_cho_phao_binh" },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -7 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -6 } },
+            { "addRel": { "char": "ha", "delta": -5 } },
+            { "addRel": { "char": "hung", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep1_phao_binh",
+                "title": "Dồn toàn bộ nguồn điện cho pháo binh",
+                "entry": "Quyết định cắt điện trạm xá để giữ trọn công suất radar và pháo binh Bắc Vực; bệnh nhân phải sơ tán bằng cáng qua bão tuyết."
+              }
+            }
+          ],
+          "next": "ch6_ep1_22c_cat_dien_tram_xa"
+        },
+        {
+          "id": "c16_thiet_quan_luat_tich_thu_dau_dan",
+          "label": "Áp dụng thiết quân luật thời chiến: cắt điện trạm xá đồng thời trưng thu toàn bộ dầu sưởi dự trữ của các bản vùng cao nạp cho pháo binh",
+          "effects": [
+            { "setFlag": "cat_dien_tram_xa_cho_phao_binh" },
+            { "setFlag": "ha_bat_dong_bac_vuc" },
+            { "setCharState": { "char": "ha", "state": "estranged" } },
+            { "addStat": { "stat": "TiepTe", "delta": 7 } },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -10 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -7 } },
+            { "addRel": { "char": "ha", "delta": -8 } },
+            { "addRel": { "char": "hung", "delta": 3 } },
+            {
+              "addJournal": {
+                "id": "jrn_ch6_ep1_ha_bat_dong",
+                "title": "Rạn nứt với Y sĩ Thu Hà tại Bắc Vực",
+                "entry": "Cắt điện trạm xá và trưng thu dầu sưởi dân bản cho pháo binh giữa bão băng, khiến Y sĩ Nguyễn Thu Hà phẫn nộ cắt đứt hợp tác."
+              }
+            }
+          ],
+          "next": "ch6_ep1_22d_ha_bat_dong_triage"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_22a_cuu_tram_xa_bac_vuc",
+      "type": "narration",
+      "location": "Trạm Xá Khe Đá — Sườn Nam Bắc Vực",
+      "mood": "warm",
+      "text": "Hai chiếc xe kéo mang theo sáu máy phát diesel công suất lớn lập tức gầm máy vượt mặt đường đóng băng, rẽ thẳng vào ba nhánh đường dẫn tới các trạm xá quân dân y. Chỉ sau bốn mươi lăm phút, những bóng đèn phẫu thuật vàng dịu lại bừng sáng dưới mái tôn phủ đầy sương muối.\n\nTrong phòng cấp cứu chật hẹp sực mùi thuốc sát trùng, các y tá vội cắm lại máy tạo ô-xy và mở lò sưởi điện ngay cạnh giường những chiến sĩ bỏng lạnh nặng nhất. Tiếng thở khò khè dịu dần theo từng độ ấm lan tỏa khắp gian nhà tạm.\n\nBên hiên trạm xá, mấy người mẹ bồng con nhỏ từ bản vùng cao chạy xuống tránh rét lặng lẽ đặt hai bó củi khô trước cửa phòng trực ban thay cho lời cảm ơn không nói hết.\n\nNgoài trận địa pháo trên đỉnh đèo, các khẩu đội trưởng lẳng lặng lau sạch thước ngắm cơ khí và đặt đèn dầu chắn gió cạnh bảng tọa độ giấy, sẵn sàng bắn chặn bằng tay nếu đêm nay có biến.",
+      "next": "ch6_ep1_23c_ha_cam_on_giu_tram_xa"
+    },
+    {
+      "id": "ch6_ep1_22b_chi_huy_tat_lo_suoi",
+      "type": "narration",
+      "location": "Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "mood": "calm",
+      "text": "Mười phút sau khi lệnh ban xuống, toàn bộ hệ thống đèn cao áp, máy sưởi điện và ấm đun trong Sở Chỉ Huy Quân Đoàn đồng loạt tắt phụt. Căn hầm chỉ huy chìm vào thứ ánh sáng vàng yếu ớt của hai ngọn đèn ắc quy và hơi lạnh buốt thấu xương.\n\nCác sĩ quan tham mưu khoác thêm áo bông, quấn khăn len kín cổ đứng quanh sa bàn theo dõi báo cáo qua điện thoại quay tay, trong khi ba máy phát điện vừa dỡ khỏi hầm chỉ huy được xe kéo thẳng lên trạm xá tiền phương.\n\nTrên mặt bàn kính lạnh ngắt, hơi thở của chúng tôi phả ra thành làn khói mỏng mỗi khi nghiêng người đo khoảng cách giữa các khe đèo. Không ai kêu ca nửa lời khi thấy cả vị Tư lệnh Trung Tướng cũng đang ngồi co tay trong chiếc áo dạ dày.\n\nNhờ sự sẻ chia khắc nghiệt ấy, cả ba cơ sở y tế vùng cao lẫn hai trận địa pháo chủ lực đều giữ được nguồn điện tối thiểu trước nửa đêm, dù từng giọt dầu trong bồn dự trữ đã xuống tới vạch đỏ.",
+      "next": "ch6_ep1_23c_ha_cam_on_giu_tram_xa"
+    },
+    {
+      "id": "ch6_ep1_22c_cat_dien_tram_xa",
+      "type": "narration",
+      "location": "Đường Xuống Dốc Trạm Xá Mỏm Thông",
+      "mood": "somber",
+      "text": "Theo mệnh lệnh sắt đá của Quân Đoàn, toàn bộ mười bốn máy phát điện đều chạy hết công suất trên các trận địa pháo binh và trạm radar đỉnh đèo. Trong khi những ngọn đồi quân sự sáng đèn sưởi ấm bộ phận thủy lực, ba trạm xá quân dân y chìm nghỉm vào bóng tối lạnh cóng.\n\nDưới ánh đèn pin quay tay yếu ớt, các y bác sĩ và dân công phải bó chặt thương binh vào hai lớp chăn dạ ẩm hơi sương, nối đuôi nhau khiêng cáng trượt từng bước trên con dốc đóng băng để đưa xuống bệnh viện tuyến dưới. Gió bấc gào rít bên tai, tiếng rên khẽ của người bệnh bị nuốt chửng vào màn tuyết.\n\nNhững bàn tay nắm đòn cáng bật máu vì bám vào gỗ đóng váng băng trên suốt ba cây số đường dốc trơn tuột. Mỗi lần bánh giày trượt đi, cả tổ khiêng phải quỳ rạp xuống giữ cho chiếc cáng khỏi lăn xuống vực đá.\n\nMột đoàn xe tải vận tải nhận lệnh chạy ngược dốc đón cáng giữa đêm, nhưng việc vận chuyển thô sơ qua ba tiếng băng giá đã khiến nhiều ca bệnh nặng rơi vào tình trạng nguy kịch.",
+      "next": "ch6_ep1_23b_ha_canh_cao_lan_cuoi"
+    },
+    {
+      "id": "ch6_ep1_22d_ha_bat_dong_triage",
+      "type": "narration",
+      "location": "Trạm Xá Bản Sương — Đêm Bão Băng",
+      "mood": "somber",
+      "text": "Đoàn cảnh vệ thiết quân luật theo lệnh trưng thu lần lượt đi qua từng nếp nhà sàn của các bản vùng cao, gom toàn bộ những can dầu hỏa sưởi ấm ít ỏi cuối cùng đưa thẳng ra trận địa pháo. Tiếng khóc trẻ nhỏ và ánh nhìn lặng ngắt đầy thất vọng của những người già theo sau vệt bánh xe lăn đi trong tuyết.\n\nTại Trạm xá Bản Sương, khi ngọn đèn phẫu thuật phụt tắt giữa ca cắt lọc vết thương bỏng lạnh, một cụ già người bản và một chiến sĩ trinh sát trẻ đã không qua khỏi trong lúc khiêng cáng xuống dốc giữa âm sáu độ.\n\nTrong căn bếp lạnh tanh không một giọt dầu đèn, những nữ hộ sinh trẻ vừa đốt tạm vài thanh củi ẩm vừa ôm chặt lấy nhau giữ hơi ấm cho hai đứa nhỏ mới chào đời hồi đầu tuần.\n\nSáng rạng mặt người, Y sĩ Nguyễn Thu Hà đứng chết lặng bên hai tấm vải trắng phủ kín ngoài hiên đá, bàn tay nắm chặt cây bút chì 2B gãy đôi tự lúc nào.",
+      "next": "ch6_ep1_23a_ha_tuyen_bo_cat_dut"
+    },
+    {
+      "id": "ch6_ep1_23a_ha_tuyen_bo_cat_dut",
+      "type": "dialogue",
+      "location": "Cửa Hầm Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "somber",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "flag": "ha_bat_dong_bac_vuc" }
+        ]
+      },
+      "text": "Tôi không tới để cãi vã thêm với Trung Tướng đâu. Đây là phù hiệu phối thuộc bộ tham mưu quân đoàn của tôi — từ giờ phút này, đội quân y lưu động chỉ nhận lệnh chuyên môn trực tiếp từ Cục Quân y.\n\nÔng giữ được một trăm phần trăm công suất pháo trên đỉnh đèo, nhưng ông đã tự tay dập tắt ánh lửa cuối cùng trong nhà dân và trên giường bệnh của lính mình. Trên bản đồ của ông hôm nay có thêm hai cái tên không bao giờ cần tới dầu sưởi nữa.\n\nTôi sẽ tự xoay xở giữ mạng những người còn lại bằng củi ướt và bàn tay trần. Xin phép không bao giờ ngồi chung bàn sa bàn với ông nữa, Thủ trưởng.",
+      "next": "ch6_ep1_24_dot_tap_kich_dem_bang_gia"
+    },
+    {
+      "id": "ch6_ep1_23b_ha_canh_cao_lan_cuoi",
+      "type": "dialogue",
+      "location": "Hành Lang Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "tense",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } }
+        ]
+      },
+      "text": "Tất cả ba mươi bốn bệnh nhân nặng đã được cáng xuống tới điểm tập kết dưới chân dốc rồi, nhưng có bốn ca bị hạ thân nhiệt sâu đang phải thở máy cầm hơi dưới kia. Đôi găng tay tôi vẫn còn cứng đờ vì băng đây này, Trung Tướng.\n\nTôi hiểu trách nhiệm giữ đường đèo trước mũi súng Thiết Phong đè nặng lên vai ông cỡ nào nên tôi vẫn ở lại bám ca trực đêm nay cùng anh em. Nhưng tôi cảnh báo thẳng với Thủ trưởng một lần: đừng đẩy lằn ranh tàn nhẫn đi thêm một bước nào nữa.\n\nNếu đêm nay pháo binh lại bắn tràn sang cả tuyến đường sơ tán dân sự dưới khe núi chỉ để giữ chỉ số sạch đẹp, thì chính tôi cũng không đứng chung hàng ngũ với ông được nữa đâu.",
+      "next": "ch6_ep1_24_dot_tap_kich_dem_bang_gia"
+    },
+    {
+      "id": "ch6_ep1_23c_ha_cam_on_giu_tram_xa",
+      "type": "dialogue",
+      "location": "Phòng Tác Chiến Quân Đoàn Bắc Vực",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } }
+        ]
+      },
+      "text": "Tôi chạy ù về đây đưa cho Trung Tướng ca nước gừng nóng với cảm ơn một tiếng thay mặt ba trạm xá tiền phương. Nhờ sáu cái máy phát điện và dầu sưởi vừa kịp lên tới nơi, toàn bộ thương binh lẫn người bản đều đã ổn định nhịp thở rồi.\n\nTôi vẫn cài cây bút chì 2B trên vành mũ đây — mấy dấu chấm trạm xá tôi vẽ trên bản đồ hôm nay không bị bỏ rơi thành vết mực chết như những nơi khác. Anh em thương binh vừa hồi tỉnh nghe tin Sở Chỉ Huy cũng tắt lò sưởi nhường điện cho họ đều rưng rưng cả.\n\nGiờ tôi quay lại trạm phẫu thuật trực tiếp cùng kíp mổ đây. Ngoài trời tuyết bắt đầu dày lên rồi đấy, Thủ trưởng nhớ giữ ấm mà chống đỡ nếu đêm nay bên kia có động tĩnh.",
+      "next": "ch6_ep1_24_dot_tap_kich_dem_bang_gia"
+    },
+    {
+      "id": "ch6_ep1_24_dot_tap_kich_dem_bang_gia",
+      "type": "narration",
+      "location": "Toàn tuyến Quân Đoàn Bắc Vực — 01 giờ 40 phút sáng",
+      "mood": "urgent",
+      "text": "Đúng một giờ bốn mươi phút rạng sáng, đúng lúc cơn bão tuyết quất mạnh nhất xuống dãy núi đá vôi, bầu trời phía Bắc bỗng rực lên hàng chục vệt sáng đỏ lừ. Đúng như lời đe dọa trong bức điện của Hắc Ưng, Khối Thiết Phong tung đòn tập kích hỗn hợp gồm xung phá sóng điện tử cực mạnh và hỏa lực pháo phản lực tầm xa đánh phủ đầu ba khe đèo Bắc Vực.\n\nTrên các màn hình vô tuyến trong hầm chỉ huy, tiếng rít trắng chói tai bùng lên át hết mọi kênh liên lạc dự phòng, trong khi một toán bộ binh trượt tuyết hạng nhẹ của địch bắt đầu áp sát hành lang sườn Tây dưới màn sương đặc quánh.\n\nCùng thời điểm ấy, đường đèo dốc dẫn xuống chân núi — nơi các tổ y tế và đoàn xe chở dân bản sơ tán đang di chuyển dở dang — bỗng nằm sát mép vùng đạn phản pháo của cả hai bên.",
+      "branches": [
+        {
+          "condition": { "charAlive": "dung" },
+          "next": "ch6_ep1_25a_dung_bao_xe_thiet_phong"
+        },
+        {
+          "condition": { "charAlive": "loc" },
+          "next": "ch6_ep1_25b_loc_keo_day_duoi_tuyet"
+        }
+      ],
+      "next": "ch6_ep1_25c_linh_bat_duoc_xung_pha_song"
+    },
+    {
+      "id": "ch6_ep1_25a_dung_bao_xe_thiet_phong",
+      "type": "dialogue",
+      "location": "Đài Quan Sát Sườn Tây — Đèo Gió (qua đường dây hữu tuyến)",
+      "speaker": "dung",
+      "speakerTitle": "Thiếu tá Hoàng Tiến Dũng",
+      "mood": "urgent",
+      "condition": { "charAlive": "dung" },
+      "text": "Báo cáo Trung Tướng! Tôi vừa vuốt lại quai mũ sắt dẫn tổ trinh sát bò ra mỏm đá nhìn thẳng xuống khe núi rồi đây! Chờ tới sáng là tụi nó rút sạch hoặc chui sâu vào tuyến giữa mất!\n\nMàn nhiễu sóng của tụi nó làm anh em mất liên lạc vô tuyến hoàn toàn, nhưng qua đường dây cáp bọc thép kéo hồi đầu tuần tôi thấy rõ rành rành: cánh quân đánh thật gồm ba đại đội trượt tuyết đang luồn dọc khe Tây, còn tiếng pháo ngoài đồi Đông chỉ là đòn nghi binh thôi!\n\nPhía đường dốc dưới chân núi còn mấy xe cứu thương với cáng dân bản đang kẹt bánh trong tuyết nữa. Thủ trưởng chốt lệnh đánh hướng nào nhanh lên để tụi tôi nổ súng chặn đầu tụi nó!",
+      "effects": [
+        { "addRel": { "char": "dung", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_26_choice_chong_pha_vong_vay_timed"
+    },
+    {
+      "id": "ch6_ep1_25b_loc_keo_day_duoi_tuyet",
+      "type": "dialogue",
+      "location": "Chốt Chuyển Tiếp Hữu Tuyến Số 3 — Bắc Vực",
+      "speaker": "loc",
+      "speakerTitle": "Trung úy Bùi Văn Lộc",
+      "mood": "urgent",
+      "condition": { "charAlive": "loc" },
+      "text": "Dạ báo cáo Trung Tướng! Hai tay em đang nắm chặt lấy dây điện thoại trần để giữ mối nối không bị gió tuyết giật đứt đây ạ, chỗ dây này em cột chặt rồi nên tín hiệu vẫn truyền về sở chỉ huy rõ mồn một!\n\nTụi Thiết Phong vừa bắn ba loạt pháo sáng xuống đoạn đường đèo dẫn ra trạm xá phía Nam, ngay sát chỗ mấy chiếc xe tải đang chở thương binh với dân bản di tản. Đồng thời phía khe Tây có tiếng xích xe bọc thép nhẹ lách qua lớp tuyết dày tiến sát hàng rào mìn.\n\nNếu không có hỏa lực chặn cánh hoặc xe cơ động bọc lót kịp thời trong hai phút nữa thì cả đoàn xe dưới dốc lẫn chốt khe Tây đều lâm nguy đó Thủ trưởng ơi!",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_26_choice_chong_pha_vong_vay_timed"
+    },
+    {
+      "id": "ch6_ep1_25c_linh_bat_duoc_xung_pha_song",
+      "type": "dialogue",
+      "location": "Phòng Vô Tuyến — Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "speaker": "linh",
+      "speakerTitle": "Thiếu tá Trần Mỹ Linh",
+      "mood": "urgent",
+      "text": "Thủ trưởng nhìn nhịp xung trên màn dao động ký này đi! Cơn bão nhiễu sóng tưởng như bịt kín cả thung lũng, nhưng ngón tay em gõ kiểm tra bước nhảy vẫn dò ra được khoảng hở ba giây sau mỗi nhịp phát của xe tác chiến điện tử Thiết Phong.\n\nMũi pháo chính của chúng đang trút vào sườn Đông để hút hỏa lực mình sang đó, trong khi mũi bộ binh cơ giới thật sự lại đang men theo khe Tây áp sát con đường nối ra các trạm xá dã chiến.\n\nĐạn địch bắt đầu rơi sát đoạn cua chân dốc rồi ạ! Thủ trưởng chỉ có chưa đầy mười hai giây để chọn hướng điều quân và hỏa lực phản kích!",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_26_choice_chong_pha_vong_vay_timed"
+    },
+    {
+      "id": "ch6_ep1_26_choice_chong_pha_vong_vay_timed",
+      "type": "choice",
+      "location": "Phòng Tác Chiến — Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "timedSeconds": 12,
+      "timeoutChoiceId": "c16_dong_cua_ham_giu_phao_tinh",
+      "text": "Đồng hồ đếm ngược 12 giây chớp sáng đỏ giữa tiếng pháo rền và màn nhiễu sóng trắng xóa. Từng cụm bộ binh trượt tuyết của Thiết Phong đang ép vào khe Tây sát tuyến đường cấp cứu.",
+      "choices": [
+        {
+          "id": "c16_phan_kich_chinh_xac_giai_vay_y_te",
+          "label": "Tung ngay đại đội cơ động dự bị áp sát bọc lót tuyến đường trạm xá, điều pháo bắn chặn dứt điểm mũi khe Tây theo tọa độ thủ công",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } }
+          ],
+          "next": "ch6_ep1_27a_cuu_tuyen_duong_y_te"
+        },
+        {
+          "id": "c16_khai_hoa_tong_luc_chan_deo",
+          "label": "Mở hỏa lực pháo phản lực tổng lực bịt kín toàn bộ cửa ngõ khe Tây và dốc chân núi để diệt gọn địch, bất chấp nguy cơ tuyết lở xuống đường cứu thương",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 5 } },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "NhanTamDan", "delta": -6 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } }
+          ],
+          "next": "ch6_ep1_27b_hoa_luc_chan_deo"
+        },
+        {
+          "id": "c16_chuyen_kenh_du_phong_phan_phao",
+          "label": "Dùng thuật toán nhảy tần số của Linh khóa ngược tọa độ xe phát nhiễu Thiết Phong, gọi pháo tầm xa đập nát bộ não điện tử của Hắc Ưng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addRel": { "char": "linh", "delta": 2 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch6_ep1_27c_be_gay_nhieu_song"
+        },
+        {
+          "id": "c16_dong_cua_ham_giu_phao_tinh",
+          "label": "Lệnh toàn tuyến rút sâu vào hầm bê tông cố thủ chờ bão tan, bảo toàn lực lượng và đạn dược tới hừng đông",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -3 } }
+          ],
+          "next": "ch6_ep1_27d_co_thu_cho_binh_minh"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_27a_cuu_tuyen_duong_y_te",
+      "type": "narration",
+      "location": "Khúc cua Dốc Đá — Tuyến Đường Y Tế Bắc Vực",
+      "mood": "urgent",
+      "text": "Hai xe thiết giáp bánh lốp cùng đại đội cơ động dự bị lập tức xé màn tuyết lao xuống khúc cua chân núi, dựng thành lá chắn thép chắn ngang tầm đạn bắn thẳng của toán đặc nhiệm Thiết Phong. Trên đỉnh đèo, các khẩu đội pháo chỉnh thước ngắm thủ công bằng ánh đèn dầu, thả từng loạt đạn cối chính xác xuống khe Tây.\n\nBị đánh vỗ mặt bất ngờ giữa đêm gió tuyết, mũi bộ binh trượt tuyết của địch phải bỏ lại hai xe kéo nhẹ và rút ngược về phía bên kia đường biên. Đoàn xe cứu thương và cáng bộ dưới dốc thoát khỏi vùng nguy hiểm an toàn tuyệt đối.\n\nNgay sau khi tiếng súng lắng xuống, lính cơ động nhảy khỏi xe bọc thép phụ bác sĩ khiêng nốt những cáng thương binh vào hầm trú ẩn có lò sưởi ấm.\n\nLượng đạn pháo dự trữ vơi đi trông thấy sau trận đánh đêm, nhưng lòng tin của cả chiến sĩ lẫn dân bản vào vị Tư lệnh Quân Đoàn được tôi luyện vững như đá núi.",
+      "next": "ch6_ep1_28_binh_minh_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_27b_hoa_luc_chan_deo",
+      "type": "narration",
+      "location": "Khe Tây & Sườn Nam Đèo Gió",
+      "mood": "tense",
+      "text": "Hơn sáu mươi quả đạn pháo phản lực đồng loạt rời bệ phóng trong tiếng gầm xé toạc bầu trời đóng băng, cày nát toàn bộ mặt bằng khe Tây thành biển lửa đỏ rực. Đội hình tiến công của Thiết Phong tan tác ngay từ phút đầu, không một tên lính nào lọt qua được hàng rào thép gai.\n\nThế nhưng dư chấn của trận mưa pháo dữ dội cũng làm rung chuyển vách đá vôi phủ đầy tuyết nặng phía trên khúc cua chân núi. Một mảng tuyết lở kéo theo đất đá tràn xuống lấp kín nửa mặt đường, hất văng chiếc xe cứu thương cuối đoàn vào vách ta-luy dương và làm hai nhân viên quân y bị thương nặng.\n\nTrên bảng tổng kết chiến trường, phòng tuyến Quân Đoàn Bắc Vực đứng vững không sứt mẻ một tấc đất, nhưng cái giá phải trả dưới chân dốc khiến không khí sau trận đánh nặng trĩu.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "flag": "cat_dien_tram_xa_cho_phao_binh" },
+              { "notFlag": "ha_bat_dong_bac_vuc" }
+            ]
+          },
+          "next": "ch6_ep1_27b1_ha_cat_dut_sau_tran_phao"
+        }
+      ],
+      "next": "ch6_ep1_28_binh_minh_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_27b1_ha_cat_dut_sau_tran_phao",
+      "type": "dialogue",
+      "location": "Bãi Tập Kết Cấp Cứu Chân Núi — Bắc Vực",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "somber",
+      "condition": { "charAlive": "ha" },
+      "text": "Tôi đã cảnh báo ông đúng hai tiếng trước rồi, Trung Tướng. Cắt điện trạm xá bắt chúng tôi khiêng người bệnh đi bộ giữa bão tuyết chưa đủ, ông còn thả nguyên trận mưa pháo kéo tuyết lở thẳng xuống đầu đoàn cứu thương!\n\nHai đồng nghiệp của tôi vừa gãy xương sườn vì đất đá vùi, còn một bệnh nhân bỏng lạnh đã tắt thở ngay dưới gầm xe bị lật. Cây bút chì 2B của tôi không chấm nổi thêm dấu nào lên bản đồ chiến thuật của ông nữa đâu.\n\nTôi rút toàn bộ tổ quân y lưu động khỏi ban tham mưu quân đoàn ngay bây giờ. Đừng mong tôi hợp tác hay ký bất kỳ giấy chứng nhận y tế làm đẹp số liệu nào cho ông nữa!",
+      "effects": [
+        { "setFlag": "ha_bat_dong_bac_vuc" },
+        { "setCharState": { "char": "ha", "state": "estranged" } },
+        { "addStat": { "stat": "NhanTamDan", "delta": -4 } },
+        { "addRel": { "char": "ha", "delta": -5 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_ha_cat_dut",
+            "title": "Y sĩ Thu Hà cắt đứt hợp tác",
+            "entry": "Trận pháo chặn đèo gây tuyết lở xuống đoàn sơ tán sau quyết định cắt điện trạm xá khiến Nguyễn Thu Hà chính thức tuyên bố bất đồng và rời khỏi ban tham mưu quân đoàn."
+          }
+        }
+      ],
+      "next": "ch6_ep1_28_binh_minh_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_27c_be_gay_nhieu_song",
+      "type": "narration",
+      "location": "Phòng Tác Chiến & Trận Địa Pháo Bắc Vực",
+      "mood": "tense",
+      "text": "Nắm bắt đúng khoảng hở ba giây trong chu kỳ phát nhiễu mà Linh phát hiện, hai tổ trắc địa dùng công thức giao hội nhanh của Quang chỉ trong một phút đã khóa chính xác tọa độ cụm xe tác chiến điện tử đối phương đặt sau sườn núi đá.\n\nBa loạt đạn pháo 155 ly bắn phản kích chính xác rơi thẳng vào đội hình xe ăng-ten của Thiết Phong. Chỉ sau hai tiếng nổ lớn ánh xanh lè, toàn bộ màn sương nhiễu trắng trên màn hình vô tuyến Quân Đoàn Bắc Vực bỗng tắt phụt, trả lại bầu không gian thông tin trong vắt.\n\nTrong buồng máy vô tuyến, Trần Mỹ Linh khẽ thở phào một tiếng dài, đôi tay vừa gõ nhịp Morse kiểm tra thông suốt toàn mạng vừa đánh dấu thời điểm dập tắt nhiễu sóng vào sổ trực.\n\nMất đi chiếc khiên điện tử che chắn, tốp bộ binh trượt tuyết của địch ngoài khe Tây lập tức rút tháo chạy trước khi hỏa lực bộ binh ta kịp khép vòng vây.",
+      "next": "ch6_ep1_28_binh_minh_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_27d_co_thu_cho_binh_minh",
+      "type": "narration",
+      "location": "Hầm Đá Bê Tông — Tuyến Giữa Bắc Vực",
+      "mood": "somber",
+      "text": "Tiếng pháo nổ ầm ầm rung chuyển vách đá suốt hơn hai giờ liền khiến bụi vữa rơi rào rào xuống mũ sắt trong các căn hầm bê tông đóng kín cửa thép. Các tiểu đội ngồi bó gối giữ đạn, lắng nghe từng nhịp rung của mặt đất qua lớp gió tuyết gào rít.\n\nTrong ánh đèn pin lờ mờ, những người lính trẻ chuyền tay nhau từng nắm cơm khô lạnh ngắt và mẩu gừng tươi để giữ tỉnh táo suốt ca gác đêm dài dằng dặc.\n\nNhờ không mạo hiểm bung quân ra giữa màn nhiễu sóng mù mịt, quân số và dự trữ đạn dược của Quân Đoàn Bắc Vực được bảo toàn gần như nguyên vẹn. Tuy nhiên, một chốt tiền tiêu ngoài rìa khe Tây bị địch gài mìn phá hủy hai cột ăng-ten phụ trước khi chúng tự rút lui vào lúc bốn giờ sáng.\n\nKhi tiếng súng thưa dần và bầu trời chuyển sắc xám bạc, toàn tuyến bắt đầu kiểm tra thiệt hại để chuẩn bị cho bình minh lạnh giá.",
+      "next": "ch6_ep1_28_binh_minh_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_28_binh_minh_bac_vuc",
+      "type": "narration",
+      "location": "Sân Bay Dã Chiến Bắc Vực — Bình minh sau bão băng",
+      "mood": "calm",
+      "text": "Khi vầng mặt trời nhợt nhạt ló ra sau những đỉnh núi đá vôi phủ trắng sương muối, cơn bão băng kéo dài suốt ba ngày đêm cũng bắt đầu tan dần. Ngoài khu vực khe Tây, xác vài chiếc xe kéo tuyết bị bỏ lại của Khối Thiết Phong nằm im lìm giữa lớp băng mỏng, minh chứng cho đòn thăm dò mùa đông của Hắc Ưng đã bị chặn đứng.\n\nTrên các mỏm đồi phòng ngự, chiến sĩ công binh bắt đầu vác xẻng đi cào tuyết mở lại lối đi giữa các hầm hào và nối lại những đoạn dây điện thoại bị mảnh đạn cắt đứt trong đêm. Khói bếp dã chiến lại lững lờ bốc lên từ khe đá phía sau lưng trận địa.\n\nThế nhưng trên bảng tổng hợp tình báo sáng sớm, những dải tín hiệu vô tuyến lại bất ngờ dồn dập chuyển hướng xuống phía Nam — nơi mạng lưới cảng biển, kho dầu chiến lược và các nhánh sông hạ lưu của Đại Chiến Khu Long Vũ đang vận chuyển nguồn sống lên cho toàn miền Bắc.\n\nNgay lúc tôi đang đứng trên sân gạch phủ băng của bộ tư lệnh quân đoàn để rà soát lại sổ bàn giao mùa đông, những người đồng đội thân cận bước tới nói lời chia tay ngắn gọn trước một bức điện hỏa tốc mới vừa từ Thủ đô bay tới.",
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "ha" },
+              { "charState": { "char": "ha", "state": "alive" } },
+              { "flag": "uu_tien_tram_xa_bac_vuc" }
+            ]
+          },
+          "next": "ch6_ep1_29a_ha_trao_ban_do_cham_chi"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "khang" },
+              { "charState": { "char": "khang", "state": "alive" } },
+              { "notFlag": "khang_bat_dong_thien_lang" }
+            ]
+          },
+          "next": "ch6_ep1_29b_khang_ben_dong_ho_nut"
+        },
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "son" },
+              { "flag": "son_bi_thuong_bach_vu" }
+            ]
+          },
+          "next": "ch6_ep1_29d_son_vet_thuong_bach_vu"
+        }
+      ],
+      "next": "ch6_ep1_29c_son_va_kiem_ke_nui_da"
+    },
+    {
+      "id": "ch6_ep1_29a_ha_trao_ban_do_cham_chi",
+      "type": "dialogue",
+      "location": "Sân Trực Ban Quân Y — Sư Đoàn Hắc Hổ",
+      "speaker": "ha",
+      "speakerTitle": "Thiếu tá Y sĩ Nguyễn Thu Hà",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "ha" },
+          { "charState": { "char": "ha", "state": "alive" } }
+        ]
+      },
+      "text": "Trung Tướng ra sân bay sớm thế ạ? Tôi vừa chạy xuống từ Trạm xá Khe Đá để đưa cho ông tờ bản đồ mới nối dài thêm hai nếp gấp này đây. Cây bút chì 2B trên vành mũ tôi hôm qua mới chấm thêm mười mấy điểm trường và trạm xá vùng hạ lưu rồi đó.\n\nNhờ ông giữ sáng mấy trạm xá trên Bắc Vực qua đêm bão vừa rồi mà cả khu vực không mất thêm ca bỏng lạnh nào. Tuần tới tôi cũng được điều động theo đội tiêm chủng lưu động xuống phối thuộc vùng duyên hải Long Vũ.\n\nNghe nói ngoài cảng biển dưới đó kho tàng lớn lắm nhưng vẫn kẹt đủ thứ chuyện giấy tờ. Có ngày xuống tới Long Vũ, tôi lại mang bản đồ chấm chì ra làm phiền ông tiếp đấy nhé Thủ trưởng!",
+      "effects": [
+        { "addRel": { "char": "ha", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_30_dispatch_thuong_tuong_long_vu"
+    },
+    {
+      "id": "ch6_ep1_29b_khang_ben_dong_ho_nut",
+      "type": "dialogue",
+      "location": "Đường Băng Dã Chiến — Bắc Vực",
+      "speaker": "khang",
+      "speakerTitle": "Đại tá Lê Minh Khang",
+      "mood": "warm",
+      "condition": {
+        "all": [
+          { "charAlive": "khang" },
+          { "charState": { "char": "khang", "state": "alive" } },
+          { "notFlag": "khang_bat_dong_thien_lang" }
+        ]
+      },
+      "text": "Chà, mới lên Trung Tướng giữ Bắc Vực chưa nóng chỗ mà nghe phong thanh trên Bộ lại sắp kéo ông đi nữa rồi hả bạn hiền? Tui bật nắp cái bật lửa này kêu tách một cái lấy hên trước lúc chia tay nghen.\n\nTrên dãy núi đá này coi như tạm đứng chân vững qua đợt rét đầu mùa rồi. Sư Đoàn Hắc Hổ tui với ông Sơn ở lại giữ chặt Đèo Gió cho, không để tụi Thiết Phong thò mũi qua nổi đâu.\n\nCho tui gõ hai cái lên vai lần nữa nè — còn nghe nhau là còn đội hình! Nếu có về vùng biển Long Vũ nắm hậu cần lớn thì nhớ ngó xuống mấy bến phà bến đò dưới đó nha, đừng để người ta biến dầu của lính trên núi thành giấy trắng trên bàn họp!",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch6_ep1_30_dispatch_thuong_tuong_long_vu"
+    },
+    {
+      "id": "ch6_ep1_29c_son_va_kiem_ke_nui_da",
+      "type": "narration",
+      "location": "Sân Sở Chỉ Huy Quân Đoàn Bắc Vực",
+      "mood": "calm",
+      "text": "Trên khoảng sân đá vôi trắng xóa sương tan, các đại đội trực thuộc lần lượt chuyển về trạng thái trực chiến bình thường sau đêm bão lửa. Những thùng đạn rỗng được thu gom gọn gàng, còn đội ngũ quân y tất bật chuyển nốt số thương binh nhẹ về tuyến giữa.\n\nBộ phận hậu cần kiểm đếm từng lít dầu còn lại trong hầm ngầm, lập danh sách bổ sung áo ấm và găng tay mới cho các tổ gác đèo đã hao mòn qua ba đêm bão giá. Tiếng máy bay trực thăng vận tải từ xa bắt đầu vọng lại sau rặng thông.\n\nĐại tá Đỗ Thành Sơn đứng bên mép đường băng, ngón tay cái vẫn quen thuộc lật từng trang sổ quân số sư đoàn bằng vẻ mặt điềm tĩnh đặc trưng. Ông chỉ gật đầu ngắn gọn một tiếng 'Tôi giữ núi, thủ trưởng yên tâm' rồi xoay người quay lại hầm tác chiến cùng các tiểu đoàn trưởng.\n\nVừa đúng lúc ấy, chiếc xe U-oát của ban cơ yếu lao vội tới đậu sát bậc thềm, mang theo một phong bì sáp đỏ đóng dấu hỏa tốc từ Bộ Tổng Tham Mưu.",
+      "next": "ch6_ep1_30_dispatch_thuong_tuong_long_vu"
+    },
+    {
+      "id": "ch6_ep1_29d_son_vet_thuong_bach_vu",
+      "type": "dialogue",
+      "location": "Mép Đường Băng Dã Chiến — Bắc Vực",
+      "speaker": "son",
+      "speakerTitle": "Đại tá Đỗ Thành Sơn",
+      "mood": "calm",
+      "condition": { "charAlive": "son" },
+      "text": "Chào Trung Tướng. Tôi lên tiễn thủ trưởng một đoạn. Trời lạnh quá, vai trái hồi Bạch Vũ lại nhức.\n\nNhưng tay phải vẫn ký đủ lệnh trực. Ba trung đoàn Bắc Vực vẫn giữ nguyên đội hình. Không thiếu một chốt nào.\n\nThủ trưởng đi Long Vũ cho vững tay. Hậu phương có thông thì tiền tuyến mới ấm. Chỗ đá núi này tôi đứng.\n\nLính của tôi, tôi chịu. Chúc thượng lộ bình an.",
+      "effects": [
+        { "addRel": { "char": "son", "delta": 1 } },
+        { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+      ],
+      "next": "ch6_ep1_30_dispatch_thuong_tuong_long_vu"
+    },
+    {
+      "id": "ch6_ep1_30_dispatch_thuong_tuong_long_vu",
+      "type": "dispatch",
+      "location": "Sân Bay Dã Chiến Quân Đoàn Bắc Vực",
+      "mood": "urgent",
+      "text": "[MẬT LỆNH KHẨN CẤP — HỘI ĐỒNG QUỐC PHÒNG & BỘ TỔNG THAM MƯU]\n\n\"Đánh giá cao năng lực ổn định phòng tuyến Bắc Vực trước đợt rét kỷ lục và đòn thăm dò tác chiến điện tử của Hắc Ưng: Phong quân hàm THƯỢNG TƯỚNG đối với Trung Tướng Tư lệnh Quân Đoàn Bắc Vực, lệnh bay khẩn cấp về phía Nam tiếp quản chức vụ Tư lệnh ĐẠI CHIẾN KHU LONG VŨ.\"\n\n\"Lý do hỏa tốc: Cụm cảng duyên hải Long Vũ — huyết mạch tiếp tế nhiên liệu mùa đông và linh kiện radar cho Bắc Vực — đang xuất hiện dấu hiệu tắc nghẽn nghiêm trọng, mất cân đối sổ sách kho cảng và nguy cơ đứt gãy mạng cảnh giới tầm thấp.\"",
+      "effects": [
+        { "addStat": { "stat": "KyLuat", "delta": 3 } },
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_lenh_long_vu",
+            "title": "Lệnh thăng Thượng Tướng về Long Vũ",
+            "entry": "Ổn định thành công mặt trận mùa đông Bắc Vực và nhận sắc lệnh thăng Thượng Tướng điều động vào tiếp quản Đại Chiến Khu Long Vũ."
+          }
+        }
+      ],
+      "next": "ch6_ep1_31_choice_ban_giao_bac_vuc"
+    },
+    {
+      "id": "ch6_ep1_31_choice_ban_giao_bac_vuc",
+      "type": "choice",
+      "location": "Cửa Máy Bay Vận Tải — Sân Bay Dã Chiến Bắc Vực",
+      "text": "Động cơ chiếc máy bay vận tải đã nổ máy rền vang giữa nền trời Bắc Vực lạnh buốt. Trước khi đặt chân lên cầu thang lên khoang lái bay về Đại Chiến Khu Long Vũ, bạn ký chỉ thị bàn giao cuối cùng nào cho Quân Đoàn Bắc Vực?",
+      "choices": [
+        {
+          "id": "c16_khoa_so_bao_toan_tram_xa",
+          "label": "Ghi rõ vào lệnh bàn giao chỉ tiêu cố định cấp dầu sưởi mùa đông cho các trạm xá vùng cao và các bản dân cư quanh Đèo Gió",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch6_ep1_bottleneck"
+        },
+        {
+          "id": "c16_day_manh_canh_gioi_radar",
+          "label": "Lệnh các đài radar đỉnh núi Bắc Vực siết chặt lịch nhảy tần số chống nhiễu của Linh và chuẩn bị đối chiếu nguồn dầu gửi từ Long Vũ lên",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "linh", "delta": 1 } }
+          ],
+          "next": "ch6_ep1_bottleneck"
+        },
+        {
+          "id": "c16_gui_ban_sao_so_cho_son",
+          "label": "Chép lại danh sách các điểm tựa then chốt và tên những người lính gác đêm từ cuốn sổ bìa xanh gửi lại cho ban chỉ huy Bắc Vực",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 4 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } }
+          ],
+          "next": "ch6_ep1_bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "ch6_ep1_bottleneck",
+      "type": "narration",
+      "location": "Khoang Máy Bay Vận Tải — Rời Không Phận Bắc Vực",
+      "mood": "calm",
+      "isChapterEnd": true,
+      "text": "Chiếc máy bay vận tải quân sự rung nhẹ rồi tách khỏi đường băng phủ đầy băng tan, nghiêng cánh vút qua những đỉnh núi đá vôi răng cưa của Bắc Vực. Qua khung cửa kính tròn dày cộm hơi lạnh, những tuyến đường đèo ngoằn ngoèo, dãy hầm bê tông Sư Đoàn Hắc Hổ và những chấm khói bếp dã chiến nhỏ dần thành một nét vẽ mảnh giữa màu xám bạc của rừng thông.\n\nTrong túi áo dạ, cuốn sổ bìa xanh nằm im cạnh tấm bản đồ nhỏ Thiên Lang và những kỷ vật từ thuở còn ở Quang Trung. Chặng đường từ Thiếu Tướng tới Trung Tướng giữa mùa đông khắc nghiệt vừa giúp giữ vững tuyến núi biên ải trước phép thử đầu tiên của Hắc Ưng, vừa phơi bày những lỗ hổng tiếp vận âm thầm đang rỉ máu từ vùng cảng biển phía sau.\n\nĐêm qua, ánh đèn pin trên mặt kính sa bàn và tiếng gió rít qua các trạm xá vùng cao đã nhắc tôi nhớ rằng mọi quyết định của người chỉ huy cấp Tướng đều nặng trĩu hơi thở của hàng vạn con người dưới thung lũng. Không một phép toán xác suất nào thay thế được trách nhiệm ấy.\n\nChỉ bốn giờ bay nữa, cái lạnh buốt giá nơi biên giới sẽ nhường chỗ cho gió biển mặn chát và mạng lưới sông rạch chằng chịt của Đại Chiến Khu Long Vũ. Ở đó, ba ngôi sao vàng Thượng Tướng đang chờ đợi một mặt trận mới — nơi những kiện sách học trò kẹt kho, đường dây dầu giả ở cầu cảng và số phận trạm radar đỉnh núi Bắc Vực sẽ đan chặt vào nhau.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ch6_ep1_ket_thuc",
+            "title": "Khép lại Hồi 16 — Hướng về Long Vũ",
+            "entry": "Giữ vững phòng tuyến Bắc Vực qua đợt rét kỷ lục và đòn thăm dò của Hắc Ưng, lên đường nhận quân hàm Thượng Tướng tại Đại Chiến Khu Long Vũ."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,938 @@
+{
+  "id": "ch3_ep1",
+  "episodeOrder": 7,
+  "chapterNumber": 3,
+  "title": "Chương III · Hồi 7: Chiếc Chìa Khóa Kho Súng",
+  "ql2ChapterId": "nco",
+  "rankRange": "Hạ Sĩ",
+  "nextChapterId": "ch3_ep2",
+  "entryNodeId": "ch3_ep1_01_chiec_chia_khoa",
+  "summary": "Nhận quân hàm Hạ Sĩ và chiếc chìa khóa kho súng Tiểu Đội 1 Thiên Minh từ tay Trung sĩ Nguyễn Hoàng Nam; đối mặt với sai lệch nửa đêm về ba quả pháo sáng thiếu hụt cùng hai số súng lệch cột trước cuộc thanh tra đột xuất của tiểu đoàn.",
+  "nodes": [
+    {
+      "id": "ch3_ep1_01_chiec_chia_khoa",
+      "type": "narration",
+      "location": "Cửa kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Mưa rây tháng Ba vừa ngớt bên sườn núi đá vôi, để lại thứ hơi ẩm lạnh buốt thấm qua lớp vải bạt quân phục dọc hành lang nhà cấp bốn ở Thiên Minh. Mùi đất đỏ nhão nhoét sau trận gió đêm hòa cùng mùi dầu bảo quản vũ khí nồng hắc hắt ra từ khe cửa sắt sơn xanh lốm đốm rỉ sét.\n\nTrên hai bên ve áo bạc màu sương gió của tôi sáng nay vừa khâu thêm một vạch vàng Hạ Sĩ. Đó là bậc quân hàm đầu tiên tách người lính ra khỏi hàng ngũ chỉ biết cúi đầu chạy theo tiếng còi báo động, buộc đôi vai phải gánh thêm một phần giấc ngủ của cả tiểu đội.\n\nĐứng trước ổ khóa đồng cỡ đại, tôi đón từ tay Trung sĩ Nguyễn Hoàng Nam xâu chìa khóa nặng trịch bọc gọn trong mảnh vải dầu đen bóng. Miếng kim loại lạnh ngắt lọt thỏm vào lòng bàn tay, nhưng sức nặng âm ỉ của nó như kéo trĩu cả cổ tay áo. Trong túi ngực trái, cuốn sổ bìa xanh thầy Trần Quốc Vinh trao ngày rời Quang Trung ép sát vào nhịp tim.\n\nTừ giờ phút này, hai mươi bốn khẩu súng trường, hai khẩu trung liên cùng từng hòm đạn dự phòng của chín anh em không còn là mấy dòng chữ khô khốc trên bảng kiểm kê nữa. Sinh mạng của cả tiểu đội trong những đêm sương mù đặc quánh sẽ đặt cược vào việc ổ khóa đồng này có bật mở trơn tru ngay trong ba nhịp thở đầu tiên hay không.",
+      "next": "ch3_ep1_02_nam_giao_chia"
+    },
+    {
+      "id": "ch3_ep1_02_nam_giao_chia",
+      "type": "dialogue",
+      "location": "Hiên kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "calm",
+      "text": "Chú đứng im chút cho anh coi lại cái dây đeo súng với mép khuy bao xe đã. Mới khâu vạch Hạ Sĩ mà cái khóa đồng còn cài lệch nửa phân thì lát nữa đứng trước anh em coi sao đặng.\n\nCầm chắc cái chìa khóa đồng ni vô cạp quần nghe chưa, đừng có quăng bừa trên đầu giường như hồi còn làm binh nhì. Hồi trước chú chỉ việc lau sạch nòng khẩu súng của riêng mình rồi ngủ kỹ tới ca gác, có sứt mẻ chi thì tự mình chịu với ban chỉ huy.\n\nNay lên Tiểu đội phó rồi, chú phải giữ cho súng của tám thằng khác không kẹt kim hỏa, không rỉ lò xo lúc tụi nó mệt nhoài nằm ngủ say sau ca tuần tra mưa. Lính tráng mệt được, chứ không được để lưng đồng đội lạnh. Cái nghề ni sai một li là mất một nhà, không có chỗ cho chữ 'chắc là đủ' mô.\n\nTối nay vô ca trực nhớ rà kỹ lại từng giá súng, kiểm từng quả pháo sáng với cuốn sổ bàn giao cũ dưới ngăn bàn trực. Có chỗ mô cấn số liệu thì báo thẳng cho anh liền trước khi mặt trời mọc, tuyệt đối đừng để qua đêm.",
+      "branches": [
+        {
+          "condition": { "flag": "giu_kin_su_co_kho_dan" },
+          "next": "ch3_ep1_03a_du_am_kho_dan"
+        },
+        {
+          "condition": { "flag": "bao_cao_thieu_dan_thien_minh" },
+          "next": "ch3_ep1_03b_du_am_minh_bach"
+        }
+      ],
+      "next": "ch3_ep1_03b_du_am_minh_bach"
+    },
+    {
+      "id": "ch3_ep1_03a_du_am_kho_dan",
+      "type": "narration",
+      "location": "Hiên kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "tense",
+      "text": "Câu dặn mộc mạc mà rành rọt của anh Nam khiến sau gáy tôi bỗng ran rát như bị đầu kim châm. Trong đầu tôi chợt hiện lại buổi chiều mưa dầm mấy tuần trước, khi phát hiện hai hòm đạn dự phòng dưới góc tường ẩm mốc ở Thiên Minh và tôi đã chọn cách tự xoay xở phơi sấy lén sau bếp để giữ kín tiếng cho tiểu đội.\n\nHồi ấy, anh em vỗ vai khen tôi biết điều, không để đại đội trừ điểm thi đua vì lỗi bảo quản. Nhưng lúc đầu ngón tay chạm vào từng khía răng cưa lạnh lẽo của chiếc chìa khóa kho súng hôm nay, tôi mới thấm thía ranh giới giữa nghĩa khí và tắc trách mỏng như tờ giấy dầu bọc đạn.\n\nNếu một vết che giấu cũ kéo theo một viên đạn lép hay một ổ khóa kẹt giữa rừng đêm, người gánh hậu quả không còn là tờ giấy kiểm điểm nữa. Người trả giá sẽ là chính đồng đội đang siết cò ngoài vọng gác.",
+      "next": "ch3_ep1_04_soi_quang_trung"
+    },
+    {
+      "id": "ch3_ep1_03b_du_am_minh_bach",
+      "type": "narration",
+      "location": "Hiên kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Tôi xoay thử chiếc chìa khóa đồng hai vòng trong lòng bàn tay, tiếng lẫy sắt nhảy tách gọn gàng giữa khoảng hiên yên ắng khiến lồng ngực dịu xuống đôi chút. Lần thẳng thắn báo cáo tỷ lệ đạn ẩm lên đại đội ở Thiên Minh để xin đổi lô mới từng khiến tôi bị nhắc nhở mất điểm thi đua hồi tháng trước.\n\nNhưng bù lại, cả tiểu đội bước vào mùa mưa lạnh với những hòm đạn khô ráo, không một viên nào bị xịt hạt nổ lúc diễn tập đêm. Tôi chợt hiểu ra sổ sách quân ngũ không sợ con số xấu, nó chỉ sợ những con số đẹp được tô vẽ để che mắt người đi sau.\n\nKhi anh Nam quay người bước xuống bậc thềm sân đất đỏ kiểm tra kíp gác chiều, tôi rút cuốn sổ bìa xanh ra khỏi túi áo ngực, khẽ vuốt lại mép giấy đã sờn vì mồ hôi.",
+      "next": "ch3_ep1_04_soi_quang_trung"
+    },
+    {
+      "id": "ch3_ep1_04_soi_quang_trung",
+      "type": "narration",
+      "location": "Phòng trực kho vũ khí — Thiên Minh",
+      "mood": "calm",
+      "text": "Mở cánh cửa sắt nặng nề bước vào bên trong, mùi dầu súng hòa quyện với hơi vôi tường cũ phả thẳng vào mặt. Căn phòng nhỏ chỉ có hai dãy giá gỗ lim, một tủ sắt đựng đạn niêm phong, thùng pháo sáng đặt trên kệ cao và chiếc bàn gỗ tạp nằm sát ô cửa sổ chấn song sắt.\n\nÁnh sáng xám đục hắt qua ô lưới sắt rọi xuống mặt bàn còn hằn những vết mực tím loang lổ của người giữ kho tiền nhiệm. Dưới góc tường ẩm hơi đá, hai gói hạt hút ẩm cũ đã ngả màu nâu sẫm nằm lăn lóc cạnh chân tủ B.\n\nTôi lật trang sổ bìa xanh có nét chữ nghiêng ngay ngắn của Đại úy Trần Quốc Vinh từ ngày ở Học Viện Quân Sự Quang Trung. Trong bầu không khí tĩnh lặng đến mức nghe rõ tiếng gió rít ngoài mái tôn, câu nhắc của thầy năm nào lại hiện lên rõ mồn một như vừa mới vang bên giảng đường gạch cũ.",
+      "branches": [
+        {
+          "condition": { "flag": "che_giau_loi_khang" },
+          "next": "ch3_ep1_04a_vet_muc_quang_trung"
+        },
+        {
+          "condition": { "flag": "bao_cao_trung_thuc_quang_trung" },
+          "next": "ch3_ep1_04b_trang_so_sach_quang_trung"
+        }
+      ],
+      "next": "ch3_ep1_04b_trang_so_sach_quang_trung"
+    },
+    {
+      "id": "ch3_ep1_04a_vet_muc_quang_trung",
+      "type": "narration",
+      "location": "Phòng trực kho vũ khí — Thiên Minh",
+      "mood": "tense",
+      "text": "Ngón tay tôi dừng lại ở mép trang giấy nơi tôi từng tự nhắc mình về đêm trực hành lang ở Quang Trung — đêm tôi đã gánh thay phần ghi thiếu sổ trực cho Lê Minh Khang để cả hai khỏi bị phạt nặng. Tình bạn giữa hai thằng lính trẻ từ hôm đó gắn bó hơn thật, nhưng cái bóng của một vết gợn hồ sơ vẫn lặng lẽ nằm lại trong ngăn lưu trữ cán bộ.\n\nCàng ngẫm lại, tôi càng nhận ra cái giá của một chữ ký nương tay chưa bao giờ dừng ở đêm hôm đó. Ở trường học nó chỉ là mấy vòng chạy sân sỏi đỏ, còn trên chốt tiền tiêu này nó có thể biến thành kẽ hở chết người ngay lúc pháo sáng vừa tắt.\n\nThầy Vinh từng bảo chậm ba nhịp là mất nửa đội hình, còn viết sai một dòng là tự cột đá vào chân mình. Bây giờ ngồi trước cuốn sổ bàn giao kho súng dày cộp của người tiền nhiệm để lại, tôi tự nhủ tuyệt đối không thể lặp lại kiểu nương tay ấy với những con số vũ khí.",
+      "next": "ch3_ep1_05_khang_ghe_hien"
+    },
+    {
+      "id": "ch3_ep1_04b_trang_so_sach_quang_trung",
+      "type": "narration",
+      "location": "Phòng trực kho vũ khí — Thiên Minh",
+      "mood": "calm",
+      "text": "Trang giấy đầu vẫn sạch sẽ như buổi sáng rời cổng Quang Trung, không có vết gạch xóa chắp vá nào. Thầy Vinh từng nói đừng viết điều mình chưa làm được, và sự thẳng thắn từ những ngày học viên ấy đã giúp tôi giữ được thói quen đối chiếu từng dòng trước khi hạ bút.\n\nTôi đặt quyển sổ bìa xanh sang một góc gọn gàng bên cạnh hộp mực dấu của tiểu đội, cảm thấy hơi ấm quen thuộc từ những ngày gác đêm đầu tiên ùa về. Giữa căn kho lạnh hơi đá vôi, kỷ luật giấy tờ hóa ra lại là điểm tựa vững vàng nhất để người lính không bị cuốn trôi trong hỗn loạn.\n\nTôi lấy khăn khô lau lớp bụi mỏng trên mặt bàn trực, xếp lại cây bút bi và thước gỗ song song bên cuốn sổ bàn giao bìa cứng. Ngoài hiên, tiếng bước chân quen thuộc lạo xạo trên sỏi ướt vang lên, kèm theo tiếng bật nắp kim loại rất khẽ.",
+      "next": "ch3_ep1_05_khang_ghe_hien"
+    },
+    {
+      "id": "ch3_ep1_05_khang_ghe_hien",
+      "type": "dialogue",
+      "location": "Hành lang nhà kho Thiên Minh — Chiều muộn",
+      "speaker": "khang",
+      "speakerTitle": "Binh nhất Lê Minh Khang",
+      "mood": "warm",
+      "text": "Chà, Hạ Sĩ mới nhìn oai quá ha, đứng giữ cửa kho súng mà lưng thẳng băng như cây thước thợ mộc vậy đó. Tui mới đi tuần đường suối dưới chân dốc về, bùn dính tới đầu gối mà vẫn phải tạt ngang ngó cái vạch vàng trên cổ áo ông một cái cho đã mắt.\n\nMà nè, nói nhỏ ông nghe chuyện này đừng có chủ quan nghen. Hồi trưa mấy ông liên lạc đại đội đi ngang có xì xào với nhau là tuần này ban hậu cần quân khí tiểu đoàn rục rịch đi kiểm tra đột xuất mấy chốt tiền tiêu đó. Tụi nó đi không báo trước đâu, xe U-oát nổ máy dưới chân đèo là nửa tiếng sau gõ cửa kho liền.\n\nÔng cũng biết tánh mấy cha trợ lý quân khí rồi đó, người ta không nói nhiều, cứ lật thẳng sổ gốc ra đối chiếu từng số súng với từng ống pháo sáng. Đừng có để thằng tiểu đội phó cũ nó quăng cục xương khô cho ông gặm thay rồi mất oan cái quân hàm mới gắn sáng nay.\n\nĐừng có nói chuyện kiểu trên giấy với tui, tối nay rà kỹ lại tủ B đi. Còn nghe nhau là còn đội hình, lúc nào cần người phụ cầm đèn pin soi giá súng thì cứ hú tui một tiếng.",
+      "effects": [
+        { "addRel": { "char": "khang", "delta": 1 } }
+      ],
+      "next": "ch3_ep1_06_chuyen_xe_bac_bay"
+    },
+    {
+      "id": "ch3_ep1_06_chuyen_xe_bac_bay",
+      "type": "narration",
+      "location": "Bãi đất trước sân tiểu đội Thiên Minh — 16 giờ 30",
+      "mood": "warm",
+      "text": "Khang vừa chạm hai cái lên vai tôi theo quy ước cũ rồi rẽ ra phía giếng nước thì tiếng máy dầu ì ầm nặng nhọc vọng lên từ con dốc đất đỏ phía tây. Chiếc xe tải quân sự hai cầu lấm lem bùn vàng từ đầu mui tới chắn bùn chậm rãi bò qua cổng tre, dừng khựng lại trước sân tiểu đội.\n\nCánh cửa sắt bật mở, bác tài Phan Văn Bảy nhảy phịch xuống đất, vỗ bộp bộp vào vạt áo sũng mồ hôi rồi cười híp mắt nhìn vạch vàng mới trên ve áo tôi. Đằng sau thùng xe phủ bạt xanh, mấy thùng pin đèn, dầu lau súng và bao gạo mới được anh em xúm vào vác xuống giữa tiếng í ới rộn ràng hẳn cả một góc núi đá vôi.\n\nMùi khói dầu máy trộn với mùi củi ướt từ bếp anh nuôi bay ngang qua hiên làm bầu không khí nặng nề của chốt tiền tiêu dịu đi đáng kể. Tôi đứng bên bậc thềm đếm từng kiện hàng vừa hạ xuống, cẩn thận gạch dấu nhận hàng vào mảnh giấy nháp kẹp bên hông.",
+      "next": "ch3_ep1_07_bay_tin_tuyen_duoi"
+    },
+    {
+      "id": "ch3_ep1_07_bay_tin_tuyen_duoi",
+      "type": "dialogue",
+      "location": "Bên thành xe tải — Sân Thiên Minh",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "warm",
+      "text": "Ới dào, bữa nay lên chức Tiểu đội phó rồi hả chú em? Nhìn sáng sủa ghê chưa kìa! Khoan vội khiêng hàng đã, thò tay vô đây tui cho viên kẹo gừng giấu trong hộc táp-lô cho ấm cổ nè, gió núi chiều nay lạnh teo luôn đó.\n\nNói thiệt với chú em, đường dốc tới đâu xe cũng bò qua, miễn còn dầu với còn người, nhưng mấy bữa nay tuyến tiểu đoàn làm giấy tờ gắt gao lắm nha. Hồi sáng tui bốc hàng dưới kho tổng thấy cậu Vũ Minh Quang khóa chú ngồi ngay bàn tham mưu hậu cần, cầm cây bút máy vặn nắp ba vòng liên tục mà soi từng tờ phiếu xuất kho.\n\nCậu ta còn hỏi tui tuần trước xe chở lên Thiên Minh có thiếu ống pháo sáng nào không nữa chớ. Hôm mưa lớn kẹt lầy dưới khe đá, tiểu đội mình có xin tạm tui một ống pháo sáng để dẫn đường xe bò lên dốc, tui ký nháp vô sổ tay lái xe rồi mà hổng biết trên kho chú ghi vô sổ cái chưa. Lát tối chú nhớ dòm lại cho kỹ nghen!",
+      "effects": [
+        { "addRel": { "char": "bay", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": {
+            "all": [
+              { "charAlive": "gia_lang" },
+              { "notFlag": "gia_lang_hi_sinh" }
+            ]
+          },
+          "next": "ch3_ep1_08a_gia_lang_ghe_cong"
+        }
+      ],
+      "next": "ch3_ep1_08b_nho_ban_suong_mu"
+    },
+    {
+      "id": "ch3_ep1_08a_gia_lang_ghe_cong",
+      "type": "dialogue",
+      "location": "Cổng gác ngoài Thiên Minh — Hoàng hôn",
+      "speaker": "gia_lang",
+      "speakerTitle": "Già Kiên (Bản Sương Mù)",
+      "condition": { "charAlive": "gia_lang" },
+      "mood": "calm",
+      "text": "Chào anh chỉ huy trẻ mới đeo vạch vàng trên áo. Già mang xuống cho mấy chú bộ đội gùi gừng già với bó lá xông giải cảm, mấy bữa ni sương núi xuống sớm, đêm gác ngoài mỏm đá lạnh thấu xương lắm.\n\nTừ bữa mấy chú cắt người xuống giúp dân Bản Sương Mù dời mái nhà tránh pháo, lũ trẻ trong bản vẫn hay chỉ tay lên ngọn núi đá vôi hỏi thăm bộ đội Thiên Minh hoài. Cây gậy trúc của già đi qua lối mòn suối cạn sáng nay thấy dấu giày đinh lạ còn mới lắm, không phải dấu lính mình.\n\nRừng không giấu dấu chân người vội đâu các chú à. Mấy chú giữ súng trong kho cho chắc tay, đếm từng ống lửa báo hiệu cho rõ ràng, kẻo tới lúc sương mù kéo xuống kín khe đá thì không kịp trở tay với tụi nó mô.",
+      "effects": [
+        { "addRel": { "char": "gia_lang", "delta": 1 } },
+        { "addStat": { "stat": "NhanTamDan", "delta": 2 } }
+      ],
+      "next": "ch3_ep1_09_linh_tram_vo_tuyen"
+    },
+    {
+      "id": "ch3_ep1_08b_nho_ban_suong_mu",
+      "type": "narration",
+      "location": "Cổng gác ngoài Thiên Minh — Hoàng hôn",
+      "mood": "somber",
+      "text": "Chiều buông nhanh xuống dãy núi đá vôi, kéo theo dải sương xám đặc trùm kín triền thung lũng hướng về phía Bản Sương Mù. Nhìn xuống khoảng rừng lặng ngắt không còn ánh khói bếp quen thuộc, lòng tôi chợt chùng xuống khi nhớ tới bóng lưng còng của Già Kiên trong làn pháo kích tuần trước.\n\nBên chân hàng rào tre, mấy gốc sả rừng già làng từng chỉ cách trồng để xua muỗi mùa mưa nay đã đâm chồi xanh non sau trận mưa rây. Không còn tiếng bước chân chậm rãi trên lối mòn dẫn lên vọng gác, chỉ còn gió thung lũng rít qua những hốc đá xám.\n\nTiếng gậy trúc gõ xuống bậc đá của ông như vẫn còn văng vẳng đâu đây câu dặn rằng rừng không giấu dấu chân người vội. Tôi siết chặt chiếc chìa khóa đồng lạnh buốt trong túi áo, tự nhắc mình từng viên đạn và từng ống pháo sáng trong kho lúc này đều gắn với sự bình yên của những mái nhà phía dưới chân núi.",
+      "next": "ch3_ep1_09_linh_tram_vo_tuyen"
+    },
+    {
+      "id": "ch3_ep1_09_linh_tram_vo_tuyen",
+      "type": "dialogue",
+      "location": "Phòng vô tuyến dã chiến — Thiên Minh",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "tense",
+      "text": "Anh ơi, khoan về kho súng đã, em có công văn chuyển tiếp từ ban tham mưu tiểu đoàn vừa theo xe bác Bảy lên nè. Lát nữa đồng chí Vũ Minh Quang cũng sẽ ghé bàn giao mẫu biểu mới trước khi xe quay đầu xuống núi.\n\nMà anh nhìn màn hình tần số phụ đi, hai tiếng nay nhiễu nền tự nhiên giảm hẳn xuống mức phẳng lì bất thường luôn. Sóng sạch quá mới là sóng có bẫy đó anh, hồi đợt trước mình đổi tần số kịp nên mới thoát quả trinh sát điện tử của tụi nó.\n\nĐêm nay có thể tụi thám báo Thiết Phong lại bò sát khe suối dò đường nữa đó. Anh rà lại số pháo sáng báo động trong kho cho chắc tay nghen, có gì khẩn thì bấm hai hồi ngắn qua dây chuông nối trực tiếp tới bàn em.",
+      "effects": [
+        { "addRel": { "char": "linh", "delta": 1 } }
+      ],
+      "branches": [
+        {
+          "condition": { "flag": "hop_tac_voi_quang_quang_trung" },
+          "next": "ch3_ep1_10a_quang_nhac_kheo"
+        },
+        {
+          "condition": { "flag": "canh_tranh_thang_quang" },
+          "next": "ch3_ep1_10b_quang_lenh_lanh"
+        }
+      ],
+      "next": "ch3_ep1_10b_quang_lenh_lanh"
+    },
+    {
+      "id": "ch3_ep1_10a_quang_nhac_kheo",
+      "type": "dialogue",
+      "location": "Hành lang ban chỉ huy chốt — Thiên Minh",
+      "speaker": "quang",
+      "speakerTitle": "Hạ sĩ tham mưu Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Chúc mừng cậu lên Hạ Sĩ nhé. Nhìn vạch vàng trên cổ áo cậu, tôi lại nhớ buổi tụi mình ngồi chung bàn sa bàn ở Quang Trung thức gần tới sáng để tính đường tiếp vận vượt dốc.\n\nTôi nói ngắn gọn trước khi xe bác Bảy quay đầu xuống tiểu đoàn đây. Trên bàn tham mưu hậu cần, hồ sơ bàn giao kho súng của Tiểu Đội 1 Thiên Minh đang có một dấu chấm hỏi đỏ về số lượng pháo sáng và đối chiếu seri súng trường từ tháng trước.\n\nCảm tính không giữ nổi chốt đâu, cậu thừa hiểu điều đó mà. Trợ lý quân khí tiểu đoàn đang chuẩn bị lịch phúc tra chéo tất cả các chốt tiền tiêu; tối nay cậu đừng tin vào mấy dòng chữ cũ của người tiền nhiệm, cứ bóc từng con số thật ra mà kiểm lại cho chắc tay.\n\nMà nè, tính bằng xác suất đi: chỉ cần một buổi tối kiểm kỹ trước khi đoàn xuống là cậu tránh được cả tháng rắc rối hành chính đấy. Tôi giữ sẵn bản sao đối chiếu ở phòng tham mưu rồi, có gì cần tra số phiếu cũ cứ nhắn qua điện đài của Linh.",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": 1 } }
+      ],
+      "next": "ch3_ep1_11_dung_doi_phao_sang"
+    },
+    {
+      "id": "ch3_ep1_10b_quang_lenh_lanh",
+      "type": "dialogue",
+      "location": "Hành lang ban chỉ huy chốt — Thiên Minh",
+      "speaker": "quang",
+      "speakerTitle": "Hạ sĩ tham mưu Vũ Minh Quang",
+      "mood": "tense",
+      "text": "Đồng chí Hạ Sĩ mới nhận kho lưu ý giúp tôi biên bản bàn giao mẫu số ba này. Trên sổ cái tiểu đoàn, mục vật tư tín hiệu và danh mục số hiệu súng trường của Tiểu Đội 1 Thiên Minh vẫn đang lệch khớp so với báo cáo cuối quý.\n\nTính bằng xác suất đi: nếu một chốt tiền tiêu có hai mươi phần trăm sai số giấy tờ thì khi pháo kích nổ ra, khả năng thiếu đạn đúng loại hoặc kẹt khóa nòng sẽ tăng gấp ba lần. Ở ban tham mưu chúng tôi không chấp nhận lý do quên ký hay bận tuần tra.\n\nCảm tính không giữ nổi chốt đâu. Tôi chuyển đủ bản đối chiếu gốc về đây rồi, nếu đợt kiểm tra tới của tiểu đoàn phát hiện thiếu khớp thì chính người đứng tên nhận chìa khóa kho hôm nay phải chịu trách nhiệm kỷ luật trực tiếp.\n\nTôi xoay nắp bút ba vòng như thói quen cũ để nhắc mình nhớ kỹ từng chi tiết trước khi đặt bút xác nhận, mong cậu cũng làm đúng như vậy với kho súng này. Xe bác Bảy sắp nổ máy quay đầu rồi, cậu giữ sức cho ca trực đầu tiên.",
+      "next": "ch3_ep1_11_dung_doi_phao_sang"
+    },
+    {
+      "id": "ch3_ep1_11_dung_doi_phao_sang",
+      "type": "dialogue",
+      "location": "Trước cửa kho vũ khí Thiên Minh — 19 giờ 30",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "urgent",
+      "text": "Này ông phó mới, mở cửa kho cấp tốc cho tao đổi cây súng trường khác với lấy thêm hai ống pháo sáng bỏ túi đi! Cây súng hôm qua tao vác đi suối về lò xo băng đạn hơi rít, mà sáng mai bốn giờ rưỡi tổ tao đã phải luồn khe đá đón lõng rồi.\n\nChờ tới sáng là tụi nó rút sạch rồi! Mấy ông trên cứ giấy tờ với biên bản mãi, ngoài rừng thám báo nó có đứng chờ mình ký sổ xong mới nổ súng đâu.\n\nHôm trước xuống khe đá gặp sương mù đặc quánh, hai thằng đi đầu suýt lạc nhau chỉ vì thiếu ống pháo sáng phát tín hiệu khẩn. Tao không đòi cho riêng mình đâu, tổ trinh sát đi trước mà súng rít thì cả chốt phía sau cũng vạ lây.\n\nMà hồi trưa anh Nam nói tối nay phải khóa niêm phong tủ dự phòng trước tám giờ, ông giải quyết lẹ cho tao để tao còn về lau lưỡi lê ngủ sớm một chút!",
+      "next": "ch3_ep1_12_choice_toi_giao_ca"
+    },
+    {
+      "id": "ch3_ep1_12_choice_toi_giao_ca",
+      "type": "choice",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "tense",
+      "text": "Trời đã tối sập, gió núi lùa qua mái tôn lạnh buốt. Hoàng Tiến Dũng đang sốt ruột chờ đổi súng và xin thêm pháo sáng, trong khi quy định khóa kho và kiểm kê buổi tối đang sát giờ.",
+      "choices": [
+        {
+          "id": "c_kiem_tra_sung_dung",
+          "label": "Bắt Dũng đứng chờ, tự tay tháo kiểm tra kim hỏa khẩu súng cũ và lập phiếu ký nhận hai bên trước khi phát pháo sáng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": -1 } },
+            { "addRel": { "char": "dung", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_13a_chuan_bi_chat_che"
+        },
+        {
+          "id": "c_giao_nhanh_giu_suc",
+          "label": "Cho Dũng đổi nhanh súng trên giá hai và cầm tạm hai quả pháo sáng không cần ghi phiếu ngay để anh em ngủ sớm giữ sức",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": -4 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "dung", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_13b_lam_tat_buoi_toi"
+        },
+        {
+          "id": "c_goi_loc_phu_lau_dau",
+          "label": "Gọi Bùi Văn Lộc qua cùng lau dầu giá súng, dạy Lộc cách kiểm tra chốt kim hỏa và ghi sổ xuất nhập chuẩn từng dòng",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": 1 } },
+            { "addRel": { "char": "loc", "delta": 2 } }
+          ],
+          "next": "ch3_ep1_13c_loc_phu_lau_sung"
+        },
+        {
+          "id": "c_hoan_phat_giu_niem_phong",
+          "label": "Kiên quyết không phá niêm phong thùng pháo sáng dự phòng ban đêm, hẹn Dũng 4 giờ sáng tập trung xuất kho đúng quy trình",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addRel": { "char": "dung", "delta": -1 } }
+          ],
+          "next": "ch3_ep1_13d_giu_niem_phong_cung"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_13a_chuan_bi_chat_che",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — 20 giờ 10",
+      "mood": "calm",
+      "text": "Dũng tặc lưỡi đứng dựa vai vào khung cửa sắt, tay vuốt quai mũ sắt liên tục vì sốt ruột, nhưng tôi vẫn bình tĩnh trải mảnh vải dầu ra mặt bàn. Từng chi tiết bệ khóa nòng và lò xo đẩy về được tháo rời dưới ánh đèn pin bọc vải đỏ.\n\nHóa ra chẳng phải súng hỏng, chỉ là hai hạt cát suối kẹt cứng trong rãnh trích khí sau buổi luồn khe hôm qua. Tôi dùng que thông nòng lau sạch vết bùn, tra hai giọt dầu mỏng rồi lắp lại nghe đánh cách dứt khoát.\n\nDũng cầm lại khẩu súng quen tay, gật gù cười khà rồi vui vẻ ký tên vào phiếu mượn hai quả pháo sáng trước khi sải bước về phòng ngủ.",
+      "next": "ch3_ep1_14_dem_kiem_ke"
+    },
+    {
+      "id": "ch3_ep1_13b_lam_tat_buoi_toi",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — 19 giờ 45",
+      "mood": "tense",
+      "text": "Nghĩ tới quãng đường núi trơn như đổ mỡ lúc bốn giờ sáng mai, tôi gật đầu để Dũng tự nhấc khẩu súng dự bị trên giá hai và rút hai ống pháo sáng từ hộp giấy trên kệ cao. Dũng vỗ vai tôi cảm ơn gọn lỏn rồi biến mất vào hành lang tối.\n\nTiếng bước chân cậu ta nhỏ dần về phía dãy nhà ngủ, chỉ để lại mùi mồ hôi trộn với hơi đất lạnh quanh ngưỡng cửa kho. Tôi khép cánh cửa sắt lại, xoay chìa khóa một vòng cho đỡ trống trải trước gió đêm.\n\nChỉ mất chưa đầy năm phút để giải quyết xong ca giao súng, nhưng khi đứng giữa khoảng kho vắng lặng, một khoảng trống nhỏ trên hộp giấy đựng pháo sáng và chỗ giá súng vừa nhấc vội lại khiến tôi hơi chột dạ. Tôi tự nhủ lát nữa ngồi bàn trực sẽ ghi bổ sung sau.",
+      "next": "ch3_ep1_14_dem_kiem_ke"
+    },
+    {
+      "id": "ch3_ep1_13c_loc_phu_lau_sung",
+      "type": "dialogue",
+      "location": "Kho vũ khí Tiểu Đội 1 — 20 giờ 15",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "warm",
+      "text": "Dạ anh chỉ em tháo chốt này phải không anh? Hồi ở Quang Trung anh ngồi ngoài sân chỉ em cột dây ba lô từng vòng một, nay vô kho súng em cũng ráng nhớ kỹ y chang vậy để phụ anh một tay.\n\nAnh coi nè, chỗ rãnh khóa nòng khẩu của Dũng dính bụi đất đỏ khô cứng lại thành cục luôn rồi, may mà tối nay anh kêu em tháo ra chùi dầu chứ sáng mai vô suối bắn là kẹt đạn chắc luôn.\n\nCòn hai ống pháo sáng của Dũng mượn, em ghi rõ số lô với giờ giao vô nháp cho anh kiểm rồi đó. Anh đi trước kiểm tủ đạn đi, chỗ giá súng ngoài này em lau sạch sẽ với cột dây kiểm kê chặt rồi.",
+      "next": "ch3_ep1_14_dem_kiem_ke"
+    },
+    {
+      "id": "ch3_ep1_13d_giu_niem_phong_cung",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — 20 giờ 00",
+      "mood": "tense",
+      "text": "Tôi đặt bàn tay lên lớp sáp niêm phong thùng pháo sáng dự phòng, lắc đầu dứt khoát trước yêu cầu vội của Dũng. Dũng hừ nhẹ một tiếng, kéo mạnh quai mũ sắt cho đỡ bực dọc rồi quay gót đi thẳng ra sân tối mà không buồn chào.\n\nỞ chốt tiền tiêu, tôi hiểu sự sốt ruột của lính trinh sát khi đứng trước mũi đường rừng ẩm ướt. Thế nhưng nếu ai muốn rút khí tài cũng cho phá niêm phong ban đêm thì chỉ vài tuần là kho tiểu đội tan tác không còn dấu vết để đối chiếu.\n\nÁnh đèn pin đỏ quét dọc dãy tủ sắt còn nguyên dấu kẹp chì khiến lòng tôi yên tâm hơn đôi chút về kỷ luật giữ kho. Tôi vặn chặt chốt cửa sổ chấn song sắt, chuẩn bị bước vào ca kiểm tra sổ sách ban đêm.",
+      "next": "ch3_ep1_14_dem_kiem_ke"
+    },
+    {
+      "id": "ch3_ep1_14_dem_kiem_ke",
+      "type": "narration",
+      "location": "Bên trong kho vũ khí Tiểu Đội 1 — 22 giờ 30",
+      "mood": "tense",
+      "text": "Mười giờ rưỡi đêm, cả doanh trại Thiên Minh đã tắt đèn đi ngủ, chỉ còn ánh đèn dầu vàng vọt trên bàn trực hòa với quầng sáng đỏ từ chiếc đèn pin cầm tay. Tôi mở cuốn sổ bàn giao bìa cứng, bắt đầu rà từng cột số liệu theo đúng lời dặn của anh Nam lúc chiều.\n\nĐếm tới thùng pháo sáng tín hiệu ở tầng kệ trên, sống lưng tôi bỗng lạnh toát: trên sổ bàn giao ghi tồn kho tròn hai mươi ống, nhưng đếm đi đếm lại ba lần chỉ còn đúng mười bảy ống — hụt mất ba quả pháo sáng không hề có phiếu xuất! Ngay dưới ngăn tủ B, sợi dây đồng niêm phong hòm đạn dự phòng cũng bị xoắn lỏng một đầu, lớp sáp đỏ nứt toác vì hơi ẩm.\n\nChưa dừng lại ở đó, khi rọi đèn đọc từng con số khắc chìm trên hộp khóa nòng ở giá súng số hai, tôi phát hiện hai khẩu súng mang số hiệu TM-418 và TM-429 đã bị tráo đổi vị trí với danh sách ký nhận của người tiền nhiệm. Bên lề trang sổ chỉ có một dòng bút chì mờ nhòe viết vội ba chữ 'Chốt ba đổi' không ngày tháng và không chữ ký xác nhận.\n\nNgoài cửa sổ chấn song, gió đêm rít từng hồi dài qua rặng tre đầu dốc, như thể bất cứ lúc nào bóng đèn dầu leo lét trên mặt bàn cũng có thể phụt tắt. Chiếc đồng hồ đeo tay chỉ mười một giờ bốn mươi — chỉ còn hơn năm tiếng nữa là còi báo thức ca tuần tra sáng sẽ vang lên.",
+      "next": "ch3_ep1_15_choice_so_kho_sung"
+    },
+    {
+      "id": "ch3_ep1_15_choice_so_kho_sung",
+      "type": "choice",
+      "location": "Bàn trực kho vũ khí Tiểu Đội 1 — Nửa đêm",
+      "mood": "tense",
+      "text": "Ba quả pháo sáng biến mất khỏi sổ sách, hai số hiệu súng TM-418 và TM-429 lệch cột bàn giao, còn đồng hồ đã chỉ gần nửa đêm trước ca tuần tra năm giờ sáng. Bạn xử lý sai lệch này thế nào?",
+      "choices": [
+        {
+          "id": "c_sua_so_minh_bach",
+          "label": "Thức trắng đêm lục thùng sổ trực cũ để truy tung tích 3 quả pháo sáng và 2 số súng lệch, gạch mực đỏ sửa sổ minh bạch",
+          "effects": [
+            { "setFlag": "sua_so_kho_sung_minh_bach" },
+            { "addStat": { "stat": "KyLuat", "delta": 6 } },
+            { "addStat": { "stat": "TiepTe", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addRel": { "char": "nam", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_so_kho_sung",
+                "title": "Đêm trắng đối chiếu sổ kho",
+                "entry": "Thức thâu đêm đối chiếu sổ trực cũ, truy rõ ba quả pháo sáng tiêu hao trong bão và chỉnh lại hai số súng TM-418, TM-429 minh bạch bằng mực đỏ."
+              }
+            }
+          ],
+          "next": "ch3_ep1_16a_dem_trang_so_sach"
+        },
+        {
+          "id": "c_hoi_khang_chot_3",
+          "label": "Men theo đường hào tối sang Chốt 3 gọi Khang dậy đối chiếu nhật ký bắn pháo sáng và lịch đổi súng tuần trước",
+          "effects": [
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } }
+          ],
+          "next": "ch3_ep1_16b_hoi_khang_chot_3"
+        },
+        {
+          "id": "c_danh_thuc_loc_kiem",
+          "label": "Đánh thức Bùi Văn Lộc qua phụ rọi đèn kiểm lại toàn bộ số seri trên ba giá súng và tìm cuống phiếu phát pháo sáng",
+          "effects": [
+            { "addRel": { "char": "loc", "delta": 1 } },
+            { "addStat": { "stat": "KyLuat", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_16c_danh_thuc_loc_kiem"
+        },
+        {
+          "id": "c_bo_qua_sai_lech",
+          "label": "Xoắn tạm dây niêm phong, ký nháy 'đã khớp kiểm kê' bên lề trang sổ rồi tắt đèn đi ngủ kịp ca tuần tra sáng",
+          "effects": [
+            { "setFlag": "bo_qua_sai_lech_kho_sung" },
+            { "addStat": { "stat": "KyLuat", "delta": -7 } },
+            { "addStat": { "stat": "TiepTe", "delta": -4 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "nam", "delta": -1 } },
+            {
+              "addJournal": {
+                "id": "jrn_so_kho_sung",
+                "title": "Nét ký vội dưới đèn dầu",
+                "entry": "Vì mệt và thiếu thời gian trước ca tuần tra sáng, tôi đã ký nháy cho qua khoản thiếu 3 quả pháo sáng và 2 số súng lệch cột trong sổ bàn giao."
+              }
+            }
+          ],
+          "next": "ch3_ep1_16d_ky_nhay_di_ngu"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_16b_hoi_khang_chot_3",
+      "type": "dialogue",
+      "location": "Hầm gác Chốt 3 — 00 giờ 45 sáng",
+      "speaker": "khang",
+      "speakerTitle": "Binh nhất Lê Minh Khang",
+      "mood": "tense",
+      "text": "Ai đó... ờ ông hả? Giờ này mà còn mò qua Chốt 3 là kho súng có chuyện rồi phải không? Khoan đã, để tui kéo áo khoác lên vai rồi bước ra mép hào nói nhỏ, kẻo mấy đứa ca sau thức giấc.\n\nTách... nghe ông nói vụ ba quả pháo sáng với hai cây súng TM-418, TM-429 là tui nhớ liền! Đêm giông sét tuần rồi bên tui bắn hai trái pháo sáng rọi khe đá chặn toán thám báo, còn một trái đưa bác Bảy soi đường kéo xe thuốc kẹt lầy dưới dốc.\n\nCòn hai cây súng kia là hôm anh em đi mưa về lau chung rồi xếp nhầm giá giữa Chốt 3 với kho chính, thằng phó cũ lười đối chiếu nên ghi đại chữ 'Chốt ba đổi' bằng bút chì đó. Đây nè, tờ giấy nháp anh Nam ký tạm cho tui hôm bão tui vẫn kẹp trong hộp thuốc lá sắt.\n\nGiờ hai giờ sáng rồi, sương lạnh thấm buốt cả hai vai mà năm giờ tụi mình còn ra tuyến. Ông tính thức tiếp viết lại sổ cho rành rọt hay kẹp đỡ tờ này vô rồi về chợp mắt một chút?",
+      "next": "ch3_ep1_17_choice_sau_khi_hoi"
+    },
+    {
+      "id": "ch3_ep1_16c_danh_thuc_loc_kiem",
+      "type": "dialogue",
+      "location": "Kho vũ khí Tiểu Đội 1 — 00 giờ 50 sáng",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "tense",
+      "text": "Dạ... anh gọi em có chuyện gì gấp lắm hả anh? Em mới ngủ được một chặp, để em xách đèn qua rọi phụ anh liền, anh đừng đứng ngoài gió lạnh hoài.\n\nAnh coi dưới khe ngăn kéo bàn trực kìa, có một miếng giấy can nhàu nát kẹp sát thanh gỗ! Em kéo ra thử nghen... Trời đất, trên này ghi rõ cây TM-418 giao cho anh Khang mượn tạm từ hôm tuần tra mưa, còn cây TM-429 chuyển sang giá phụ để thay cái kim hỏa bị mòn.\n\nCả ba cái vỏ đít ống pháo sáng đã bắn cũng có ghi ngày giờ bắn dưới đáy tờ giấy luôn nè anh, hai quả bắn đêm sương mù, một quả đưa xe bác Bảy. Nhưng mà đã gần hai giờ sáng rồi, tờ giấy bị rách mất góc dấu xác nhận của tiểu đội phó cũ... giờ mình sửa sổ lại hết hay sao anh?",
+      "next": "ch3_ep1_17_choice_sau_khi_hoi"
+    },
+    {
+      "id": "ch3_ep1_17_choice_sau_khi_hoi",
+      "type": "choice",
+      "location": "Bàn trực kho vũ khí Tiểu Đội 1 — 01 giờ 40 sáng",
+      "mood": "tense",
+      "text": "Nhờ kiểm tra cùng đồng đội, bạn đã lần ra nguồn gốc 3 quả pháo sáng và hai khẩu súng TM-418, TM-429. Tuy nhiên trời đã về khuya và giấy xác nhận gốc vẫn thiếu dấu hoàn chỉnh.",
+      "choices": [
+        {
+          "id": "c_lap_bien_ban_chuan",
+          "label": "Thức tiếp tới gần sáng để chuyển trả súng đúng giá, gạch mực đỏ sửa sổ và đính kèm tờ giải trình đầy đủ",
+          "effects": [
+            { "setFlag": "sua_so_kho_sung_minh_bach" },
+            { "addStat": { "stat": "KyLuat", "delta": 5 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addStat": { "stat": "SiKhi", "delta": -2 } },
+            { "addRel": { "char": "nam", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_so_kho_sung",
+                "title": "Sửa sổ trước giờ sáng",
+                "entry": "Cùng đồng đội truy ra nguồn gốc 3 quả pháo sáng và đổi trả đúng vị trí hai khẩu súng TM-418, TM-429, chỉnh sổ minh bạch bằng mực đỏ."
+              }
+            }
+          ],
+          "next": "ch3_ep1_16a_dem_trang_so_sach"
+        },
+        {
+          "id": "c_ghi_chu_tam_ngu_bu",
+          "label": "Kẹp tạm tờ giấy nháp vào bìa sau sổ cái rồi ký nháy 'đã kiểm đủ' để kịp chợp mắt trước ca tuần tra 5 giờ",
+          "effects": [
+            { "setFlag": "bo_qua_sai_lech_kho_sung" },
+            { "addStat": { "stat": "KyLuat", "delta": -5 } },
+            { "addStat": { "stat": "TiepTe", "delta": -3 } },
+            { "addStat": { "stat": "SiKhi", "delta": 1 } },
+            {
+              "addJournal": {
+                "id": "jrn_so_kho_sung",
+                "title": "Kẹp tạm mảnh giấy nháp",
+                "entry": "Đã biết nguyên nhân sai lệch pháo sáng và seri súng nhưng vì quá khuya nên ký nháy cho qua trên trang chính để kịp ngủ trước ca sáng."
+              }
+            }
+          ],
+          "next": "ch3_ep1_16d_ky_nhay_di_ngu"
+        },
+        {
+          "id": "c_bao_som_nam_xac_nhan",
+          "label": "Gõ cửa đánh thức Trung sĩ Nam ngay trong đêm để cùng đối chiếu chứng từ và ký xác nhận phụ lục sửa lỗi",
+          "effects": [
+            { "setFlag": "sua_so_kho_sung_minh_bach" },
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 1 } },
+            { "addRel": { "char": "nam", "delta": 2 } },
+            {
+              "addJournal": {
+                "id": "jrn_so_kho_sung",
+                "title": "Phụ lục ký đêm cùng anh Nam",
+                "entry": "Đánh thức Trung sĩ Nam ngay nửa đêm để cùng xác nhận lại số seri TM-418, TM-429 và 3 quả pháo sáng, khóa chặt hồ sơ trước bình minh."
+              }
+            }
+          ],
+          "next": "ch3_ep1_18_nam_ky_xac_nhan_dem"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_16a_dem_trang_so_sach",
+      "type": "narration",
+      "location": "Bàn trực kho vũ khí — 03 giờ 30 sáng",
+      "mood": "calm",
+      "text": "Hai giờ sáng, mí mắt nặng như đeo chì và hơi lạnh thung lũng thấm qua đế giày vải làm mười đầu ngón chân tê buốt. Tôi phải bốc nhúm lá trà khô nhai sống cho vị chát đắng xộc lên tận sống mũi để giữ đầu óc tỉnh táo trước từng trang sổ trực mốc meo.\n\nCuối cùng, toàn bộ manh mối cũng khớp lại như bánh răng đồng hồ: hai quả pháo sáng bắn soi khe đá trong đêm mưa tuần trước, một quả chuyển xe bác Bảy lúc sa lầy, cùng hai khẩu TM-418 và TM-429 bị xếp tráo giá sau trận tuần tra ướt.\n\nTôi lấy thước gỗ kẻ một đường mực đỏ thẳng tắp qua dòng bút chì mập mờ, ghi rõ số phiếu bổ sung, dán gọn mảnh giấy xác nhận vào trang phụ lục rồi bấm kẹp chì mới lên hòm tủ B. Khi ngả lưng xuống phản gỗ lúc gần bốn giờ sáng, tiếng gà rừng đã bắt đầu gáy rộ dưới chân núi.",
+      "next": "ch3_ep1_19_cong_dien_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_18_nam_ky_xac_nhan_dem",
+      "type": "dialogue",
+      "location": "Kho vũ khí Tiểu Đội 1 — 02 giờ 20 sáng",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "calm",
+      "text": "Không sao mô chú, gọi anh dậy lúc ni là đúng rồi, có chuyện đụng tới sổ sách súng đạn thì đừng bao giờ ngại phá giấc ngủ của chỉ huy. Chú đứng gần đèn dầu cho ấm tay rồi trải hết mấy tập giấy nháp ra đây.\n\nĐể anh soi kỹ lại hai cây TM-418 với TM-429 coi... ừ đúng rồi, hôm mưa bão đó chính tay anh ký nháp cho Khang mượn sang Chốt 3 mà thằng phó cũ hấn quên nhập sổ cái trước lúc đi học. Còn ba quả pháo sáng thì hai quả cứu tuyến khe đá, một quả soi đường cho xe bác Bảy.\n\nChú viết rõ ba quả pháo sáng vô cột tiêu hao đột xuất đi, anh ký làm chứng ngay dưới mép trang cho. Cái nghề ni sai một li là mất một nhà, nhưng biết thức đêm dựng lại cho ngay ngắn trước lúc mặt trời lên thì còn giữ được cả kho súng lẫn anh em.",
+      "next": "ch3_ep1_19_cong_dien_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_16d_ky_nhay_di_ngu",
+      "type": "narration",
+      "location": "Phòng ngủ Tiểu Đội 1 — 01 giờ 50 sáng",
+      "mood": "somber",
+      "text": "Tôi bấm nắp bút bi, hít một hơi ngắn rồi hạ nét ký nháy vào góc phải trang sổ ngay bên dưới dòng chữ bút chì mờ nhòe, viết thêm bốn chữ 'đã khớp kiểm kê'. Chắc hẳn một chốt tiền tiêu mưa gió quanh năm chẳng ai hơi đâu đi bới móc ba ống pháo sáng với hai số súng đổi chỗ trong cùng một tiểu đội.\n\nGấp cuốn sổ dày cất vào ngăn kéo gỗ, tôi xoắn chặt đầu dây đồng gãy trên tủ B cho gọn mắt rồi khóa cửa sắt bước về giường tầng. Nhìn qua ô cửa phòng ngủ tối om, tám người đồng đội vẫn đang say ngủ yên bình trước ca tuần tra sớm.\n\nThế nhưng khi nằm trùm chiếc chăn mỏng nghe gió thổi lùa qua mái tôn, chiếc chìa khóa đồng lót dưới gối cứ cấn vào mang tai lạnh buốt. Cảm giác bất an mơ hồ khiến tôi trằn trọc lật người mãi tới gần sáng mới thiếp đi được một chặp.",
+      "next": "ch3_ep1_19_cong_dien_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_19_cong_dien_thanh_tra",
+      "type": "dispatch",
+      "location": "Sân tiểu đội Thiên Minh — 06 giờ 10 sáng",
+      "mood": "urgent",
+      "text": "[CÔNG ĐIỆN CHỈ ĐẠO KHẨN — BAN HẬU CẦN & QUÂN KHÍ TIỂU ĐOÀN]\n\n\"Xe kiểm tra đột xuất của Ban Quân khí Tiểu đoàn đã vượt dốc đá Thiên Minh lúc 06 giờ 05. Yêu cầu Tiểu Đội 1 giữ nguyên hiện trạng giá súng tại vị trí, mở ngay cửa kho vũ khí và xuất trình đầy đủ sổ gốc bàn giao, nhật ký tiêu hao pháo sáng cùng niêm phong tủ dự phòng để đối chiếu với bản lưu tiểu đoàn trước 06 giờ 30.\"\n\nChưa kịp bưng bát cháo nóng trên chiếc bàn ăn gỗ tạp, tiếng máy xe U-oát gầm gừ gài cầu leo dốc bùn lầy đã rít lên ngay sát hàng rào tre trước cổng doanh trại, kéo theo tiếng còi tập hợp gấp gáp của trực ban.",
+      "next": "ch3_ep1_20_linh_bao_xe_vao_cong"
+    },
+    {
+      "id": "ch3_ep1_20_linh_bao_xe_vao_cong",
+      "type": "dialogue",
+      "location": "Lối đi trước phòng vô tuyến — Thiên Minh",
+      "speaker": "linh",
+      "speakerTitle": "Chiến sĩ vô tuyến Trần Mỹ Linh",
+      "mood": "urgent",
+      "text": "Anh ơi, đoàn kiểm tra tới sớm hơn dự kiến nửa tiếng luôn rồi! Em vừa nhận mã điện xác nhận từ trạm dưới đèo thì xe U-oát đã lù lù lên tới cổng tre rồi, tiếng còi trực ban thổi giục tập hợp ngoài sân nghe rát cả tai.\n\nEm thấy có đồng chí trợ lý quân khí mang cặp da đen với hai cán bộ kiểm kê ngồi băng trước, còn phía sau thùng xe là... là Vũ Minh Quang mang theo nguyên tập sổ đối chiếu bản lưu của tiểu đoàn đó anh!\n\nMấy ngón tay em gõ kiểm tra lại tín hiệu mà thấy lạnh ngắt luôn đây nè. Anh mau quay về mở sẵn cửa kho súng đi, đừng để đoàn phải đứng chờ ngoài sân mà bị ghi thêm lỗi tác phong!",
+      "next": "ch3_ep1_21_to_thanh_tra_vao_kho"
+    },
+    {
+      "id": "ch3_ep1_21_to_thanh_tra_vao_kho",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — 06 giờ 25 sáng",
+      "mood": "tense",
+      "text": "Đúng sáu giờ hai lăm, tổ thanh tra tiểu đoàn bước thẳng vào cửa kho còn vương mùi dầu bảo quản. Không chào hỏi dài dòng hay uống ngụm nước chè nào anh Nam mời ngoài hiên, viên trợ lý quân khí đeo đôi găng tay vải trắng muốt tự tay kiểm tra từng ổ khóa đồng.\n\nCả căn phòng kho nhỏ bé lập tức chìm vào bầu không khí đặc quánh, chỉ nghe tiếng đế giày da nện khẽ trên nền xi măng lạnh và tiếng giấy lật sột soạt. Anh Nam đứng nghiêm ngoài khung cửa sắt, ánh mắt thoáng lo âu hướng về phía bàn trực.\n\nViên trợ lý gõ nhẹ cán thước gỗ lên sợi dây niêm phong hòm đạn tủ B, đảo mắt qua hàng hộp pháo sáng trên kệ cao rồi mở phắt cuốn sổ bàn giao. Ngón tay trỏ bọc vải trắng dừng phắt lại ở cột tồn kho pháo sáng và danh mục số hiệu súng trường giá số hai.",
+      "branches": [
+        {
+          "condition": { "flag": "sua_so_kho_sung_minh_bach" },
+          "next": "ch3_ep1_22a_quang_doi_chieu_khop"
+        },
+        {
+          "condition": { "flag": "bo_qua_sai_lech_kho_sung" },
+          "next": "ch3_ep1_22b_phat_hien_sai_lech"
+        }
+      ],
+      "next": "ch3_ep1_22b_phat_hien_sai_lech"
+    },
+    {
+      "id": "ch3_ep1_22a_quang_doi_chieu_khop",
+      "type": "dialogue",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "speaker": "quang",
+      "speakerTitle": "Hạ sĩ tham mưu Vũ Minh Quang",
+      "mood": "calm",
+      "text": "Báo cáo đồng chí trợ lý, đây là bản sao lưu phiếu xuất pháo sáng và danh sách số hiệu TM-418, TM-429 ở cấp tiểu đoàn ạ. Để tôi đối chiếu chéo với phần ghi chú mực đỏ của đồng chí Hạ Sĩ ở đây.\n\nBa ống pháo sáng xuất trong bão và dẫn xe tiếp tế khớp đúng ngày giờ nhật ký vô tuyến; hai khẩu súng trên giá số hai đã xếp trả đúng vị trí và kẹp đầy đủ phụ lục xác nhận. Cậu thức cả đêm để dựng lại tập sổ này đúng không? Mắt cậu thâm quầng hết rồi kìa.\n\nĐồng chí trợ lý vừa ký xác nhận 'Đạt chuẩn' xong rồi đấy. Nói thật với cậu, trên bàn giấy tụi tôi sợ nhất những bản báo cáo sạch bóng mà rỗng ruột, còn những trang sổ có vết mực đỏ sửa lỗi trung thực thế này mới giữ được chốt.",
+      "effects": [
+        { "addRel": { "char": "quang", "delta": 1 } },
+        { "addStat": { "stat": "KyLuat", "delta": 2 } }
+      ],
+      "next": "ch3_ep1_28_ket_thuc_thanh_tra_dat"
+    },
+    {
+      "id": "ch3_ep1_22b_phat_hien_sai_lech",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "urgent",
+      "text": "Đầu ngón tay bọc găng trắng của viên trợ lý gõ cạch cạch lên dòng chữ 'đã khớp kiểm kê' có nét ký nháy của tôi nằm chình ình bên cạnh ô thiếu ba quả pháo sáng. Từng tiếng gõ khô khốc vang dội trong căn kho ẩm mốc như tiếng búa gõ thẳng vào thái dương.\n\nKhông dừng lại ở đó, anh ta lôi từ giá số hai ra khẩu súng mang số hiệu TM-418 nằm lệch hẳn khỏi vị trí ký nhận, rồi dùng mũi thước hất nhẹ đầu dây niêm phong xoắn tạm trên tủ B làm miếng sáp nứt rơi lộp bộp xuống nền xi măng. Mồ hôi lạnh túa ra râm ran sau gáy tôi dưới lớp áo bông mỏng.\n\nViên trợ lý đẩy gọng kính nhìn thẳng vào vạch vàng Hạ Sĩ mới khâu trên cổ áo tôi, yêu cầu xuất trình ngay chứng từ gốc giải trình ba quả pháo sáng và hai khẩu súng lệch cột trong vòng mười giây, nếu không sẽ lập biên bản đình chỉ giữ kho tại chỗ.",
+      "next": "ch3_ep1_23_quang_giuc_tra_loi"
+    },
+    {
+      "id": "ch3_ep1_23_quang_giuc_tra_loi",
+      "type": "dialogue",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "speaker": "quang",
+      "speakerTitle": "Hạ sĩ tham mưu Vũ Minh Quang",
+      "mood": "urgent",
+      "text": "Nhìn thẳng vào bảng đối chiếu đi đồng chí Hạ Sĩ! Trên bản lưu tiểu đoàn vẫn còn treo nợ ba quả pháo sáng chưa tất toán và hai số súng TM-418, TM-429 đứng khác cột hoàn toàn so với chữ ký của cậu.\n\nTính bằng xác suất đi: trong sổ kiểm kê vũ khí, một con số lệch không giải trình được đồng nghĩa với kẽ hở an toàn trực tiếp của cả chốt tiền tiêu. Cảm tính không giữ nổi chốt đâu!\n\nCậu có giữ phiếu gốc hoặc biên bản chuyển chốt hợp lệ trong ngăn bàn không? Đừng vòng vo mất thời gian nữa, tổ thanh tra còn phải đi hai chốt kế bên trước khi trời đổ mưa, cậu trả lời dứt khoát ngay bây giờ đi!",
+      "next": "ch3_ep1_24_choice_doi_chat_10s"
+    },
+    {
+      "id": "ch3_ep1_24_choice_doi_chat_10s",
+      "type": "choice",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "urgent",
+      "timedSeconds": 10,
+      "timeoutChoiceId": "c_dung_hinh_im_lang",
+      "text": "Đồng hồ trên cổ tay viên trợ lý quân khí tích tắc đếm ngược từng nhịp giữa căn kho lặng phắc. Bạn không có phiếu gốc hợp lệ trong tay!",
+      "choices": [
+        {
+          "id": "c_nhan_loi_dung_nghiem",
+          "label": "Đứng nghiêm nhận lỗi ký nháy thiếu đối chiếu đêm qua, giao lại sai lệch trung thực và xin 24 giờ truy lục sổ Chốt 3",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addStat": { "stat": "SiKhi", "delta": -3 } },
+            { "addRel": { "char": "nam", "delta": 1 } },
+            { "addRel": { "char": "quang", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_25a_nhan_loi_bi_canh_cao"
+        },
+        {
+          "id": "c_nguy_tao_giay_to",
+          "label": "Viện cớ mái kho dột làm nhòe giấy gốc rồi viết vội một phiếu xuất lùi ngày để khớp cột pháo sáng và số súng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": -5 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": -4 } },
+            { "addRel": { "char": "khang", "delta": -2 } },
+            { "addRel": { "char": "quang", "delta": -2 } }
+          ],
+          "next": "ch3_ep1_25b_nguy_tao_giay_to"
+        },
+        {
+          "id": "c_goi_dong_doi_xac_minh",
+          "label": "Xin tạm dừng một phút để gọi ngay bác Bảy và Khang đang đứng ngoài sân vào làm chứng trực tiếp việc tiêu hao pháo sáng",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": -1 } },
+            { "addStat": { "stat": "TinhDongDoi", "delta": 2 } },
+            { "addRel": { "char": "bay", "delta": 1 } },
+            { "addRel": { "char": "khang", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_25c_goi_dong_doi_xac_minh"
+        },
+        {
+          "id": "c_dung_hinh_im_lang",
+          "label": "Đứng cứng họng không thốt nổi lời giải thích nào khi viên trợ lý gõ bút lên dòng chữ ký nháy",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": -3 } },
+            { "addStat": { "stat": "SiKhi", "delta": -4 } },
+            { "addRel": { "char": "quang", "delta": -1 } }
+          ],
+          "next": "ch3_ep1_25a_nhan_loi_bi_canh_cao"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_25b_nguy_tao_giay_to",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "urgent",
+      "text": "Hoảng loạn dồn lên cổ họng, tôi cúi gằm mặt quay vào góc bàn viết vội một tờ phiếu xuất lùi ngày tháng trước bằng nét chữ cố gồng cho khỏi run, ghi đại ba quả pháo sáng hỏng ẩm và hai số súng điều chuyển. Lén chấm đầu ngón tay vào giọt nước mưa đọng ngoài bệ cửa sổ sắt, tôi miết nhẹ lên mép giấy cho giống vết ố lâu ngày rồi hai tay đưa lên cho viên trợ lý.\n\nAnh ta không nói một lời, cầm tờ giấy soi ngược lên ánh sáng ban mai qua khung cửa sổ sắt, rồi lạnh lùng lật tờ giấy than lưu seri phiếu tại tiểu đoàn từ cặp của Quang đặt sát bên cạnh.\n\nCon số seri lệch lạc, dấu mực in không khớp cuống lưu và nét mực bi còn tươi bóng lập tức tố cáo màn đối phó vụng về giữa căn kho lặng ngắt chỉ nghe tiếng gió rít ngoài khe cửa.",
+      "branches": [
+        {
+          "condition": { "statMax": { "stat": "KyLuat", "value": 44 } },
+          "next": "ch3_ep1_26a_niem_phong_kho_bat_giam"
+        }
+      ],
+      "next": "ch3_ep1_26b_ky_luat_nang_giu_ham"
+    },
+    {
+      "id": "ch3_ep1_26a_niem_phong_kho_bat_giam",
+      "type": "narration",
+      "location": "Kho vũ khí Tiểu Đội 1 — Thiên Minh",
+      "mood": "somber",
+      "text": "Viên trợ lý quân khí im lặng đúng ba nhịp thở rồi rút từ trong cặp da ra một xấp hồ sơ mỏng mang tên tôi. Bên trong ghi chép rành rọt chuỗi vết nhơ lấp liếm sai sót và thiếu hụt kỷ luật tích tụ từ ngày còn ở Học Viện Quang Trung cho tới chốt Thiên Minh.\n\nAnh ta khép cuốn sổ lại không buồn chất vấn thêm một câu nào nữa, chỉ phất tay ra hiệu cho hai cán bộ kiểm kê dán dải giấy niêm phong đỏ chéo ngang cánh cửa sắt kho súng, rồi bước tới thu lại chiếc chìa khóa đồng ngay từ thắt lưng tôi.\n\nNgoài sân đất đỏ, cả Tiểu Đội 1 đứng lặng phắc nhìn tôi lầm lũi bước lên chiếc xe U-oát phủ bạt giữa hai vệ binh tiểu đoàn. Chiếc xe lao xuống con dốc đá vôi trong cơn mưa lạnh thấm tận xương, bỏ lại cuốn sổ bìa xanh nằm chơ vơ trên bàn trực.",
+      "next": "ending_toa_an_binh"
+    },
+    {
+      "id": "ending_toa_an_binh",
+      "type": "ending",
+      "endingId": "ending_toa_an_binh",
+      "endingTitle": "Phiên Tòa Quân Sự",
+      "location": "Hành lang Tòa án Quân sự Tiểu đoàn",
+      "mood": "somber",
+      "text": "Hành lang gạch ẩm mốc của tòa án quân sự tiểu đoàn vắng ngắt, chỉ có tiếng nước mưa nhỏ giọt đều đều ngoài mái hiên như đếm ngược từng phút cuối cùng trong đời quân ngũ của tôi. Khi thư ký phiên tòa gọi tên tôi bước vào phòng đối chất về tội ngụy tạo chứng từ quân khí và ký khống sổ kho súng, cánh cửa gỗ đầu dãy khẽ mở.\n\nĐại úy Trần Quốc Vinh — người thầy từ Học Viện Quân Sự Quang Trung — bước vào với chiếc áo mưa ướt sũng hai vai. Thầy không mắng một lời nào, chỉ lặng lẽ đặt cuốn sổ bìa xanh đã sờn gáy lên chiếc ghế gỗ trống bên cạnh tôi rồi ngồi im suốt buổi xử kỷ luật.\n\nPhiên tòa khép lại với bản án tước quân hàm Hạ Sĩ và đình chỉ phục vụ quân ngũ vì chuỗi sai phạm sổ sách lặp lại có hệ thống. Trên đường bước ra khỏi cổng trại trong bộ thường phục nhạt màu, câu nói năm xưa của thầy mới thực sự ngấm sâu vào xương tủy.\n\nKhông người lính nào gục ngã vì một viên đạn lạc trên trang giấy, nhưng họ tự đánh gãy sống lưng mình ngay từ nét bút gian dối đầu tiên. Con đường quân lộ của tôi chấm dứt trước khi kịp nhìn thấy bình minh trên thung lũng Vân Long.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ending_toa_an",
+            "title": "Kết cục: Phiên Tòa Quân Sự",
+            "entry": "Chuỗi che giấu sai sót tích tụ cùng hành vi ngụy tạo chứng từ kho súng trước đoàn thanh tra tiểu đoàn đã dẫn tới phiên tòa quân sự, chấm dứt binh nghiệp."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_25a_nhan_loi_bi_canh_cao",
+      "type": "narration",
+      "location": "Sân tiểu đội Thiên Minh — Chiều muộn",
+      "mood": "somber",
+      "text": "Biên bản kiểm điểm đỏ chót được đọc thẳng trước hàng quân toàn tiểu đội vào cuối buổi chiều. Tôi nhận án cảnh cáo trước tập thể, bị cắt bảy ngày nghỉ phép dự phòng và gánh thêm bảy đêm trực gác liên tiếp cùng việc cạo sạch rỉ sét cho toàn bộ giá súng dự bị.\n\nĐứng một mình ngoài hiên kho cọ dầu từng thanh thép lạnh dưới ánh đèn vàng heo hắt, tôi thấy anh Nam lặng lẽ mang ra mảnh giấy xác nhận tìm được từ thùng sổ Chốt 3 cùng phiếu ký tay của bác Bảy, giúp tiểu đội tất toán đủ con số với ban quân khí tiểu đoàn.\n\nMay mắn chưa bị tước quân hàm, nhưng vết mực đỏ trong lý lịch quân nhân trở thành cái gai nhắc nhở tôi suốt chặng đường sau: mỗi chữ ký đặt xuống mặt giấy đều nặng đúng bằng trách nhiệm của người cầm chìa khóa.",
+      "next": "ch3_ep1_29_sau_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_25c_goi_dong_doi_xac_minh",
+      "type": "dialogue",
+      "location": "Cửa kho vũ khí Thiên Minh — Sáng sớm",
+      "speaker": "bay",
+      "speakerTitle": "Bác tài Phan Văn Bảy",
+      "mood": "tense",
+      "text": "Khoan đã mấy anh kiểm kê ơi, để tui trình bày rõ kẻo tội nghiệp thằng nhỏ mới nhận kho hôm qua! Đây nè, cuốn sổ hành trình xe tải của tui có chữ ký nháp nhận một ống pháo sáng soi đường kéo xe thuốc vượt bùn tuần trước rõ ràng luôn nè.\n\nCòn hai quả pháo sáng nữa là đêm giông sét Khang nó bắn chặn khe đá, hai khẩu TM-418 với TM-429 cũng là anh em đổi gác ướt rồi xếp nhầm giá từ hồi thằng phó cũ chưa đi. Khang đứng ngay bên kia giếng nước, gọi nó qua đối chất một tiếng là khớp hết mọi con số liền.\n\nTụi tui người thật việc thật đứng ngay sân đây, không có chuyện ăn bớt hay làm mất khí tài đâu mấy đồng chí. Báo cáo đồng chí trợ lý, lỗi của tui là ký nháp mà quên lên sổ cái với tiểu đội, xin chịu phạt kiểm điểm hành chính chứ đừng quy tội gian dối cho thằng nhỏ.",
+      "next": "ch3_ep1_29_sau_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_26b_ky_luat_nang_giu_ham",
+      "type": "narration",
+      "location": "Hiên kho vũ khí Thiên Minh — Trưa nắng nhạt",
+      "mood": "somber",
+      "text": "Căn kho lặng như tờ suốt năm phút sau khi tờ phiếu viết vội bị bóc trần. May mắn nhờ hồ sơ kỷ luật tích lũy từ trước vẫn giữ được mức tối thiểu và anh Nam kịp bước vào đứng nghiêm xin bảo lãnh kiểm kê lại toàn bộ kho ngay trong buổi trưa, viên trợ lý mới gác lại quyết định niêm phong bắt giữ.\n\nTôi vẫn phải ký vào biên bản kỷ luật cảnh cáo mức nặng nhất cấp tiểu đội, bị tước mọi ngày phép năm và phải đối chiếu lại toàn bộ sổ sách dưới sự giám sát trực tiếp của Quang trước khi xe tiểu đoàn quay đầu.\n\nLúc Quang thu xếp cặp tài liệu bước ra xe U-oát, cậu ta chỉ liếc tôi một cái lạnh băng rồi lắc đầu không nói lời nào. Cái giá cho một giây hoảng loạn tìm cách lấp liếm đã để lại vết rạn sâu hoắm giữa lòng tin đồng đội.",
+      "next": "ch3_ep1_29_sau_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_28_ket_thuc_thanh_tra_dat",
+      "type": "narration",
+      "location": "Hiên kho vũ khí Thiên Minh — 07 giờ 15 sáng",
+      "mood": "warm",
+      "text": "Tiếng máy xe U-oát xa dần rồi khuất hẳn sau khúc cua đất đỏ dưới chân dốc, để lại làn bụi ẩm tan nhanh trong nắng sớm vừa ló qua đỉnh núi đá vôi. Đứng ngoài hiên, Trung sĩ Nguyễn Hoàng Nam thở phào một hơi dài rồi bước tới vỗ mạnh hai cái lên vai tôi.\n\nNgay cả phần đối chiếu lô đạn dự phòng của Thiên Minh tháng trước cũng khớp từng con số với hồ sơ lưu tiểu đoàn. Trước khi lên xe, viên trợ lý quân khí còn gật đầu nói nhỏ rằng chốt tiền tiêu nào cũng có người thức đêm giữ sổ rành mạch như thế này thì ban hậu cần đỡ mất nửa gánh lo.\n\nTôi nắm chặt chiếc chìa khóa đồng còn ấm hơi tay, thấy cơn buồn ngủ suốt đêm trắng chợt nhẹ bẫng đi một nửa.",
+      "next": "ch3_ep1_29_sau_thanh_tra"
+    },
+    {
+      "id": "ch3_ep1_29_sau_thanh_tra",
+      "type": "narration",
+      "location": "Nhà ăn Tiểu Đội 1 — Hai tuần sau",
+      "mood": "warm",
+      "text": "Hai tuần nắng mưa nối tiếp ở tuyến tiền tiêu Thiên Minh trôi qua nhanh như một đợt chuyển mùa trên triền núi đá vôi. Những ca mở kho cấp đạn lúc nửa đêm hay những buổi lau dầu kiểm tra kim hỏa trước bình minh dần trở thành thói quen nằm gọn trong lòng bàn tay tôi.\n\nMỗi lần chạm tay vào ổ khóa đồng, tôi lại nhớ tới bài học đắt giá từ buổi sáng xe U-oát tiểu đoàn rít còi ngoài cổng tre. Sự cẩn trọng không còn nằm trên lời dặn của anh Nam nữa mà đã ngấm vào từng động tác soi đèn pin kiểm giá súng.\n\nChiều thứ Sáu, chuyến xe tiếp tế của bác Bảy lại mang lên cùng thùng gạo một túi thư nhà buộc dây gai và mấy gói lạc rang giòn rụm bọc giấy báo cũ. Cả tiểu đội túm tụm quanh chiếc bàn gỗ dài dưới mái hiên nghe tiếng mưa lộp độp ngoài sân, vừa chuyền tay nhau đọc từng mảnh thư hậu phương vừa nhấm nháp vị bùi béo của lạc rang nóng hổi.",
+      "next": "ch3_ep1_30_khang_va_dung_tranh_luan"
+    },
+    {
+      "id": "ch3_ep1_30_khang_va_dung_tranh_luan",
+      "type": "dialogue",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "speaker": "dung",
+      "speakerTitle": "Trinh sát Hoàng Tiến Dũng",
+      "mood": "tense",
+      "text": "Tao nói thiệt với tụi mày, mấy đêm nay tiếng chó sủa dưới chân suối cứ rộ lên từng chặp lúc hai giờ sáng là không bình thường đâu. Tụi thám báo Thiết Phong chắc chắn đang dò đường luồn sau trận bão tuần trước rồi!\n\nThế mà sáng nay xin phép xuống sâu thêm năm trăm mét dưới khe đá để đặt mìn báo động thì anh Nam lại bảo chờ lệnh đại đội. Chờ tới sáng là tụi nó rút sạch rồi!\n\nMày ngồi bên Chốt 3 suốt ngày chỉ lo đếm từng viên đạn với lau dây mìn, có thấy tụi nó đang rình ngay dưới mũi mình không hả Khang?",
+      "next": "ch3_ep1_31_khang_dap_loi"
+    },
+    {
+      "id": "ch3_ep1_31_khang_dap_loi",
+      "type": "dialogue",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "speaker": "khang",
+      "speakerTitle": "Binh nhất Lê Minh Khang",
+      "mood": "calm",
+      "text": "Tách... Nói nghe nè ông nội Hải Phòng, đừng có nóng mặt rồi vuốt quai mũ sắt nữa. Tui không có ngồi đếm đạn chơi đâu, đêm qua tụi tui ngoài Chốt 3 cũng nghe tiếng đá lăn dưới khe chớ bộ điếc à.\n\nNhưng mà ông coi lại địa hình đi: sương mù xuống dày hơn tuần trước nhiều, đường suối trơn trượt mà tổ ông mới có ba người, không mang theo dây nối vô tuyến thì lỡ đụng ổ phục kích dưới khe ai xuống kéo tụi ông lên? Coi chừng cái bản đồ nó lừa mắt mình đó nha!\n\nÔng phó ngồi ngay đây nè, để coi ông ấy chia bài thế nào. Đừng có nói chuyện kiểu trên giấy với tui, nhưng cũng đừng có lao đầu xuống vực không mang dây bảo hiểm.",
+      "next": "ch3_ep1_31b_choice_giu_nhip_tieu_doi"
+    },
+    {
+      "id": "ch3_ep1_31b_choice_giu_nhip_tieu_doi",
+      "type": "choice",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "mood": "tense",
+      "text": "Dũng nóng lòng đòi tăng cường tuần tra sâu xuống khe đá, trong khi Khang kiên quyết giữ đội hình chặt quanh chốt chờ đủ trang bị liên lạc. Là Tiểu đội phó, bạn điều phối mâu thuẫn này thế nào?",
+      "choices": [
+        {
+          "id": "c_ung_ho_dung_tuan_tra",
+          "label": "Ủng hộ Dũng cho tổ trinh sát đi sớm hơn nửa tiếng để rà mép suối, nhưng bắt buộc mang theo 2 quả pháo sáng dự phòng",
+          "effects": [
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": -2 } },
+            { "addRel": { "char": "dung", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": -1 } }
+          ],
+          "next": "ch3_ep1_31c_ung_ho_tuan_tra_som"
+        },
+        {
+          "id": "c_dong_tinh_khang_giu_chot",
+          "label": "Đứng về phía sự thận trọng của Khang, giữ nguyên cự ly tuần tra chuẩn và tập trung kiểm tra pin máy bộ đàm trước",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 3 } },
+            { "addStat": { "stat": "TiepTe", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": 2 } },
+            { "addRel": { "char": "dung", "delta": -1 } }
+          ],
+          "next": "ch3_ep1_31d_dong_tinh_kiem_khi_tai"
+        },
+        {
+          "id": "c_phan_cong_hai_mui",
+          "label": "Chia nhịp phối hợp: Dũng dẫn mũi trinh sát rà dốc trên cao lúc hửng sáng, còn Khang giữ tuyến hỏa lực Chốt 3 bọc lót tầm nhìn",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 4 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addRel": { "char": "dung", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_31e_phan_cong_hai_mui"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_31c_ung_ho_tuan_tra_som",
+      "type": "narration",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "mood": "tense",
+      "text": "Dũng vỗ đùi cái đét, cười khà đắc ý rồi quay sang nháy mắt thách thức Khang, nhưng tôi lập tức giơ tay ra hiệu cho cậu trinh sát ngồi xuống ký sổ nhận thêm hai quả pháo sáng mới. Khang bật nắp chiếc bật lửa kêu tách một tiếng khô gọn rồi cất vào túi áo, lắc đầu nhắc nhỏ tôi nhớ kiểm tra lại cự ly liên lạc trước khi để Dũng xuất phát.\n\nTôi kéo tờ bản đồ kẹp dưới mặt kính bàn ăn ra, khoanh bút chì rõ điểm hẹn quay đầu nếu sương dưới khe đá đặc quá tầm nhìn hai mét. Dũng liếc nhìn nét chì đậm rồi gật đầu nghiêm túc hơn hẳn lúc nãy.\n\nKhông khí quanh bàn gỗ chùng xuống đôi chút nhưng không tới mức căng thẳng như trước. Dũng tự giác mang hai chiếc ca sắt ra ngoài giếng tráng nước, sẵn sàng cho ca tuần tra sớm ngày mai.",
+      "next": "ch3_ep1_32_loc_mang_tra_nong"
+    },
+    {
+      "id": "ch3_ep1_31d_dong_tinh_kiem_khi_tai",
+      "type": "narration",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Nghe tôi phân tích lại quy trình báo động và độ ẩm của khe đá sau mưa, Dũng tuy còn nhăn mặt gãi tai nhưng không cãi thêm lời nào nữa. Cậu ta vuốt lại quai mũ sắt đặt bên cạnh chiếc đĩa lạc rang, lầm bầm nhận phần đi kiểm tra lại hai bộ pin dự phòng của máy liên lạc.\n\nTôi bước lại mở ngăn tủ dụng cụ bên cạnh, đưa cho Dũng cuộn băng keo cách điện để bọc lại khớp nối dây bộ đàm chống thấm sương. Thấy tôi cũng xuống tay kiểm tra kỹ chứ không nói suông, cậu trinh sát Hải Phòng dịu hẳn giọng.\n\nKhang nháy mắt gật đầu hài lòng, đẩy gói lạc rang sát về phía Dũng như cách làm hòa quen thuộc của hai thằng lính cùng tiểu đội.",
+      "next": "ch3_ep1_32_loc_mang_tra_nong"
+    },
+    {
+      "id": "ch3_ep1_31e_phan_cong_hai_mui",
+      "type": "narration",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Vẽ vội hai nét phấn trắng lên mặt bàn gỗ để chỉ hướng cắt chéo từ mỏm đá Chốt 3 xuống mép suối, tôi phân định rõ khoảng cách giữa mũi đi đầu của Dũng và tầm yểm trợ của Khang. Dũng nghe thấy vẫn được xuống dò dấu vết thì gật đầu rụp, còn Khang cũng yên tâm vì giữ được mắt quan sát suốt tuyến dốc.\n\nTôi dặn kỹ hai người phải giữ nguyên quy ước hai tiếng còi ngắn nếu gặp dấu vết mới, tuyệt đối không tự ý tách đội hình đuổi theo vào rừng sâu. Mũi dò đường và tuyến giữ chốt ăn khớp với nhau như hai cánh tay cùng giữ một khẩu súng.\n\nCả hai không còn gầm ghè nhau nữa mà tự động ngồi sát lại so khớp tín hiệu còi ngắn trong trường hợp sương mù che khuất tầm mắt.",
+      "next": "ch3_ep1_32_loc_mang_tra_nong"
+    },
+    {
+      "id": "ch3_ep1_32_loc_mang_tra_nong",
+      "type": "narration",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "mood": "warm",
+      "text": "Đúng lúc ấy, cánh cửa gỗ nối sang bếp anh nuôi khẽ đẩy mở. Bùi Văn Lộc hai tay bưng cẩn thận chiếc ấm nhôm bốc khói nghi ngút cùng mấy chiếc ca sắt tráng men, mang theo mùi gừng đập dập thơm nồng làm ấm hẳn gian nhà ăn lạnh gió.\n\nNgoài mái hiên, tiếng mưa đêm bắt đầu rả rích rơi xuống hàng lá chuối rừng sau dãy nhà ngủ. Ánh đèn vàng từ bóng điện dây tóc hắt lên khuôn mặt còn sạm gió núi của cậu lính trẻ đang bước vào.\n\nĐặt ấm nước nóng xuống giữa bàn, cậu lính trẻ quê miền Tây đưa tay nắm nhẹ mép quai áo như thói quen cũ rồi ngẩng đầu báo cáo với tôi trước giờ điểm danh tối.",
+      "branches": [
+        {
+          "condition": { "flag": "loc_vung_tam_binh_nhat" },
+          "next": "ch3_ep1_32a_loc_vung_vang"
+        },
+        {
+          "condition": { "flag": "kem_cap_loc_kien_nhan" },
+          "next": "ch3_ep1_32a_loc_vung_vang"
+        }
+      ],
+      "next": "ch3_ep1_32b_loc_de_dat"
+    },
+    {
+      "id": "ch3_ep1_32a_loc_vung_vang",
+      "type": "dialogue",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "warm",
+      "text": "Anh uống miếng nước gừng cho ấm bụng rồi nghỉ chút đi anh, hồi chiều tới giờ em thấy anh ngồi lau lại toàn bộ khóa nòng giá một cực lắm rồi.\n\nTrước giờ ăn cơm, em tự rà lại hết dây đeo ba lô, khóa bao xe với móc hộp tiếp đạn cho hai đứa tân binh mới bổ sung về tiểu đội mình rồi đó. Em chỉ tụi nó thắt đúng kiểu gập ngược đầu dây qua khoen sắt như hồi trước anh ngồi bên bãi tập chỉ em, nên chạy đêm không sợ bung chốt nữa đâu.\n\nLát ca gác hai giờ sáng sương xuống dày, anh đi trước kiểm tra vọng trên, chỗ dây này em cột chặt rồi, em với anh Khang giữ dưới khe ổn thỏa hết cho.",
+      "effects": [
+        { "addRel": { "char": "loc", "delta": 1 } }
+      ],
+      "next": "ch3_ep1_33_cong_dien_chuan_bi_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_32b_loc_de_dat",
+      "type": "dialogue",
+      "location": "Nhà ăn Tiểu Đội 1 — Thiên Minh",
+      "speaker": "loc",
+      "speakerTitle": "Binh nhất Bùi Văn Lộc",
+      "mood": "tense",
+      "text": "Dạ... em pha ca nước gừng mời anh uống cho đỡ lạnh tay. Hồi nãy trước khi lên giường tụi em đã buộc lại dây trang bị kỹ lắm, kiểm đi kiểm lại hai bận rồi.\n\nNhưng mà lỡ ca đêm mưa lớn quá có tuột cái chốt khóa nào thì... anh đừng bắt tụi em chạy phạt ngoài sân tội nghiệp mấy đứa mới về anh nghen. Chỉ tại tay em đụng mấy cái móc sắt ban đêm hay run quá, dạ để em làm lại liền nếu anh thấy còn lỏng.\n\nEm có chép lại sơ đồ xếp ba lô gọn nhất vào góc sổ tay rồi, lát nữa anh rảnh anh ngó qua giùm em coi có chỗ nào chưa đúng điều lệnh không. Em hứa đứng giữ ca gác cẩn thận từng phút một, không để mất nhịp đâu anh.",
+      "next": "ch3_ep1_33_cong_dien_chuan_bi_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_33_cong_dien_chuan_bi_ban_giao",
+      "type": "dispatch",
+      "location": "Phòng trực ban Tiểu Đội 1 — 08 giờ 00 sáng hôm sau",
+      "mood": "tense",
+      "text": "[CÔNG ĐIỆN ĐIỀU ĐỘNG NHÂN SỰ — BAN TÁC CHIẾN TIỂU ĐOÀN]\n\n\"Thực hiện kế hoạch luân chuyển cán bộ chuẩn bị cho đợt chuyển quân sắp tới về khu tập kết thung lũng Vân Long: điều động Trung sĩ Nguyễn Hoàng Nam tạm lên Ban Chỉ Huy Tiểu đoàn nhận nhiệm vụ huấn luyện tăng cường và điều phối tuyến hậu cần kể từ tuần sau.\"\n\n\"Giao Hạ Sĩ Tiểu đội phó Tiểu Đội 1 Thiên Minh chuẩn bị tiếp nhận toàn bộ hồ sơ quân số, sổ trực tiểu đội và khóa vũ khí để sẵn sàng đảm nhiệm quyền Tiểu đội trưởng trong đợt bàn giao kế tiếp.\"",
+      "next": "ch3_ep1_34_choice_chuan_bi_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_34_choice_chuan_bi_ban_giao",
+      "type": "choice",
+      "location": "Phòng trực ban Tiểu Đội 1 — Thiên Minh",
+      "mood": "calm",
+      "text": "Tờ công điện điều động anh Nam đã ghim lên bảng gỗ trước phòng trực. Trong vài ngày cuối trước khi chính thức nhận bàn giao tiểu đội, bạn ưu tiên chuẩn bị việc gì trước?",
+      "choices": [
+        {
+          "id": "c_hoc_que_quan_anh_em",
+          "label": "Ngồi cùng anh Nam đọc thuộc hết tên tuổi, quê quán và hoàn cảnh gia đình từng chiến sĩ ở những trang cuối cuốn sổ tiểu đội",
+          "effects": [
+            { "addStat": { "stat": "TinhDongDoi", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 3 } },
+            { "addRel": { "char": "nam", "delta": 2 } },
+            { "addRel": { "char": "loc", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_35a_hoc_ten_que_quan"
+        },
+        {
+          "id": "c_ra_soat_khi_tai_toan_dien",
+          "label": "Cùng Khang và Dũng tập báo động mở kho cấp súng trong 60 giây, kiểm tra lại toàn bộ pháo sáng và đạn cơ số",
+          "effects": [
+            { "addStat": { "stat": "KyLuat", "delta": 4 } },
+            { "addStat": { "stat": "TiepTe", "delta": 4 } },
+            { "addRel": { "char": "khang", "delta": 1 } },
+            { "addRel": { "char": "dung", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_35b_dien_tap_mo_kho_60s"
+        },
+        {
+          "id": "c_noi_kenh_vo_tuyen_linh",
+          "label": "Phối hợp với phòng vô tuyến của Linh và xe tiếp vận bác Bảy để khóa chặt lịch dự phòng tần số và tuyến tiếp tế",
+          "effects": [
+            { "addStat": { "stat": "TiepTe", "delta": 3 } },
+            { "addStat": { "stat": "KyLuat", "delta": 2 } },
+            { "addRel": { "char": "linh", "delta": 2 } },
+            { "addRel": { "char": "bay", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_35c_khoa_tuyen_vo_tuyen"
+        },
+        {
+          "id": "c_xuong_ban_kiem_tra_dan",
+          "label": "Đi bộ theo đường mòn sườn núi rà lại các mốc sơ tán dân cư và mực nước suối cạn quanh khu vực Bản Sương Mù",
+          "effects": [
+            { "addStat": { "stat": "NhanTamDan", "delta": 5 } },
+            { "addStat": { "stat": "SiKhi", "delta": 2 } },
+            { "addRel": { "char": "nam", "delta": 1 } }
+          ],
+          "next": "ch3_ep1_35d_tham_duong_bien_ban"
+        }
+      ]
+    },
+    {
+      "id": "ch3_ep1_35a_hoc_ten_que_quan",
+      "type": "narration",
+      "location": "Phòng trực ban Tiểu Đội 1 — Đêm yên tĩnh",
+      "mood": "warm",
+      "text": "Đêm đó ngoài hiên mưa rừng lại rơi lộp độp trên mái tôn, tám anh em trong phòng ngủ đều đã say giấc sau ca trực chiều. Tôi mở những trang cuối cuốn sổ tiểu đội anh Nam đang đặt trên bàn, nheo mắt đọc từng dòng chữ viết tay thẳng hàng mộc mạc đến thắt lòng.\n\nBùi Văn Lộc — nhà cuối xóm rạch Cái Bè, cha bị thấp khớp nặng mỗi mùa nước nổi; Trần Văn Hào — quê Nghệ An, em gái vừa đậu sư phạm; Đinh Quang Tùng — xã ven sông Quảng Bình, tháng rồi mới gửi về hai tháng phụ cấp sửa mái ngói sau bão.\n\nNhìn dãy tên nằm im trên trang giấy kẻ ô, căn phòng tập thể chật hẹp này bỗng như rộng mở gấp nhiều lần: mỗi chiếc giường tầng gỗ tạp đêm nay đều nối thẳng về một bếp lửa quê xa hàng trăm cây số.",
+      "next": "ch3_ep1_36_nam_dan_do_truoc_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_35b_dien_tap_mo_kho_60s",
+      "type": "narration",
+      "location": "Sân kho vũ khí Thiên Minh — Chiều muộn",
+      "mood": "tense",
+      "text": "Không chờ tới đêm, tôi bấm đồng hồ gọi Khang, Dũng và cả tổ trực vào tập đóng mở kho vũ khí trong điều kiện tắt đèn hoàn toàn. Chỉ bằng cảm giác đầu ngón tay chạm vào ổ khóa đồng, tôi rèn mình bật mở cửa sắt trong đúng bốn giây rồi hô rõ từng tên nhận súng.\n\nTừng hộp tiếp đạn dự phòng và ống pháo sáng được đặt đúng tầm tay để người chạy sau không va vào người đi trước. Dũng mồ hôi nhễ nhại nhưng cười khoái chí khi cả tiểu đội rút ngắn được thời gian lấy vũ khí xuống còn bốn mươi tám giây.\n\nKhang vỗ vai tôi gật đầu xác nhận rằng ngay cả trong sương mù đặc quánh nhất, cái chìa khóa đồng này cũng không còn làm chậm nhịp đội hình nữa.",
+      "next": "ch3_ep1_36_nam_dan_do_truoc_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_35c_khoa_tuyen_vo_tuyen",
+      "type": "narration",
+      "location": "Phòng vô tuyến Thiên Minh — Chiều nắng nhạt",
+      "mood": "calm",
+      "text": "Tôi sang ngồi cạnh bàn điện đài của Linh suốt hai tiếng liền, chép lại toàn bộ bảng tần số phụ và ám hiệu báo động khi đường dây hữu tuyến bị pháo cắt đứt. Những đầu ngón tay mảnh của Linh gõ nhịp Morse đều đặn trên mặt bàn gỗ để tôi kiểm lại tốc độ giải mã.\n\nCô lính thông tin trẻ còn đánh dấu bằng bút chì đỏ những khung giờ nhiễu khí quyển hay quét ngang triền núi đá vôi để tôi kịp nhắc anh em giữ im lặng vô tuyến. Từng ký hiệu ngắn gọn trên trang giấy giúp tôi nhìn rõ cả mạng lưới liên lạc mỏng manh đang nối chốt với tiểu đoàn.\n\nChiều muộn, bác Bảy đánh xe qua trạm gác cũng tạt vào ký khớp giờ chuyển đạn và pin máy dự phòng trước khi tuyến đường đèo bước vào mùa mưa lớn. Mạch liên lạc và hậu cần nối liền khiến tôi có cảm giác đôi mắt của tiểu đội đã nhìn xa hơn qua khỏi dãy núi đá vôi.",
+      "next": "ch3_ep1_36_nam_dan_do_truoc_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_35d_tham_duong_bien_ban",
+      "type": "narration",
+      "location": "Đường mòn sườn núi hướng Bản Sương Mù",
+      "mood": "calm",
+      "text": "Tôi khoác ba lô nhẹ, đi dọc theo triền đường mòn đá tai mèo hướng xuống rìa thung lũng để kiểm tra lại những cột sơn trắng đánh dấu lối sơ tán dân bản. Con suối cạn mùa khô bắt đầu có nước rỉ ra từ khe đá ngầm, báo hiệu mùa mưa lũ trên dãy núi sắp tràn về.\n\nDọc hai bên bờ dốc, những bụi lau lách mọc cao quá đầu người che khuất tầm nhìn xuống khúc cua đá dưới chân đồi. Tôi lấy dao rừng phát bớt mấy cành gai chắn ngang lối mòn để nếu phải hành quân hoặc cõng thương binh trong đêm cũng không bị vướng chân.\n\nMấy bà con đi nương ngang qua nhận ra màu quân phục quen thuộc liền vẫy tay chào từ xa, hỏi thăm xem khi nào tiểu đội mới đổi quân. Tôi đứng lặng trên mỏm đá nhìn xuống những mái nhà lợp lá nấp dưới tán rừng, thầm ghi nhớ từng ngã rẽ phòng khi biến cố bất ngờ ập tới.",
+      "next": "ch3_ep1_36_nam_dan_do_truoc_ban_giao"
+    },
+    {
+      "id": "ch3_ep1_36_nam_dan_do_truoc_ban_giao",
+      "type": "dialogue",
+      "location": "Hiên phòng trực ban Thiên Minh — Bình minh",
+      "speaker": "nam",
+      "speakerTitle": "Trung sĩ Nguyễn Hoàng Nam",
+      "mood": "warm",
+      "text": "Chú coi lại nếp cổ áo đi, tuần sau có quyết định chính thức là chú đứng đầu hàng quân thay anh đó. Lúc bàn giao sổ trực tiểu đội, nhớ dặn là đừng chỉ lật mấy trang đầu coi ca gác với số súng rồi gấp lại cất tủ.\n\nMở tuốt mấy trang sau cùng mà giữ cho kỹ từng dòng chữ nhỏ anh ghi về quê quán tụi nó, tên má tụi nó, đứa mô dưới quê đang vô mùa gặt hay có người ốm nặng ở trạm xá xã. Mình cầm sổ điểm danh không phải để đếm đầu người nộp báo cáo lên đại đội, mà để nhớ đằng sau mỗi cái tên là cả một mái nhà đang chong đèn chờ tụi nó trở về.\n\nĐợt này rút về hướng thung lũng Vân Long địa hình phức tạp hơn Thiên Minh nhiều lắm. Giữ chắc cái chìa khóa kho súng đó nghe chú, còn giữ được kỷ luật với anh em thì đi tới mô cũng đứng vững.",
+      "effects": [
+        { "addRel": { "char": "nam", "delta": 1 } }
+      ],
+      "next": "ch3_ep1_bottleneck"
+    },
+    {
+      "id": "ch3_ep1_bottleneck",
+      "type": "narration",
+      "location": "Sân tiểu đội Thiên Minh — Sáng sớm",
+      "mood": "warm",
+      "isChapterEnd": true,
+      "text": "Bình minh nhuộm hồng dải sương mỏng đang tan dần trên đỉnh núi đá vôi Thiên Minh. Khói bếp anh nuôi bay là là qua khoảng sân sỏi ướt, mang theo mùi cơm mới làm dịu đi cái lạnh buốt còn sót lại sau đêm dài.\n\nTôi đứng bên cánh cửa sắt sơn xanh của kho vũ khí tiểu đội, cảm nhận sức nặng quen thuộc của chiếc chìa khóa đồng nằm gọn nơi cạp quần và cuốn sổ bìa xanh ép sát ngực trái. Đi ngang qua hiên, Khang không nói nhiều, chỉ thò tay chạm nhẹ hai lần lên vai áo tôi đúng theo quy ước cũ rồi bước ra phía giếng nước.\n\nTừ phòng vô tuyến, tiếng gõ nhịp Morse đều đặn của Linh vẫn vang khẽ, còn phía cổng tre xa xa, bụi đỏ từ con dốc dẫn xuống thung lũng Vân Long đã bắt đầu cuộn lên theo vệt nắng sớm. Chặng đường làm người lính chỉ biết nhận lệnh đã ở lại sau lưng; phía trước là hàng quân chín con người sắp bước vào đợt bàn giao sinh tử.",
+      "effects": [
+        {
+          "addJournal": {
+            "id": "jrn_ep7_chiec_chia_khoa",
+            "title": "Hồi 7: Chiếc Chìa Khóa Kho Súng",
+            "entry": "Nhận quân hàm Hạ Sĩ và quyền giữ kho vũ khí Tiểu Đội 1 Thiên Minh. Trải qua cuộc thanh tra đột xuất của tiểu đoàn về 3 quả pháo sáng và số hiệu súng lệch cột, sẵn sàng cho đợt bàn giao Trung sĩ sắp tới."
+          }
+        }
+      ]
+    }
+  ]
+}
